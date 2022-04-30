@@ -1,9 +1,8 @@
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import React, { useState } from 'react'
+import React, { useReducer, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ButtonFill from '../../components/Button/ButtonFill/ButtonFill'
 import ButtonLink from '../../components/Button/ButtonLink/ButtonLink'
-import ButtonOutline from '../../components/Button/ButtonOutline/ButtonOutline'
 import Input from '../../components/Input/Input'
 import LabelTypography from '../../components/Typography/LabelTypography'
 import LargeTypography from '../../components/Typography/LargeTypography'
@@ -13,56 +12,59 @@ import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading'
 import Alert from '../../components/Alert/Alert'
 import validator from 'validator'
 
-const Login = () => {
-    // const history = useHistory()
-    const navigate = useNavigate()
-    const [login, setLogin] = useState({
-        email: "",
-        password:""
-    })
-    const [showPassword, setShowPassword] = useState(false)
-    const [initializeLogin, setInitializeLogin] = useState(false)
-    const [alert, setAlert] = useState(false)
+const initialState = {
+    email:"",
+    password: "",
+    showPassword: false,
+    initialize: false,
+    alert: false
+}
 
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "HANDLE INPUT TEXT":
+            return {...state, [action.field] : action.payload}
+        case "HANDLE RESET FIELD":
+            return {...state, email: "", password: ""}
+        case "HANDLE SHOW PASSWORD":
+            return {...state, showPassword: action.payload}
+        case "HANDLE INITIALIZE":
+            return {...state, initialize: action.payload}
+        case "HANDLE ALERT":
+            return {...state, alert: true}
+        default:
+            break;
+    }
+}
+
+const Login = () => {
+    const navigate = useNavigate()
+    const [state, dispatch] = useReducer(reducer, initialState)
     const validateForm = () => {
-        return validator.isEmpty(login.email) || validator.isEmpty(login.password)
+        return validator.isEmpty(state.email) || validator.isEmpty(state.password)
       }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setLogin(prevState => ({
-            ...prevState, [name]: value
-        }))
-    }
-
     const handleLogin = () => {
-        setInitializeLogin(true)
-        signInWithEmailAndPassword(auth, login.email, login.password)
+        dispatch({type: "HANDLE INITIALIZE", payload: true})
+        signInWithEmailAndPassword(auth, state.email, state.password)
         .then((userCredential) => {
           const user = userCredential.user;
           if(user.emailVerified){
-                setInitializeLogin(false)
-                // history.push('/dashboard')
+                dispatch({type: "HANDLE INITIALIZE", payload: false})
                 navigate('/')
           }else{
-                setLogin({
-                    email: "",
-                    password:""
-                })
-                setInitializeLogin(false)
-                setAlert(true)
+                dispatch({type: "HANDLE RESET FIELD"})
+                dispatch({type: "HANDLE INITIALIZE", payload: false})
+                dispatch({type: "HANDLE ALERT"})
           }
         })
         .catch((error) => {
-            setInitializeLogin(false)
-            setAlert(true)
+            dispatch({type: "HANDLE INITIALIZE", payload: false})
+            dispatch({type: "HANDLE ALERT"})
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorCode, errorMessage)
-            setLogin({
-                email: "",
-                password:""
-            })
+            dispatch({type: "HANDLE RESET FIELD"})
         });
     }
     const handleKeyPress = (event) => {
@@ -76,7 +78,7 @@ const Login = () => {
         <div className='flex justify-center min-h-screen bg-gray-50 md:items-center'>
             <div className='flex flex-col py-2 py-2 bg-white px-4 gap-2 rounded-xl w-full md:w-1/4'>
                 <LargeTypography textValue="Login Clocker" additionalClass="flex justify-center"/>
-                {alert&&
+                {state.alert&&
                     <Alert 
                     additionalClass="mt-2 mb-2" 
                     color="yellow" 
@@ -85,16 +87,16 @@ const Login = () => {
                 />}
                 <div>
                     <LabelTypography textValue="Email"/>
-                    <Input handleChange={handleChange} type="email" name="email" value={login.email} placeholder="email@email.com" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
+                    <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field:e.target.name,  payload : e.target.value})} type="email" name="email" value={state.email} placeholder="email@email.com" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                 </div>
             
                 <div>
                     <LabelTypography textValue="Password"/>
                     <div className='relative'>
-                        <Input handleKeyPress={handleKeyPress} handleChange={handleChange} type={showPassword ? 'text' : 'password'} name="password" value={login.password} placeholder="Password." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
+                        <Input handleKeyPress={handleKeyPress} handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field:e.target.name,  payload : e.target.value})} type={state.showPassword ? 'text' : 'password'} name="password" value={state.password} placeholder="Password." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                         
                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                            <ButtonIcon actionFunction={() => setShowPassword(!showPassword)} icon={showPassword ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                            <ButtonIcon actionFunction={() => dispatch({type: "HANDLE SHOW PASSWORD", payload: !state.showPassword})} icon={state.showPassword ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                             <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                             </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
@@ -107,15 +109,13 @@ const Login = () => {
 
                 <ButtonLink newProps="flex justify-end" linkTo={()=> navigate('/forget-password')} label="Lupa password?"/>
                 <ButtonFill disabled={validateForm()} additionalClass={validateForm() ? 'bg-blue-200 border-blue-200' : ""} handleClick={handleLogin} label="Login"/>
-                {/* <p className='flex justify-center mb-4'>- atau login lebih mudah dengan -</p>
-                <ButtonFill label="Google"/> */}
                 <div className='flex justify-center'>
                 <p>Belum punya akun? registrasi</p>&nbsp;
                 <ButtonLink linkTo={()=> navigate('/registration')} label="disini"/>
                 </div>
             </div>
         </div>
-        {initializeLogin&&<SpinnerLoading/>}
+        {state.initialize&&<SpinnerLoading/>}
     </>
   )
 }
