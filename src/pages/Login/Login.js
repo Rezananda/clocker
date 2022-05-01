@@ -77,7 +77,7 @@ const Login = () => {
   return (
       <>
         <div className='flex justify-center min-h-screen bg-gray-50 md:items-center'>
-            <div className='flex flex-col py-2 py-2 bg-white px-4 gap-2 rounded-xl w-full md:w-1/4'>
+            <div className='flex flex-col py-2 py-2 bg-white px-4 gap-4 rounded-xl w-full md:w-1/4'>
                 <LargeTypography textValue="Login Clocker" additionalClass="flex justify-center"/>
                 {state.alert&&
                     <Alert 
@@ -108,11 +108,9 @@ const Login = () => {
                     </div>
                 </div>
                 <ButtonFill disabled={validateForm()} additionalClass={validateForm() ? 'bg-blue-200 border-blue-200' : "bg-blue-500 border-blue-500"} handleClick={handleLogin} label="Login"/>
-                <div className='flex justify-center items-center'>
-                    <p>Belum punya akun? registrasi</p>&nbsp;
-                    <div className='flex items-center justify-center'>
-                        <ButtonLink linkTo={()=> navigate('/registration')} label="disini"/>    
-                    </div>
+                <div className='flex justify-center'>
+                    <p>Belum punya akun? registrasi</p>
+                    <ButtonLink newProps={'ml-1'} linkTo={()=> navigate('/registration')} label="disini"/>    
                 </div>
                 <div className='flex justify-center'>
                     <ButtonLink linkTo={()=> navigate('/forget-password')} label="Lupa password?"/> 
