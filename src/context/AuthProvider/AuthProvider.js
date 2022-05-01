@@ -1,6 +1,5 @@
 import { onAuthStateChanged } from 'firebase/auth'
 import React, { createContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading'
 import { auth } from '../../utils/Firebase/Firebase'
 
@@ -12,17 +11,15 @@ const AuthProvider = ({children}) => {
 
     useEffect(()=> {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            // if (user) {
-            //     setCurrentUser(user)
-            //     setUserInitializing(false)
-            // } else {
-            //     setUserInitializing(false)
-            //     navigate('/login')
-            // }
-            setCurrentUser(user)
-            setUserInitializing(false)
-          });
-          return unsubscribe
+            if(user&&user.emailVerified){
+                setCurrentUser(user)
+                setUserInitializing(false)
+            }else{
+                setCurrentUser()
+                setUserInitializing(false)
+            }
+        });
+        return unsubscribe
     },[])
 
     if(userInitializing){

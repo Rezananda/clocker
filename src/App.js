@@ -8,6 +8,7 @@ import Account from './pages/Account/Account'
 import AddAttendace from './pages/AddAttendance/AddAttendace'
 import AddGroup from './pages/AddGroup/AddGroup'
 import DetailGroup from './pages/DetailGroup/DetailGroup'
+import ForgetPassword from './pages/ForgetPassword/ForgetPassword'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import Notifications from './pages/Notifications/Notifications'
@@ -24,6 +25,7 @@ const App = () => {
           <Route element={<PublicRoute/>}>
             <Route path="/login" element={<Login/>} />
             <Route path="/registration" element={<Registration/>} />
+            <Route path="/forget-password" element={<ForgetPassword/>} />
           </Route>
           <Route element={<PrivateRoute/>}>
             <Route path="/" element={<DashboardSectionWithNavbar><Home/></DashboardSectionWithNavbar>} />

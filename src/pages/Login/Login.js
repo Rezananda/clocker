@@ -17,7 +17,8 @@ const initialState = {
     password: "",
     showPassword: false,
     initialize: false,
-    alert: false
+    alert: false,
+    alertMessage: ""
 }
 
 const reducer = (state, action) => {
@@ -31,7 +32,7 @@ const reducer = (state, action) => {
         case "HANDLE INITIALIZE":
             return {...state, initialize: action.payload}
         case "HANDLE ALERT":
-            return {...state, alert: true}
+            return {...state, alert: true, alertMessage: action.payload }
         default:
             break;
     }
@@ -55,12 +56,12 @@ const Login = () => {
           }else{
                 dispatch({type: "HANDLE RESET FIELD"})
                 dispatch({type: "HANDLE INITIALIZE", payload: false})
-                dispatch({type: "HANDLE ALERT"})
+                dispatch({type: "HANDLE ALERT", payload: "Email belum diaktivasi."})
           }
         })
         .catch((error) => {
             dispatch({type: "HANDLE INITIALIZE", payload: false})
-            dispatch({type: "HANDLE ALERT"})
+            dispatch({type: "HANDLE ALERT", payload: error.code})
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorCode, errorMessage)
@@ -83,7 +84,7 @@ const Login = () => {
                     additionalClass="mt-2 mb-2" 
                     color="yellow" 
                     icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>} 
-                    text="Kamu belum aktivasi email"
+                    text={state.alertMessage}
                 />}
                 <div>
                     <LabelTypography textValue="Email"/>
@@ -106,12 +107,15 @@ const Login = () => {
                         </div>
                     </div>
                 </div>
-
-                <ButtonLink newProps="flex justify-end" linkTo={()=> navigate('/forget-password')} label="Lupa password?"/>
-                <ButtonFill disabled={validateForm()} additionalClass={validateForm() ? 'bg-blue-200 border-blue-200' : ""} handleClick={handleLogin} label="Login"/>
+                <ButtonFill disabled={validateForm()} additionalClass={validateForm() ? 'bg-blue-200 border-blue-200' : "bg-blue-500 border-blue-500"} handleClick={handleLogin} label="Login"/>
+                <div className='flex justify-center items-center'>
+                    <p>Belum punya akun? registrasi</p>&nbsp;
+                    <div className='flex items-center justify-center'>
+                        <ButtonLink linkTo={()=> navigate('/registration')} label="disini"/>    
+                    </div>
+                </div>
                 <div className='flex justify-center'>
-                <p>Belum punya akun? registrasi</p>&nbsp;
-                <ButtonLink linkTo={()=> navigate('/registration')} label="disini"/>
+                    <ButtonLink linkTo={()=> navigate('/forget-password')} label="Lupa password?"/> 
                 </div>
             </div>
         </div>

@@ -1,16 +1,16 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import AccountInformation from '../../components/AccountInformation/AccountInformation'
-import { AuthContext } from '../../context/AuthProvider/AuthProvider'
 import AttendanceInformation from '../../components/AttendanceInformation/AttendanceInformation'
 import GroupAttendanceInformation from '../../components/GroupAttendanceInformation/GroupAttendanceInformation'
+import useUserContext from '../../hooks/UseUserContext/UseUserContext'
 
 const Home = () => {
-    const authContext = useContext(AuthContext)
+    const userContext = useUserContext()
   return (
     <>
-      <AccountInformation displayName={authContext.currentUser.displayName} letter={authContext.currentUser.photoURL}/>
-      <AttendanceInformation uid={authContext.currentUser.uid}/>
-      <GroupAttendanceInformation uid={authContext.currentUser.uid}/>
+      <AccountInformation displayName={userContext.currentUser.displayName} letter={userContext.currentUser.photoURL}/>
+      <AttendanceInformation uid={userContext.currentUser.uid}/>
+      <GroupAttendanceInformation uid={userContext.currentUser.uid}/>
     </>
   )
 }
