@@ -4,7 +4,7 @@ import useUserContext from '../../../hooks/UseUserContext/UseUserContext'
 
 const PublicRoute = () => {
     const userContext = useUserContext()
-    if(userContext.currentUser){
+    if(userContext.currentUser&&userContext.currentUser.emailVerified){
         return <Navigate to={'/'} />
     }
     return <Outlet/>

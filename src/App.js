@@ -1,5 +1,4 @@
 import React from 'react'
-// import {BrowserRouter as Router, Redirect, Route} from "react-router-dom"
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom"
 import DashboardSectionWithNavbar from './components/DashboardSection/DashboardSectionWithNavbar'
 import DashboardSectionWithoutNavbar from './components/DashboardSection/DashboardSectionWithoutNavbar'
@@ -19,27 +18,27 @@ import PublicRoute from './utils/Route/PublicRoute/PublicRoute'
 
 const App = () => {
   return (
-    <Router>
-      <AuthProvider>
+    <AuthProvider>
+      <Router>
         <Routes>
-          <Route element={<PublicRoute/>}>
-            <Route path="/login" element={<Login/>} />
-            <Route path="/registration" element={<Registration/>} />
-            <Route path="/forget-password" element={<ForgetPassword/>} />
-          </Route>
-          <Route element={<PrivateRoute/>}>
-            <Route path="/" element={<DashboardSectionWithNavbar><Home/></DashboardSectionWithNavbar>} />
-            <Route path="/transactions" element={<DashboardSectionWithNavbar><Transactions/></DashboardSectionWithNavbar>}/>
-            <Route path="/notifications" element={<DashboardSectionWithNavbar> <Notifications/></DashboardSectionWithNavbar>}/>
-            <Route path="/profile" element={<DashboardSectionWithNavbar><Account/></DashboardSectionWithNavbar>} />
-            <Route path='/add-attendance' element={<DashboardSectionWithoutNavbar><AddAttendace/></DashboardSectionWithoutNavbar>}/>
-            <Route path='/add-group' element={<DashboardSectionWithoutNavbar><AddGroup/></DashboardSectionWithoutNavbar>}/>
-            <Route path='/detail-group' element={<DashboardSectionWithoutNavbar><DetailGroup/></DashboardSectionWithoutNavbar>}/>
-          </Route>
-          <Route path="*" element={<p>Page Not Found</p>}/>
+            <Route element={<PublicRoute/>}>
+              <Route path="/login" element={<Login/>} />
+              <Route path="/registration" element={<Registration/>} />
+              <Route path="/forget-password" element={<ForgetPassword/>} />
+            </Route>
+            <Route element={<PrivateRoute/>}>
+              <Route path="/" element={<DashboardSectionWithNavbar><Home/></DashboardSectionWithNavbar>} />
+              <Route path="/transactions" element={<DashboardSectionWithNavbar><Transactions/></DashboardSectionWithNavbar>}/>
+              <Route path="/notifications" element={<DashboardSectionWithNavbar> <Notifications/></DashboardSectionWithNavbar>}/>
+              <Route path="/profile" element={<DashboardSectionWithNavbar><Account/></DashboardSectionWithNavbar>} />
+              <Route path='/add-attendance' element={<DashboardSectionWithoutNavbar><AddAttendace/></DashboardSectionWithoutNavbar>}/>
+              <Route path='/add-group' element={<DashboardSectionWithoutNavbar><AddGroup/></DashboardSectionWithoutNavbar>}/>
+              <Route path='/detail-group' element={<DashboardSectionWithoutNavbar><DetailGroup/></DashboardSectionWithoutNavbar>}/>
+            </Route>
+            <Route path="*" element={<p>Page Not Found</p>}/>
         </Routes>
-      </AuthProvider>
-    </Router>
+      </Router>
+    </AuthProvider>
   )
 }
 

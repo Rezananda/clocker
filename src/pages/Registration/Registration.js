@@ -104,7 +104,6 @@ const Registration = () => {
 
         if(errors.length === 0){
             dispatch({type: "HANDLE INITIALIZE", payload: true})
-            handleStepRegistration('next')
             createUserWithEmailAndPassword(auth, state.email, state.password)
             .then((userCredential) => {
                 const user = userCredential.user;
@@ -123,8 +122,8 @@ const Registration = () => {
                     sendEmailVerification(user).then(()=> {
                         handleStepRegistration('next')
                         dispatch({type: "HANDLE RESET FIELD"})
+                        dispatch({type: "HANDLE INITIALIZE", payload: false})
                     })
-                    dispatch({type: "HANDLE INITIALIZE", payload: false})
                 })
             })
             .catch((error) => {
@@ -143,7 +142,7 @@ const Registration = () => {
 
   return (
     <>
-        <div className='flex justify-center min-h-screen bg-gray-50 md:items-center'>
+        <div className='flex justify-center min-h-screen bg-gray-100 md:items-center'>
             {(state.step === 1)? <StepInputData state={state} dispatch={dispatch} errors={errors} validateForm={validateForm()} handleKeyPress={handleKeyPress} handleRegister={handleRegister}/> : (state.step === 2)? <StepConfirmation/> : ""}
         </div>
         {state.initialize ? 

@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 const StepInputData = ({state, dispatch, errors, validateForm, handleKeyPress, handleRegister}) => {
     const navigate = useNavigate()
   return (
-    <div className='flex flex-col gap-2 w-full py-2 bg-white px-4 rounded-xl md:w-1/4'>
+    <div className='flex flex-col gap-4 w-full py-2 bg-white px-4 rounded-xl md:w-1/4'>
         <LargeTypography textValue="Registrasi Clocker" additionalClass="flex justify-center"/>
         {state.alert ? 
         <Alert 
@@ -30,7 +30,7 @@ const StepInputData = ({state, dispatch, errors, validateForm, handleKeyPress, h
         }
 
         <div>
-            <LabelTypography textValue="Nama Depan"/>
+            <LabelTypography textValue="Nama Depan*"/>
             <div className='relative'>
                 <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="text" name="firstName" value={state.firstName} placeholder="Maksimal 50 Karakter." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -46,7 +46,7 @@ const StepInputData = ({state, dispatch, errors, validateForm, handleKeyPress, h
             </div>
         </div>
         <div>
-            <LabelTypography textValue="Nama Belakang"/>
+            <LabelTypography textValue="Nama Belakang*"/>
             <div className='relative'>
                 <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="text" name="lastName" value={state.lastName} placeholder="Maksimal 50 Karakter." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -62,7 +62,7 @@ const StepInputData = ({state, dispatch, errors, validateForm, handleKeyPress, h
             </div>
         </div>
         <div>
-            <LabelTypography textValue="Email"/>
+            <LabelTypography textValue="Email*"/>
             <div className='relative'>
                 <Input  handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="email" name="email" value={state.email} placeholder="email@email.com" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -81,14 +81,14 @@ const StepInputData = ({state, dispatch, errors, validateForm, handleKeyPress, h
         </div>
         <div>
             <div className='flex items-center'>
-                <LabelTypography textValue="Password"/>
+                <LabelTypography textValue="Password*"/>
                 <div className='relative flex flex-col items-center'>
                     <ButtonIcon actionFunction={()=> dispatch({type: "HANDLE TOOLTIP", payload: !state.tooltip})} icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>}/>
                     {state.tooltip ?                   
                     <div className="absolute flex bottom-0 flex-col items-center mb-6">
-                        <span className="relative z-10 p-2 text-xs w-44 leading-none text-white bg-black shadow-lg">Password harus terdiri dari minimal 8 huruf, 1 angka, 1 huruf kapital dan symbol</span>
+                        <span className="relative z-10 p-2 text-xs w-44 leading-none text-white bg-black rounded-lg shadow-lg">Password harus terdiri dari minimal 8 huruf, 1 angka, 1 huruf kapital dan symbol</span>
                         <div className="w-3 h-3 -mt-2 rotate-45 bg-black"></div>
                     </div>
                     :
@@ -122,7 +122,7 @@ const StepInputData = ({state, dispatch, errors, validateForm, handleKeyPress, h
         </div>
 
         <div className='mb-4'>
-            <LabelTypography textValue="Konfirmasi Password"/>
+            <LabelTypography textValue="Konfirmasi Password*"/>
             <div className='relative'>
                 <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} handleKeyPress={handleKeyPress} type={state.showPasswordToggle2 ? 'text' : 'password'} name="confirmPassword" value={state.confirmPassword} placeholder="Konfirmasi Password." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">

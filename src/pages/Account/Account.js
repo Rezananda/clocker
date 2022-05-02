@@ -1,17 +1,20 @@
 import { signOut } from 'firebase/auth'
-import React from 'react'
+import React, { useState } from 'react'
 import { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import LetterAvatar from '../../components/LetterAvatar/LetterAvatar'
 import { AuthContext } from '../../context/AuthProvider/AuthProvider'
 import { auth } from '../../utils/Firebase/Firebase'
 
 const Account = () => {
     const user = useContext(AuthContext)
-    const navigate = useNavigate()
+    const [logout, setLogout] = useState(false)
     const handlelogout = () =>{
-        signOut(auth)
-        navigate('/login')
+      setLogout(true)
+      signOut(auth)
+    }
+    if(logout){
+      return <Navigate to={'/login'}/>
     }
   return (
     <div>

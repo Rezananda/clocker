@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import React, { useReducer, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useReducer } from 'react'
+import { useNavigate, Navigate } from 'react-router-dom'
 import ButtonFill from '../../components/Button/ButtonFill/ButtonFill'
 import ButtonLink from '../../components/Button/ButtonLink/ButtonLink'
 import Input from '../../components/Input/Input'
@@ -18,7 +18,8 @@ const initialState = {
     showPassword: false,
     initialize: false,
     alert: false,
-    alertMessage: ""
+    alertMessage: "",
+    isLogin: false
 }
 
 const reducer = (state, action) => {
@@ -33,6 +34,8 @@ const reducer = (state, action) => {
             return {...state, initialize: action.payload}
         case "HANDLE ALERT":
             return {...state, alert: true, alertMessage: action.payload }
+        case "HANDLE LOGIN":
+            return {...state, isLogin: action.payload }
         default:
             break;
     }
@@ -44,29 +47,35 @@ const Login = () => {
     const validateForm = () => {
         return validator.isEmpty(state.email) || validator.isEmpty(state.password)
       }
+      
 
     const handleLogin = () => {
         dispatch({type: "HANDLE INITIALIZE", payload: true})
         signInWithEmailAndPassword(auth, state.email, state.password)
         .then((userCredential) => {
           const user = userCredential.user;
-          if(user.emailVerified){
-                dispatch({type: "HANDLE INITIALIZE", payload: false})
-                navigate('/')
+          if(user&&user.emailVerified){
+                dispatch({type: "HANDLE LOGIN", payload: true})
           }else{
-                dispatch({type: "HANDLE RESET FIELD"})
-                dispatch({type: "HANDLE INITIALIZE", payload: false})
-                dispatch({type: "HANDLE ALERT", payload: "Email belum diaktivasi."})
+                dispatch({type: "HANDLE ALERT", payload: "Emailmu belum aktif."})
+                
           }
         })
         .catch((error) => {
+            if(error.code === 'auth/user-not-found'){
+                dispatch({type: "HANDLE ALERT", payload: 'User Tidak Ditemukan.'})
+            }else if(error.code === "auth/wrong-password"){
+                dispatch({type: "HANDLE ALERT", payload: 'Username/Password Salah'})
+            }else{
+                const errorCode = error.code;
+                dispatch({type: "HANDLE ALERT", payload: errorCode})
+            }
+        }).finally(() => {
             dispatch({type: "HANDLE INITIALIZE", payload: false})
-            dispatch({type: "HANDLE ALERT", payload: error.code})
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage)
-            dispatch({type: "HANDLE RESET FIELD"})
-        });
+        })
+    }
+    if(state.isLogin){
+        return <Navigate to={'/'}/>
     }
     const handleKeyPress = (event) => {
       if(event.key === 'Enter'){
@@ -113,7 +122,7 @@ const Login = () => {
                     <ButtonLink newProps={'ml-1'} linkTo={()=> navigate('/registration')} label="disini"/>    
                 </div>
                 <div className='flex justify-center'>
-                    <ButtonLink linkTo={()=> navigate('/forget-password')} label="Lupa password?"/> 
+                    <ButtonLink newProps={'text-sm'} linkTo={()=> navigate('/forget-password')} label="Lupa password?"/> 
                 </div>
             </div>
         </div>

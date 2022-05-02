@@ -10,16 +10,21 @@ const AuthProvider = ({children}) => {
     const[userInitializing, setUserInitializing] = useState(true)
 
     useEffect(()=> {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if(user&&user.emailVerified){
-                setCurrentUser(user)
-                setUserInitializing(false)
-            }else{
-                setCurrentUser()
-                setUserInitializing(false)
-            }
-        });
-        return unsubscribe
+        let isMounted = true;
+        if(isMounted){
+            onAuthStateChanged(auth, (user) => {
+                if(user){
+                    setCurrentUser(user)
+                    setUserInitializing(false)
+                }else{
+                    setCurrentUser()
+                    setUserInitializing(false)
+                }
+            });
+        }
+        return () => {
+            isMounted = false
+        }
     },[])
 
     if(userInitializing){
