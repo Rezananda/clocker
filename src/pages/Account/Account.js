@@ -4,12 +4,15 @@ import { useContext } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import LetterAvatar from '../../components/LetterAvatar/LetterAvatar'
 import { AuthContext } from '../../context/AuthProvider/AuthProvider'
+import useRouteContext from '../../hooks/UseRouteContext/UseRouteContext'
 import { auth } from '../../utils/Firebase/Firebase'
 
 const Account = () => {
     const user = useContext(AuthContext)
     const [logout, setLogout] = useState(false)
+    const {handleRoute} = useRouteContext()
     const handlelogout = () =>{
+      handleRoute(0)
       setLogout(true)
       signOut(auth)
     }

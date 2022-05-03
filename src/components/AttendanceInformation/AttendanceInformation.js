@@ -3,13 +3,18 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup';
 import UseCheckPersonalAttendance from '../../hooks/UseCheckPersonalAttendance/UseCheckPersonalAttendance';
+import useUserContext from '../../hooks/UseUserContext/UseUserContext';
 import Alert from '../Alert/Alert';
 import ButtonIcon from '../Button/ButtonIcon/ButtonIcon';
 import ButtonOutline from '../Button/ButtonOutline/ButtonOutline';
+import LoadingAttendanceInformation from '../LoadingPulse/LoadingAttendanceInformation';
 import SwipeClockIn from '../SwipeClockIn/SwipeClockIn';
+import LoadingAttendanceInformationClockInStatus from './LoadingAttendanceInformationClockInStatus';
 
-const AttendanceInformation = ({uid}) => {
-    const [initilaizingGroupInfo, groupInfo] = useCheckGroup(uid)
+const AttendanceInformation = () => {
+    const userContext = useUserContext()
+    const uid = userContext.currentUser.uid
+    const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
     const [initializePersonalAttendance, personalAttendance] = UseCheckPersonalAttendance(uid)
     const [dropDown, setDropDonw] = useState(false)
     const navigate = useNavigate()
@@ -17,7 +22,9 @@ const AttendanceInformation = ({uid}) => {
   return (
     <div className='px-4 mb-4'>
         <div className='w-full rounded bg-white flex flex-col bg-blue-500 p-4 gap-2 drop-shadow-md'>
-            {initilaizingGroupInfo? <p>Loading...</p> : 
+            {initilaizingGroupInfo? 
+            <LoadingAttendanceInformation/>
+            : 
             (groupInfo.status === "01") ? 
             <>
                 <div className='flex justify-between h-10 items-center'>
@@ -36,7 +43,7 @@ const AttendanceInformation = ({uid}) => {
                         </div>
                     </div>
                 </div>
-                {initializePersonalAttendance ? <p>Loading...</p>
+                {initializePersonalAttendance ? <LoadingAttendanceInformationClockInStatus/>
                 :
                 <div className='flex flex-col justify-center'>
                     {personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()) ? 
@@ -81,7 +88,7 @@ const AttendanceInformation = ({uid}) => {
             </>
             :
             <div className='flex flex-col'>
-                <Alert color="yellow" additionalClass="mb-4" icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>} text="Kamu Belum Memiliki Grup"/>
+                <Alert color="yellow" additionalClass="mb-4" icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>} text="Belum ada grup."/>
                 <ButtonOutline label="Tambah Grup" handleClick={() => navigate('/add-group')}/>
             </div>
             }

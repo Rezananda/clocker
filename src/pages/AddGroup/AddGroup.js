@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useReducer, useState } from 'react'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
 import InputGroupName from './AddGroup/InputGroupName'
 import ConfirmationAddGroup from './AddGroup/ConfirmationAddGroup'
@@ -12,37 +12,60 @@ import ResultJoinGroup from './JoinGroup/ResultJoinGroup'
 import Stepper from '../../components/Stepper/Stepper'
 import { useNavigate } from 'react-router-dom'
 
+const initialState = {
+  tab: 1,
+  stepAddGroup: 1,
+  stepJoinGroup: 1,
+  groupName:"",
+  loadingSaveGroup: false,
+  loadingJoinGroup: false,
+  groupId: "",
+  groupCode: "",
+  groupCodeData: {},
+  initializingGroupCodeData: false
+} 
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "HANDLE TAB":
+      return {...state, tab: action.payload}
+    case "HANDLE STEP ADD GROUP":
+      return {...state, stepAddGroup: action.payload}
+    case "HANDLE STEP JOIN GROUP":
+      return {...state, stepJoinGroup: action.payload}
+    case "HANDLE GROUP NAME":
+      return {...state, groupName: action.payload}
+    case "HANDLE GROUP ID":
+      return {...state, groupId: action.payload}
+    case "HANDLE GROUP CODE":
+      return {...state, groupCodeData: action.payload}
+    case "HANDLE GROUP DATA":
+      return {...state, groupCode: action.payload}
+    case "HANDLE LOADING SAVE GROUP":
+      return {...state, loadingSaveGroup: action.payload}
+    case "HANDLE LOADING JOIN GROUP":
+      return {...state, loadingJoinGroup: action.payload}
+    case "HANDLE LOADING GROUP CODE DATA":
+      return {...state, initializingGroupCodeData: action.payload}
+    default:
+      break;
+  }
+}
+
 const AddGroup = () => {
 
     const user = useContext(AuthContext)
     const navigate = useNavigate()
-    // tab state
-    const [tab, setTab] = useState(1)
-    // stepper
-    const [stepAddGroup, setStepAddGroup] = useState(1)
-    const [stepJoinGroup, setStepJoinGroup] = useState(1)
 
-    const [groupName, setGroupName] = useState("")
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     const [groupStatus, setGroupStatus] = useState([])
 
-    const [loadingSaveGroup, setLoadingSaveGroup] = useState(false)
-    
-    const [loadingJoinGroup, setLoadingJoinGroup] = useState(false)
-
-    const [groupId, setGroupId] = useState("")
-
-    const [groupCode, setGroupCode] = useState("")
-
-    const [groupCodeData, setGroupCodeData] = useState({})
-
-    const [initializingGroupCodeData, setInitializingGroupCodeData] = useState(false)
-
     function handleStepAddGroup(statusStepAddGroup){
       if(statusStepAddGroup === "prev"){
-          setStepAddGroup(stepAddGroup - 1)
+          dispatch({type: 'HANDLE STEP ADD GROUP', payload: state.stepAddGroup - 1})
       }else if(statusStepAddGroup === "next"){
-        setStepAddGroup(stepAddGroup + 1)
+          dispatch({type: 'HANDLE STEP ADD GROUP', payload: state.stepAddGroup + 1})
       }else{
           console.log('error step')
       }
@@ -50,25 +73,25 @@ const AddGroup = () => {
 
     function handleStepJoinGroup(statusStepJoinGroup){
       if(statusStepJoinGroup === "prev"){
-          setStepJoinGroup(stepJoinGroup - 1)
+          dispatch({type: "HANDLE STEP JOIN GROUP", payload: state.stepJoinGroup - 1})
       }else if(statusStepJoinGroup === "next"){
-        setStepJoinGroup(stepJoinGroup + 1)
+          dispatch({type: "HANDLE STEP JOIN GROUP", payload: state.stepJoinGroup + 1})
       }else{
           console.log('error step')
       }
     }
 
     const handleCheckCodeGroup = async () => {
-      setInitializingGroupCodeData(true)
-      const docRefGetGroup = doc(db, "groupInformation", groupCode);
+      dispatch({type: "HANDLE LOADING GROUP CODE DATA", payload: true})
+      const docRefGetGroup = doc(db, "groupInformation", state.groupCode);
       const docSnapGetGroup = await getDoc(docRefGetGroup)
       if(docSnapGetGroup.exists()){
-          setGroupCodeData(docSnapGetGroup.data()) 
-          setInitializingGroupCodeData(false)
+          dispatch({type: "HANDLE GROUP CODE", payload: docSnapGetGroup.data()})
+          dispatch({type: "HANDLE LOADING GROUP CODE DATA", payload: false})
           handleStepJoinGroup('next')
       }else{
-          setInitializingGroupCodeData(false)
-          setGroupCodeData(false)
+        dispatch({type: "HANDLE LOADING GROUP CODE DATA", payload: false})
+          dispatch({type: "HANDLE GROUP CODE", payload: false})
       }
     }
 
@@ -81,10 +104,10 @@ const AddGroup = () => {
     };
 
     const handleAddGroup = async () => {
-      setLoadingSaveGroup(true)
+      dispatch({type: "HANDLE LOADING SAVE GROUP", payload: true})
       try{
         const docRef = await addDoc(collection(db, "groupInformation"), {
-          groupName: groupName,
+          groupName: state.groupName,
           groupOwnerName: user.currentUser.displayName,
           groupOwnerId: user.currentUser.uid,
           groupMember: [
@@ -100,23 +123,23 @@ const AddGroup = () => {
           groupStatus: groupStatus,
           timestamps: serverTimestamp()
         })
-        setGroupId(docRef.id)
+        dispatch({type: "HANDLE GROUP ID", payload: docRef.id})
         const personalRef = doc(db, "users", user.currentUser.uid)
         setDoc(personalRef, {group: [docRef.id]}, {merge: true})
         handleStepAddGroup('next')
-        setLoadingSaveGroup(false)
+        dispatch({type: "HANDLE LOADING SAVE GROUP", payload: false})
       }catch(e){
         console.log(e)
         console.log('gagal')
-        setLoadingSaveGroup(false)
+        dispatch({type: "HANDLE LOADING SAVE GROUP", payload: false})
       }
     }
 
     const handleJoinGroup = async () => {
-      setLoadingJoinGroup(true)
+      dispatch({type: "HANDLE LOADING JOIN GROUP", payload: true})
       try{
         const batch = writeBatch(db)
-        const groupInformationRef = doc(db, "groupInformation", groupCode)
+        const groupInformationRef = doc(db, "groupInformation", state.groupCode)
         batch.update(groupInformationRef, {
           groupMember: arrayUnion({
             status: '02',
@@ -147,10 +170,10 @@ const AddGroup = () => {
         })
         await batch.commit()
         handleStepJoinGroup('next')
-        setLoadingJoinGroup(false)
+        dispatch({type: "HANDLE LOADING JOIN GROUP", payload: false})
       }catch(e){
         console.log(e)
-        setLoadingJoinGroup(false)
+        dispatch({type: "HANDLE LOADING JOIN GROUP", payload: false})
       }
     }
 
@@ -158,29 +181,31 @@ const AddGroup = () => {
     <>
         <div className="mb-2 bg-white drop-shadow-md">
             <div className='flex justify-start items-center p-2'>
-              <ButtonIcon 
-              actionFunction={()=> navigate(-1)} 
-              icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-            </svg>}
-              />
-              <p className='text-md font-bold text-blue-500 flex ml-1'>Tambah Grup</p>
+                <ButtonIcon 
+                actionFunction={()=> navigate(-1)} 
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+                </svg>}
+                />
+                <p className='text-md font-bold text-blue-500 flex ml-1'>Tambah Grup</p>
             </div>
             <ul className="flex mb-4">
-                <li className="w-full"><button onClick={()=> setTab(1)} className={tab === 1 ? "p-2 w-full text-blue-500 border-b-4 border-blue-500" : "p-2 w-full text-gray-500 rounded-t-lg border-b-2 border-transparent"}>Gabung Grup</button></li>
-                <li className="w-full"><button onClick={()=> setTab(2)} className={tab === 2 ? "p-2 w-full text-blue-500 border-b-4 border-blue-500" : "p-2 w-full text-gray-500 rounded-t-lg border-b-2 border-transparent"}>Buat Grup</button></li>
+                <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 1})} className={state.tab === 1 ? "p-2 w-full text-blue-500 border-b-4 border-blue-500" : "p-2 w-full text-gray-500 rounded-t-lg border-b-2 border-transparent"}>Gabung Grup</button></li>
+                <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 2})} className={state.tab === 2 ? "p-2 w-full text-blue-500 border-b-4 border-blue-500" : "p-2 w-full text-gray-500 rounded-t-lg border-b-2 border-transparent"}>Buat Grup</button></li>
             </ul>
         </div>
-        <div className={tab === 1 ? "block px-4" : "hidden"}>
+
+        <div className={state.tab === 1 ? "block px-4" : "hidden"}>
           <div className='bg-white rounded-lg p-4'>
-            <Stepper stepAddGroup={stepJoinGroup}/>
-            {(stepJoinGroup === 1) ? <InputGroupCode setGroupCode={setGroupCode} groupCode={groupCode} handleCheckCodeGroup={handleCheckCodeGroup} groupCodeData={groupCodeData} initializingGroupCodeData={initializingGroupCodeData} /> : (stepJoinGroup === 2) ? <ConfirmationJoinGroup groupCodeData={groupCodeData} handleJoinGroup={handleJoinGroup} loadingJoinGroup={loadingJoinGroup} handleStepJoinGroup={handleStepJoinGroup} /> : (stepJoinGroup === 3 ) ? <ResultJoinGroup/> : <></>}
+            <Stepper stepAddGroup={state.stepJoinGroup}/>
+            {(state.stepJoinGroup === 1) ? <InputGroupCode setGroupCode={(e) => dispatch({type: "HANDLE GROUP CODE", payload: e.target.value})} groupCode={state.groupCode} handleCheckCodeGroup={handleCheckCodeGroup} groupCodeData={state.groupCodeData} initializingGroupCodeData={state.initializingGroupCodeData} /> : (state.stepJoinGroup === 2) ? <ConfirmationJoinGroup groupCodeData={state.groupCodeData} handleJoinGroup={handleJoinGroup} loadingJoinGroup={state.loadingJoinGroup} handleStepJoinGroup={handleStepJoinGroup} /> : (state.stepJoinGroup === 3 ) ? <ResultJoinGroup/> : <></>}
           </div>
         </div>
-        <div className={tab === 2 ? "block px-4 " : "hidden"}>
+
+        <div className={state.tab === 2 ? "block px-4 " : "hidden"}>
           <div className='bg-white rounded-lg p-4'>
-            <Stepper stepAddGroup={stepAddGroup}/>
-            {(stepAddGroup === 1) ? <InputGroupName handleStepAddGroup={handleStepAddGroup} setGroupName={(e) => setGroupName(e.target.value)} handleGroupStatus={handleGroupStatus} groupName={groupName} groupStatus={groupStatus}/> : (stepAddGroup === 2) ?  <ConfirmationAddGroup groupName={groupName} groupStatus={groupStatus} handleAddGroup={handleAddGroup} loadingSaveGroup={loadingSaveGroup} handleStepAddGroup={handleStepAddGroup}/> : (stepAddGroup === 3) ? <ResultAddGroup groupId={groupId}/> : <></>}
+            <Stepper stepAddGroup={state.stepAddGroup}/>
+            {(state.stepAddGroup === 1) ? <InputGroupName handleStepAddGroup={handleStepAddGroup} setGroupName={(e) => dispatch({type: "HANDLE GROUP NAME", payload: e.target.value})} handleGroupStatus={handleGroupStatus} groupName={state.groupName} groupStatus={groupStatus}/> : (state.stepAddGroup === 2) ?  <ConfirmationAddGroup groupName={state.groupName} groupStatus={groupStatus} handleAddGroup={handleAddGroup} loadingSaveGroup={state.loadingSaveGroup} handleStepAddGroup={handleStepAddGroup}/> : (state.stepAddGroup === 3) ? <ResultAddGroup groupId={state.groupId}/> : <></>}
           </div>
         </div>
     </>

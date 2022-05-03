@@ -1,10 +1,14 @@
-import { doc, getDoc, onSnapshot } from 'firebase/firestore'
+import { doc, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { db } from '../../utils/Firebase/Firebase'
+import useUserContext from '../UseUserContext/UseUserContext'
 
-const useCheckGroup = (uid) => {
+const useCheckGroup = () => {
+    const userContext = useUserContext()
+    const uid = userContext.currentUser.uid
     const [initilaizingGroupInfo, setInitializingGroupInfo] = useState(true)
     const [groupInfo, setGroupInfo] = useState()
+
     const checkGroup = async() =>{
         try{
             const unsubGetUser = onSnapshot(doc(db, 'users', uid), (docAccountInfo)=> {

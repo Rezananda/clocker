@@ -1,6 +1,5 @@
 import React from 'react'
 import ButtonFill from '../../../components/Button/ButtonFill/ButtonFill'
-import ButtonOutline from '../../../components/Button/ButtonOutline/ButtonOutline'
 import Input from '../../../components/Input/Input'
 import LabelTypography from '../../../components/Typography/LabelTypography'
 import validator from 'validator'
@@ -32,29 +31,26 @@ const InputGroupName = ({handleStepAddGroup, handleGroupStatus, setGroupName, gr
           <ul className='flex flex-col gap-1'>
               <li className='flex items-center justify-between w-full'>
                   <span>Work From Home (WFH)</span>
-                  <input onChange={handleGroupStatus} type="checkbox" className='w-4 h-4 text-indigo-500' name='wfh' value="wfh" checked={groupStatus.includes('wfh')}/>
+                  <input onChange={handleGroupStatus} type="checkbox" className='w-4 h-4 text-indigo-500' name='WFH' value="WFH" checked={groupStatus.includes('WFH')}/>
               </li>
-              <div className='border-t border-gray-300'></div>
 
               <li className='flex items-center justify-between w-full'>
                   <span>Work From Office (WFO)</span>
-                  <input onChange={handleGroupStatus} type="checkbox" className='w-4 h-4 text-indigo-500' name='wfo' value="wfo" checked={groupStatus.includes('wfo')}/>
+                  <input onChange={handleGroupStatus} type="checkbox" className='w-4 h-4 text-indigo-500' name='WFO' value="WFO" checked={groupStatus.includes('WFO')}/>
               </li>
-              <div className='border-t border-gray-300'></div>
 
               <li className='flex items-center justify-between w-full'>
                   <span>Sakit</span>
-                  <input onChange={handleGroupStatus} type="checkbox" className='w-4 h-4 text-indigo-500' name='sakit' value="sakit" checked={groupStatus.includes('sakit')}/>
+                  <input onChange={handleGroupStatus} type="checkbox" className='w-4 h-4 text-indigo-500' name='Sakit' value="Sakit" checked={groupStatus.includes('Sakit')}/>
               </li>
-              <div className='border-t border-gray-300'></div>
               
               <li className='flex items-center justify-between w-full'>
                   <span>Cuti</span>
-                  <input onChange={handleGroupStatus} type="checkbox" className='w-4 h-4 text-indigo-500' name='cuti' value="cuti" checked={groupStatus.includes('cuti')}/>
+                  <input onChange={handleGroupStatus} type="checkbox" className='w-4 h-4 text-indigo-500' name='Cuti' value="Cuti" checked={groupStatus.includes('Cuti')}/>
               </li>
           </ul>
         </div>
-        <ButtonFill label="Lanjut" handleClick={() => handleStepAddGroup('next')} disabled={validateForm()} additionalClass={validateForm() ? 'bg-blue-200 border-blue-200' : ""} />
+        <ButtonFill label="Lanjut" handleClick={() => handleStepAddGroup('next')} disabled={validateForm()} additionalClass={validateForm() ? 'bg-blue-200 border-blue-200' : "bg-blue-500 border-blue-500"} />
       </div>
   )
 }

@@ -4,7 +4,6 @@ import useRouteContext from '../../hooks/UseRouteContext/UseRouteContext'
 
 const Navbar = () => {
     const {navbar, handleRoute} = useRouteContext()
-    console.log(navbar)
 
   return (
     <div className="relative z-10">

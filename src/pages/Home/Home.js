@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <>
       <AccountInformation/>
-      <AttendanceInformation uid={userContext.currentUser.uid}/>
+      <AttendanceInformation/>
       <GroupAttendanceInformation uid={userContext.currentUser.uid}/>
     </>
   )

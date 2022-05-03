@@ -7,6 +7,7 @@ import Modal from '../../components/Modal/Modal'
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading'
 import { AuthContext } from '../../context/AuthProvider/AuthProvider'
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup'
+import useLetterAvatar from '../../hooks/UseLetterAvatar/UseLetterAvatar'
 import { db } from '../../utils/Firebase/Firebase'
 
 const DetailGroup = () => {
@@ -89,7 +90,8 @@ const DetailGroup = () => {
         {initilaizingGroupInfo? <SpinnerLoading/> : 
         <div>
             <div className='flex flex-col gap-1 items-center p-10'>
-                <LetterAvatar letter={groupInfo.data.groupName.split(" ").shift().charAt(0) + groupInfo.data.groupName.split(" ").pop().charAt(0)}/>
+                {console.log(groupInfo.data.groupName.split(" ").length)}
+                <LetterAvatar letter={groupInfo.data.groupName.split(" ").length > 1? groupInfo.data.groupName.split(" ").shift().charAt(0) + groupInfo.data.groupName.split(" ").pop().charAt(0) : groupInfo.data.groupName.split(" ").shift().charAt(0)}/>
                 <p className='font-bold'>{groupInfo.data.groupName}</p>
                 <div className='px-4 flex justify-center'>
                     <div className='flex w-fit p-2 items-center gap-2 bg-white rounded-lg'>

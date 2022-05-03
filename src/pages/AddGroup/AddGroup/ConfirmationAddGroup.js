@@ -19,7 +19,7 @@ const ConfirmationAddGroup = ({ groupName, groupStatus, handleAddGroup, loadingS
                 </li>
             </ul>
             <div className='flex flex-col gap-4'>
-              <ButtonFill label="Tambah" handleClick={handleAddGroup}/>
+              <ButtonFill label="Tambah" handleClick={handleAddGroup} additionalClass={'bg-blue-500 border-blue-500'}/>
               <ButtonOutline label="Kembali" handleClick={() => handleStepAddGroup('prev')}/>
             </div>
       </div>
