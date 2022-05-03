@@ -1,32 +1,53 @@
 import { arrayRemove, arrayUnion, deleteField, doc, updateDoc} from 'firebase/firestore'
-import React, { useContext, useState } from 'react'
+import React, { useReducer, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
 import LetterAvatar from '../../components/LetterAvatar/LetterAvatar'
 import Modal from '../../components/Modal/Modal'
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading'
-import { AuthContext } from '../../context/AuthProvider/AuthProvider'
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup'
-import useLetterAvatar from '../../hooks/UseLetterAvatar/UseLetterAvatar'
 import { db } from '../../utils/Firebase/Firebase'
 
+const initialState = {
+    initializeChangeStatus: false,
+    initializeChangeRoleUser: false,
+    showModal: false,
+    showModalDeleteUser: false,
+    dropDown: false
+}
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "LOADING CHANGE STATUS":
+            return {...state, initializeChangeStatus: action.payload}
+        case "LOADING CHANGE ROLE USER":
+            return {...state, initializeChangeRoleUser: action.payload}
+        case "HANDLE SHOW MODAL":
+            return {...state, showModal: action.payload}
+        case "HANDLE SHOW MODAL DELETE USER":
+            return {...state, showModalDeleteUser: action.payload}
+        case "HANDLE DROPDOWN":
+            return {...state, dropDown: action.payload}
+        default:
+            break;
+    }
+}
+
 const DetailGroup = () => {
-    const user = useContext(AuthContext)
     const navgiate = useNavigate()
-    const [initilaizingGroupInfo, groupInfo] = useCheckGroup(user.currentUser.uid)
-    const [initializeChangeStatus, setInitializeChangeStatus] = useState(false)
-    const [initializeChangeRoleUser, setInitializeChangeRoleUser] = useState(false)
-    const [showModal, setShowModal] = useState(false)
-    const [showModalDeleteUser, setShowModalDeleteUser] = useState(false)
-    const [dropDown, setDropDown] = useState(false)
+    const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
+
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    // const [dropDown, setDropDown] = useState(false)
 
     const handleCopy = () => {
         navigator.clipboard.writeText(groupInfo.id)
     }
 
     const handleChangeStatus = async(userId, displayName, photoURL, status, roleUser, groupId) => {
-        setShowModal(false)
-        setInitializeChangeStatus(true)
+        dispatch({type: "HANDLE SHOW MODAL", payload: false})
+        dispatch({type: "LOADING CHANGE STATUS", payload: true})
         const memberRef = doc(db, 'groupInformation', groupId)
         await updateDoc(memberRef, {
             groupMember: arrayRemove({
@@ -46,13 +67,13 @@ const DetailGroup = () => {
                 userId: userId
             })
         })
-        setInitializeChangeStatus(false)
+        dispatch({type: "LOADING CHANGE STATUS", payload: false})
     }
 
     const handleDeleteUser =  async(userId, displayName, photoURL, status, roleUser, groupId) => {
-        setDropDown(false)
-        setShowModalDeleteUser(false)
-        setInitializeChangeRoleUser(true)
+        dispatch({type: "HANDLE DROPDOWN", payload: false})
+        dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: false})
+        dispatch({type: "LOADING CHANGE ROLE USER", payload: true})
         const memberRef = doc(db, 'groupInformation', groupId)
         await updateDoc(memberRef, {
             groupMember: arrayRemove({
@@ -69,7 +90,7 @@ const DetailGroup = () => {
             group: deleteField()
         })
 
-        setInitializeChangeRoleUser(false)
+        dispatch({type: "LOADING CHANGE ROLE USER", payload: false})
     }
 
   return (
@@ -82,9 +103,6 @@ const DetailGroup = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                 </svg>}/>
                 <p className='text-md font-bold text-blue-500 flex ml-1'>Informasi Grup</p>
-            </div>
-            <div className='basis-1/2 flex justify-end'>
-                {/* <ButtonIcon icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>}/> */}
             </div>
         </nav>
         {initilaizingGroupInfo? <SpinnerLoading/> : 
@@ -129,12 +147,12 @@ const DetailGroup = () => {
                                             :
                                         (groupInfo.roleUser === '01' && val.status === '02' && val.roleUser === '02') ?
                                         <>                                    
-                                            <span className='bg-blue-100 rounded-lg cursor-pointer' onClick={() => setShowModalDeleteUser(true)}>
+                                            <span className='bg-blue-100 rounded-lg cursor-pointer' onClick={() => dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: true})}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                                                 </svg>
                                             </span>
-                                            <span className='bg-blue-100 rounded-lg cursor-pointer' onClick={() => setShowModal(true)}>
+                                            <span className='bg-blue-100 rounded-lg cursor-pointer' onClick={() => dispatch({type: "HANDLE SHOW MODAL", payload: true})}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                                 </svg>
@@ -143,10 +161,10 @@ const DetailGroup = () => {
                                         :
                                         (groupInfo.roleUser === '01' && val.status === '01' && val.roleUser === '02') ?
                                         <div>
-                                            <ButtonIcon actionFunction={() => setDropDown(dropDown => !dropDown)} icon={<svg className="h-6 w-6 text-blue-500"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="1" />  <circle cx="12" cy="19" r="1" />  <circle cx="12" cy="5" r="1" /></svg>}/>
+                                            <ButtonIcon actionFunction={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} icon={<svg className="h-6 w-6 text-blue-500"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="1" />  <circle cx="12" cy="19" r="1" />  <circle cx="12" cy="5" r="1" /></svg>}/>
                                             <div className='flex justify-end'>                            
-                                                <ul className={`divide-y text-gray-700 absolute z-40 bg-white rounded px-4 py-2 shadow-md ${dropDown? 'block' : 'hidden'} `}>
-                                                    <li onClick={() => setShowModalDeleteUser(showModalDeleteUser => !showModalDeleteUser)} className="text-center cursor-pointer">Hapus User</li> 
+                                                <ul className={`divide-y text-gray-700 absolute z-40 bg-white rounded px-4 py-2 shadow-md ${state.dropDown? 'block' : 'hidden'} `}>
+                                                    <li onClick={() => dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser})} className="text-center cursor-pointer">Hapus User</li> 
                                                 </ul>
                                             </div>
 
@@ -156,13 +174,13 @@ const DetailGroup = () => {
                                         }
                                     </div>
                                 </div>
-                                {showModal ? 
-                                    <Modal text={`Apakah kamu ingin menyetujui user ${val.displayName}?`} handleAction={() => handleChangeStatus(val.userId, val.displayName, val.photoURL, val.status, val.roleUser, groupInfo.id)} handleClose={() => setShowModal(false)} initializing={initializeChangeStatus}/>
+                                {state.showModal ? 
+                                    <Modal text={`Apakah kamu ingin menyetujui user ${val.displayName}?`} handleAction={() => handleChangeStatus(val.userId, val.displayName, val.photoURL, val.status, val.roleUser, groupInfo.id)} handleClose={() => dispatch({type: "HANDLE SHOW MODAL", payload: false})} initializing={state.initializeChangeStatus}/>
                                     :
                                     ""
                                 }
-                                {showModalDeleteUser ? 
-                                    <Modal text={`Apakah kamu ingin menghapus user ${val.displayName}?`} handleAction={() => handleDeleteUser(val.userId, val.displayName, val.photoURL, val.status, val.roleUser, groupInfo.id)} handleClose={() => {setShowModalDeleteUser(false); setDropDown(false)}} initializing={initializeChangeRoleUser}/>
+                                {state.showModalDeleteUser ? 
+                                    <Modal text={`Apakah kamu ingin menghapus user ${val.displayName}?`} handleAction={() => handleDeleteUser(val.userId, val.displayName, val.photoURL, val.status, val.roleUser, groupInfo.id)} handleClose={() => {dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: false}); dispatch({type: "HANDLE DROPDOWN", payload: false})}} initializing={state.initializeChangeRoleUser}/>
                                     :
                                     ""
                                 }
