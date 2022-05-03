@@ -12,7 +12,7 @@ const ConfirmationJoinGroup = ({groupCodeData, handleJoinGroup, loadingJoinGroup
             <div className='border-t border-gray-300'></div>
             <li>Pemilik Grup: <span className='font-bold'>{groupCodeData.groupOwnerName}</span></li>
         </ul>
-        <ButtonFill label="Gabung Grup" handleClick={handleJoinGroup}/>
+        <ButtonFill additionalClass={'bg-blue-500 border-blue-500'} label="Gabung Grup" handleClick={handleJoinGroup}/>
         <ButtonOutline label="Kembali" handleClick={() => handleStepJoinGroup('prev')}/>
     </div>
     {loadingJoinGroup && <SpinnerLoading/>}

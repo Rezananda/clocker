@@ -37,9 +37,9 @@ const reducer = (state, action) => {
       return {...state, groupName: action.payload}
     case "HANDLE GROUP ID":
       return {...state, groupId: action.payload}
-    case "HANDLE GROUP CODE":
-      return {...state, groupCodeData: action.payload}
     case "HANDLE GROUP DATA":
+      return {...state, groupCodeData: action.payload}
+    case "HANDLE GROUP CODE":
       return {...state, groupCode: action.payload}
     case "HANDLE LOADING SAVE GROUP":
       return {...state, loadingSaveGroup: action.payload}
@@ -86,12 +86,12 @@ const AddGroup = () => {
       const docRefGetGroup = doc(db, "groupInformation", state.groupCode);
       const docSnapGetGroup = await getDoc(docRefGetGroup)
       if(docSnapGetGroup.exists()){
-          dispatch({type: "HANDLE GROUP CODE", payload: docSnapGetGroup.data()})
+          dispatch({type: "HANDLE GROUP DATA", payload: docSnapGetGroup.data()})
           dispatch({type: "HANDLE LOADING GROUP CODE DATA", payload: false})
           handleStepJoinGroup('next')
       }else{
-        dispatch({type: "HANDLE LOADING GROUP CODE DATA", payload: false})
-          dispatch({type: "HANDLE GROUP CODE", payload: false})
+          dispatch({type: "HANDLE LOADING GROUP CODE DATA", payload: false})
+          dispatch({type: "HANDLE GROUP DATA", payload: false})
       }
     }
 
@@ -198,7 +198,7 @@ const AddGroup = () => {
         <div className={state.tab === 1 ? "block px-4" : "hidden"}>
           <div className='bg-white rounded-lg p-4'>
             <Stepper stepAddGroup={state.stepJoinGroup}/>
-            {(state.stepJoinGroup === 1) ? <InputGroupCode setGroupCode={(e) => dispatch({type: "HANDLE GROUP CODE", payload: e.target.value})} groupCode={state.groupCode} handleCheckCodeGroup={handleCheckCodeGroup} groupCodeData={state.groupCodeData} initializingGroupCodeData={state.initializingGroupCodeData} /> : (state.stepJoinGroup === 2) ? <ConfirmationJoinGroup groupCodeData={state.groupCodeData} handleJoinGroup={handleJoinGroup} loadingJoinGroup={state.loadingJoinGroup} handleStepJoinGroup={handleStepJoinGroup} /> : (state.stepJoinGroup === 3 ) ? <ResultJoinGroup/> : <></>}
+            {(state.stepJoinGroup === 1) ? <InputGroupCode setGroupCode={(e) => dispatch({type: "HANDLE GROUP CODE", payload: e.target.value})} groupCode={state.groupCode} handleCheckCodeGroup={handleCheckCodeGroup} groupCodeData={state.groupCodeData} initializingGroupCodeData={state.initializingGroupCodeData} /> : (state.stepJoinGroup === 2) ? <ConfirmationJoinGroup groupCodeData={state.groupCodeData} handleJoinGroup={handleJoinGroup} loadingJoinGroup={state.loadingJoinGroup} handleStepJoinGroup={handleStepJoinGroup} /> : (state.stepJoinGroup === 3 ) ? <ResultJoinGroup groupCodeData={state.groupCodeData}/> : <></>}
           </div>
         </div>
 
