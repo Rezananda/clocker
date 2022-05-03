@@ -1,18 +1,27 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import useRouteContext from '../../hooks/UseRouteContext/UseRouteContext'
+import useUserContext from '../../hooks/UseUserContext/UseUserContext'
 import LetterAvatar from '../LetterAvatar/LetterAvatar'
 
-const AccountInformation = ({displayName, letter}) => {  
+const AccountInformation = () => {  
+  const userContext = useUserContext()
+  const displayName = userContext.currentUser.displayName.split(' ')[0]
+  const letter = userContext.currentUser.photoURL
+
+  const {handleRoute} = useRouteContext()
+
   return (
-    <div className='flex w-full px-4 py-2 bg-white mb-4 rounded-b-2xl items-center justify-between'>
-      <div className=''>
-        <div className='flex items-center'>
-          <p className=''>Hello </p>
-          <span className='ml-1 text-lg' role="img" aria-label="sheep">👋</span>
-        </div>
-          <p className='text-lg font-bold'>{displayName} </p>
+    <div className='flex w-full p-4 bg-white mb-4 rounded-b-2xl items-center justify-between'>
+      <div className='flex items-center'>
+        <p className='text-xl'>Halo,</p>
+        <p className='ml-1 text-xl font-bold'>{displayName} </p>
+        <span className='ml-1 text-lg' role="img" aria-label="sheep">👋</span>
       </div>
       <div>
-        <LetterAvatar letter={letter}/>
+        <Link to={'/profile'} onClick={() => handleRoute(3)}>
+          <LetterAvatar letter={letter}/>
+        </Link>
       </div>
     </div>
   )

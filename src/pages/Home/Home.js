@@ -8,7 +8,7 @@ const Home = () => {
     const userContext = useUserContext()
   return (
     <>
-      <AccountInformation displayName={userContext.currentUser.displayName} letter={userContext.currentUser.photoURL}/>
+      <AccountInformation/>
       <AttendanceInformation uid={userContext.currentUser.uid}/>
       <GroupAttendanceInformation uid={userContext.currentUser.uid}/>
     </>

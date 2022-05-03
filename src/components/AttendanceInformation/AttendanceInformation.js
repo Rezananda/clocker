@@ -6,8 +6,6 @@ import UseCheckPersonalAttendance from '../../hooks/UseCheckPersonalAttendance/U
 import Alert from '../Alert/Alert';
 import ButtonIcon from '../Button/ButtonIcon/ButtonIcon';
 import ButtonOutline from '../Button/ButtonOutline/ButtonOutline';
-
-// Import Swiper styles
 import SwipeClockIn from '../SwipeClockIn/SwipeClockIn';
 
 const AttendanceInformation = ({uid}) => {
