@@ -22,7 +22,9 @@ const initialState = {
   groupId: "",
   groupCode: "",
   groupCodeData: {},
-  initializingGroupCodeData: false
+  initializingGroupCodeData: false,
+  error: "",
+  errorMessage: ""
 } 
 
 const reducer = (state, action) => {
@@ -47,6 +49,10 @@ const reducer = (state, action) => {
       return {...state, loadingJoinGroup: action.payload}
     case "HANDLE LOADING GROUP CODE DATA":
       return {...state, initializingGroupCodeData: action.payload}
+    case "HANDLE STATUS":
+      return {...state, initializingGroupCodeData: action.payload}
+    case "HANDLE ERROR":
+      return {...state, error: true, errorMessage: action.payload}
     default:
       break;
   }
@@ -128,9 +134,8 @@ const AddGroup = () => {
         setDoc(personalRef, {group: [docRef.id]}, {merge: true})
         handleStepAddGroup('next')
         dispatch({type: "HANDLE LOADING SAVE GROUP", payload: false})
-      }catch(e){
-        console.log(e)
-        console.log('gagal')
+      }catch(error){
+        dispatch({type: "HANDLE ERROR", payload: 'Terjadi kesalahanan'})
         dispatch({type: "HANDLE LOADING SAVE GROUP", payload: false})
       }
     }
@@ -173,6 +178,7 @@ const AddGroup = () => {
         dispatch({type: "HANDLE LOADING JOIN GROUP", payload: false})
       }catch(e){
         console.log(e)
+        dispatch({type: "HANDLE ERROR", payload: 'Terjadi kesalahanan'})
         dispatch({type: "HANDLE LOADING JOIN GROUP", payload: false})
       }
     }
@@ -198,14 +204,14 @@ const AddGroup = () => {
         <div className={state.tab === 1 ? "block px-4" : "hidden"}>
           <div className='bg-white rounded-lg p-4'>
             <Stepper stepAddGroup={state.stepJoinGroup}/>
-            {(state.stepJoinGroup === 1) ? <InputGroupCode setGroupCode={(e) => dispatch({type: "HANDLE GROUP CODE", payload: e.target.value})} groupCode={state.groupCode} handleCheckCodeGroup={handleCheckCodeGroup} groupCodeData={state.groupCodeData} initializingGroupCodeData={state.initializingGroupCodeData} /> : (state.stepJoinGroup === 2) ? <ConfirmationJoinGroup groupCodeData={state.groupCodeData} handleJoinGroup={handleJoinGroup} loadingJoinGroup={state.loadingJoinGroup} handleStepJoinGroup={handleStepJoinGroup} /> : (state.stepJoinGroup === 3 ) ? <ResultJoinGroup groupCodeData={state.groupCodeData}/> : <></>}
+            {(state.stepJoinGroup === 1) ? <InputGroupCode setGroupCode={(e) => dispatch({type: "HANDLE GROUP CODE", payload: e.target.value})} groupCode={state.groupCode} handleCheckCodeGroup={handleCheckCodeGroup} groupCodeData={state.groupCodeData} initializingGroupCodeData={state.initializingGroupCodeData} /> : (state.stepJoinGroup === 2) ? <ConfirmationJoinGroup groupCodeData={state.groupCodeData} handleJoinGroup={handleJoinGroup} loadingJoinGroup={state.loadingJoinGroup} handleStepJoinGroup={handleStepJoinGroup} error={state.error} errorMessage={state.errorMessage} /> : (state.stepJoinGroup === 3 ) ? <ResultJoinGroup groupCodeData={state.groupCodeData}/> : <></>}
           </div>
         </div>
 
         <div className={state.tab === 2 ? "block px-4 " : "hidden"}>
           <div className='bg-white rounded-lg p-4'>
             <Stepper stepAddGroup={state.stepAddGroup}/>
-            {(state.stepAddGroup === 1) ? <InputGroupName handleStepAddGroup={handleStepAddGroup} setGroupName={(e) => dispatch({type: "HANDLE GROUP NAME", payload: e.target.value})} handleGroupStatus={handleGroupStatus} groupName={state.groupName} groupStatus={groupStatus}/> : (state.stepAddGroup === 2) ?  <ConfirmationAddGroup groupName={state.groupName} groupStatus={groupStatus} handleAddGroup={handleAddGroup} loadingSaveGroup={state.loadingSaveGroup} handleStepAddGroup={handleStepAddGroup}/> : (state.stepAddGroup === 3) ? <ResultAddGroup groupId={state.groupId}/> : <></>}
+            {(state.stepAddGroup === 1) ? <InputGroupName handleStepAddGroup={handleStepAddGroup} setGroupName={(e) => dispatch({type: "HANDLE GROUP NAME", payload: e.target.value})} handleGroupStatus={handleGroupStatus} groupName={state.groupName} groupStatus={groupStatus}/> : (state.stepAddGroup === 2) ?  <ConfirmationAddGroup  groupName={state.groupName} groupStatus={groupStatus} handleAddGroup={handleAddGroup} loadingSaveGroup={state.loadingSaveGroup} handleStepAddGroup={handleStepAddGroup} error={state.error} errorMessage={state.errorMessage}/> : (state.stepAddGroup === 3) ? <ResultAddGroup groupId={state.groupId}/> : <></>}
           </div>
         </div>
     </>

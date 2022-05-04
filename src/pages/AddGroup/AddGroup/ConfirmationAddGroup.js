@@ -1,11 +1,13 @@
 import React from 'react'
+import Alert from '../../../components/Alert/Alert'
 import ButtonFill from '../../../components/Button/ButtonFill/ButtonFill'
 import ButtonOutline from '../../../components/Button/ButtonOutline/ButtonOutline'
 import SpinnerLoading from '../../../components/SpinnerLoading/SpinnerLoading'
 
-const ConfirmationAddGroup = ({ groupName, groupStatus, handleAddGroup, loadingSaveGroup, handleStepAddGroup}) => {
+const ConfirmationAddGroup = ({ groupName, groupStatus, handleAddGroup, loadingSaveGroup, handleStepAddGroup, error, errorMessage}) => {
   return (
       <>
+      {error&&<Alert type={'error'} text={errorMessage}/>}
         <div className='flex flex-col'>
             <ul className='flex flex-col gap-2 mb-4'>
                 <li className='flex items-center'><p>Nama Grup</p> <span className='font-bold'>: {groupName}</span></li>

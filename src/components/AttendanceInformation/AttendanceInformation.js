@@ -78,7 +78,7 @@ const AttendanceInformation = () => {
             </>
             :
             <div className='flex flex-col'>
-                <Alert type={'warning'} additionalClass={'mb-4'} text="Belum ada grup."/>
+                <Alert type={'info'} additionalClass={'mb-4'} text="Belum ada grup."/>
                 <ButtonOutline label="Tambah Grup" handleClick={() => navigate('/add-group')}/>
             </div>
             }
