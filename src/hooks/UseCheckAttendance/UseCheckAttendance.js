@@ -1,51 +1,65 @@
-import { collection, doc, limit, onSnapshot, query, Timestamp, where } from 'firebase/firestore'
-import React, { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../../context/AuthProvider/AuthProvider'
+import { collection, doc, onSnapshot, query,  where } from 'firebase/firestore'
+import  { useEffect, useState } from 'react'
 import { db } from '../../utils/Firebase/Firebase'
+import useUserContext from '../UseUserContext/UseUserContext'
 
-const UseCheckAttendance = (uid, option) => {
+const UseCheckAttendance = (option) => {
+    const userContext = useUserContext()
+    const uid = userContext.currentUser.uid
     const [initializeAttendance, setInitializeAttendance] = useState(true)
     const [attendanceInfo, setAttandanceInfo] = useState()
+    const attendanceData = []
 
     const checkAttandance = () => {
         try{
             const unsubGetUser = onSnapshot(doc(db, 'users', uid), (docAccountInfo)=> {
+                const attendanceAllQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]))
+                const attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()))
                 if(docAccountInfo.data().group){
-                    if(option === 'now'){
-                        const q = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()))
-                        const usubGetAttendance = onSnapshot(q, (attendance)=> {
-                                const attendanceData = []
-                                attendance.forEach((doc) => {
-                                    attendanceData.push(doc.data());
-                                });
-                                if(attendanceData.length > 0){
-                                    setAttandanceInfo(attendanceData)
-                                }else{
-                                    setAttandanceInfo('noAttendance')
-                                }
-                                setInitializeAttendance(false)
+                    const unsubGetGroup = onSnapshot(doc(db, 'groupInformation', docAccountInfo.data().group[0]), (doc)=>{
+                        const groupMember = doc.data().groupMember
+                        const personalGroup = groupMember.find(o => o.userId === uid )
+                        if(personalGroup.status === '01'){
+                            if(option === 'now'){
+                                const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
+                                            attendance.forEach((doc) => {
+                                                attendanceData.push(doc.data());
+                                            });
+                                            if(attendanceData.length > 0){
+                                                setAttandanceInfo(attendanceData)
+                                            }else{
+                                                setAttandanceInfo('noAttendance')
+                                            }
+                                            setInitializeAttendance(false)
+                                        }
+                
+                                    )
+                                return unsubGetAttendance
+                            }else if(option === "all"){
+                                const usubGetAttendance = onSnapshot(attendanceAllQuery, (attendance)=> {
+                                        attendance.forEach((doc) => {
+                                            attendanceData.push(doc.data());
+                                        });
+                                        if(attendanceData.length > 0){
+                                            setAttandanceInfo(attendanceData)
+                                        }else{
+                                            setAttandanceInfo('noAttendance')
+                                        }
+                                        setInitializeAttendance(false)
+                                    }
+            
+                                )
+                                return usubGetAttendance
                             }
-    
-                        )
-                        return usubGetAttendance
-                    }else if(option === "all"){
-                        const q = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]))
-                        const usubGetAttendance = onSnapshot(q, (attendance)=> {
-                                const attendanceData = []
-                                attendance.forEach((doc) => {
-                                    attendanceData.push(doc.data());
-                                });
-                                if(attendanceData.length > 0){
-                                    setAttandanceInfo(attendanceData)
-                                }else{
-                                    setAttandanceInfo('noAttendance')
-                                }
-                                setInitializeAttendance(false)
-                            }
-    
-                        )
-                        return usubGetAttendance
-                    }
+                        }else{
+                            setAttandanceInfo('noGroup')
+                            setInitializeAttendance(false)
+                        }
+
+                    })
+                    return unsubGetGroup
+
+
                 }else{
                     setAttandanceInfo('noGroup')
                     setInitializeAttendance(false)

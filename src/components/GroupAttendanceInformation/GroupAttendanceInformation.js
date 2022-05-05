@@ -2,7 +2,6 @@ import { Timestamp } from 'firebase/firestore'
 import React from 'react'
 import UseCheckAttendance from '../../hooks/UseCheckAttendance/UseCheckAttendance'
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup'
-import useUserContext from '../../hooks/UseUserContext/UseUserContext'
 import Alert from '../Alert/Alert'
 import ButtonLink from '../Button/ButtonLink/ButtonLink'
 import Chip from '../Chip/Chip'
@@ -12,12 +11,10 @@ import LoadingListAttendance from '../LoadingPulse/LoadingListAttendance'
 
 
 const GroupAttendanceInformation = () => {
-  const userContext = useUserContext()
-  const uid = userContext.currentUser.uid
-  const [initilaizingGroupInfo, groupInfo] = useCheckGroup(uid)
-  const [initializeAttendance, attendanceInfo] = UseCheckAttendance(uid, 'now')
+  const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
+  const [initializeAttendance, attendanceInfo] = UseCheckAttendance('now')
   let dateToday = new Date()
-
+  
   return (
     <div className='px-4'>
         {initilaizingGroupInfo ? 
@@ -25,7 +22,7 @@ const GroupAttendanceInformation = () => {
           <LoadingChip/>
         </>
         :
-        (groupInfo === false) ?
+        (groupInfo === false || groupInfo.status === '02') ?
         ""
         :
         (groupInfo.data.groupStatus.length > 0) ?
@@ -54,7 +51,7 @@ const GroupAttendanceInformation = () => {
             <Alert additionalClass="mt-2" text="Belum ada grup." type={'info'}/>
           </>
           :
-          (attendanceInfo === 'noAttendance')? 
+          (attendanceInfo === 'noAttendance') ? 
           <Alert additionalClass="mt-2" text="Belum ada kehadiran" type={'info'}/>
           :
           <>

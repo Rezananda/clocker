@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup';
 import UseCheckPersonalAttendance from '../../hooks/UseCheckPersonalAttendance/UseCheckPersonalAttendance';
-import useUserContext from '../../hooks/UseUserContext/UseUserContext';
 import Alert from '../Alert/Alert';
 import ButtonIcon from '../Button/ButtonIcon/ButtonIcon';
 import ButtonOutline from '../Button/ButtonOutline/ButtonOutline';
@@ -12,10 +11,8 @@ import SwipeClockIn from '../SwipeClockIn/SwipeClockIn';
 import LoadingAttendanceInformationClockInStatus from './LoadingAttendanceInformationClockInStatus';
 
 const AttendanceInformation = () => {
-    const userContext = useUserContext()
-    const uid = userContext.currentUser.uid
     const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
-    const [initializePersonalAttendance, personalAttendance] = UseCheckPersonalAttendance(uid)
+    const [initializePersonalAttendance, personalAttendance] = UseCheckPersonalAttendance()
     const [dropDown, setDropDonw] = useState(false)
     const navigate = useNavigate()
 

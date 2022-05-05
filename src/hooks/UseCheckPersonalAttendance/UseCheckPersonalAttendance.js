@@ -1,8 +1,11 @@
 import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { db } from '../../utils/Firebase/Firebase'
+import useUserContext from '../UseUserContext/UseUserContext'
 
-const UseCheckPersonalAttendance = (uid) => {
+const UseCheckPersonalAttendance = () => {
+    const userContext = useUserContext()
+    const uid = userContext.currentUser.uid
     const [initializePersonalAttendance, setInitializePersonalAttendance] = useState(true)
     const [personalAttendance, setPersonalAttendance] = useState()
 
@@ -21,7 +24,8 @@ const UseCheckPersonalAttendance = (uid) => {
                     )
                     return usubGetAttendance
                 }catch(e){
-                    console.log(e)
+                    setPersonalAttendance(false)
+                    setInitializePersonalAttendance(false)
                 }
                 
             })
@@ -29,8 +33,13 @@ const UseCheckPersonalAttendance = (uid) => {
     }
 
     useEffect(()=> {
-        const getAttendance = checkPersonalAttendance()
-        return getAttendance
+        let isMounted = true;
+        if(isMounted){
+            checkPersonalAttendance()
+        }
+        return () => {
+            isMounted = false
+        }
     }, [])
 
   return [initializePersonalAttendance, personalAttendance]
