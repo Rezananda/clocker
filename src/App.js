@@ -9,6 +9,7 @@ import AddAttendace from './pages/AddAttendance/AddAttendace'
 import AddGroup from './pages/AddGroup/AddGroup'
 import DetailGroup from './pages/DetailGroup/DetailGroup'
 import ForgetPassword from './pages/ForgetPassword/ForgetPassword'
+import HandleUserStatus from './pages/HandleUserStatus/HandleUserStatus'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import Notifications from './pages/Notifications/Notifications'
@@ -36,6 +37,7 @@ const App = () => {
                 <Route path='/add-attendance' element={<DashboardSectionWithoutNavbar><AddAttendace/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/add-group' element={<DashboardSectionWithoutNavbar><AddGroup/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/detail-group' element={<DashboardSectionWithoutNavbar><DetailGroup/></DashboardSectionWithoutNavbar>}/>
+                <Route path='/change-status' element={<DashboardSectionWithoutNavbar><HandleUserStatus/></DashboardSectionWithoutNavbar>}/>
               </Route>
               <Route path="*" element={<p>Page Not Found</p>}/>
           </Routes>

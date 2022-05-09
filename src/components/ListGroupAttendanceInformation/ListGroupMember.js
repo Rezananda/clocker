@@ -1,8 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import ButtonIcon from '../Button/ButtonIcon/ButtonIcon'
 import LetterAvatar from '../LetterAvatar/LetterAvatar'
 
 const ListGroupMember = ({val, groupInfo, dispatch, state}) => {
+    const navigate = useNavigate()
   return (
     <div className='flex gap-2 flex-row items-center bg-white w-full border-l-4 border-blue-500 rounded px-2 py-2 mb-1'>
         <div className=''>
@@ -12,26 +14,33 @@ const ListGroupMember = ({val, groupInfo, dispatch, state}) => {
             <span className='text-sm flex items-center text-gray-600'>
             {val.displayName}
             </span>
-            <span className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-1 py-0.5'>
-                {val.roleUser === '01' ? 'Admin' : 'User'}
-            </span>
+            
+            {val.roleUser === '01' ? 
+                <span className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-1 py-0.5'>
+                    Admin
+                </span>
+            : val.roleUser === '02' &&  val.status === '01' ? 
+                <span className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-1 py-0.5'>
+                    User
+                </span>
+            : 
+                <span className='text-xs font-bold text-yellow-500 flex items-center bg-yellow-100 rounded w-fit px-1 py-0.5'>
+                    Permohonan User
+                </span>
+            }
+            
         </div>
-        <div className='flex justify-end gap-2 basis-1/4'>
+        <div className='flex justify-end'>
             {(groupInfo.roleUser === '01' && val.status === '01' && val.roleUser === '01') ? 
             null
                 :
             (groupInfo.roleUser === '01' && val.status === '02' && val.roleUser === '02') ?
             <>                                    
-                <span className='bg-blue-100 rounded-lg cursor-pointer' onClick={() => dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: true})}>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                <button onClick={() => navigate('/change-status', {state:{userId: val.userId, displayName:val.displayName, photoURL:val.photoURL, status:val.status, roleUser:val.roleUser, groupInfoId: groupInfo.id}})} className='bg-blue-500 rounded-full text-xs text-white font-bold px-2 py-1 flex gap-1 items-center'>Ubah 
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                     </svg>
-                </span>
-                <span className='bg-blue-100 rounded-lg cursor-pointer' onClick={() => dispatch({type: "HANDLE SHOW MODAL", payload: true})}>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                </span>
+                </button>
             </>
             :
             (groupInfo.roleUser === '01' && val.status === '01' && val.roleUser === '02') ?

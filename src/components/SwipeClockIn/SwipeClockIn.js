@@ -19,15 +19,16 @@ const SwipeClockIn = () => {
         }, 2000)
     }
   return (
-    <div className='bg-blue-100 h-10 flex items-center rounded-full shadow-xl'>
+    <div className='bg-gray-100 flex items-center rounded-full'>
         <Swiper
             dir="rtl"
             slidesPerView={1}
             onSlideChange={() => SwipeClokcer()}
-            style={{borderRadius: "9999px", marginLeft: "2px", display:'flex', justifyContent:"center"}}
+            style={{borderRadius: "9999px", marginLeft: "2px", display:'flex', justifyContent:"center", alignItems:'center'}}
             >
-            <SwiperSlide style={{display:"flex", justifyContent:"flex-end"}}>
-                <div className='w-9 h-9 bg-blue-500 rounded-full drop-shadow-lg flex items-center justify-center'>
+            {!swipeLoading&& <p className='absolute font-bold text-gray-400 text-sm'>SWIPE UNTUK CLOCK-IN</p>}
+            <SwiperSlide style={{display:"flex", justifyContent:"flex-end", padding: '2px'}}>
+                <div className='w-10 h-10 bg-blue-500 rounded-full drop-shadow-lg flex items-center justify-center'>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd" />
                         <path fillRule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -35,7 +36,7 @@ const SwipeClockIn = () => {
                 </div>
             </SwiperSlide>
             <SwiperSlide>
-                <div className='w-full h-9 flex justify-center items-center flex-row-reverse'>{swipeLoading? <p className='text-sm font-bold'>...Loading</p> : ""}</div>
+                <div className='w-full h-9 flex justify-center items-center flex-row-reverse flex items-center'>{swipeLoading? <p className='text-sm font-bold'>...Loading</p> : ""}</div>
             </SwiperSlide>
         </Swiper>
     </div>

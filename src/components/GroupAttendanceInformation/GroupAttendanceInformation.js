@@ -27,7 +27,7 @@ const GroupAttendanceInformation = () => {
         :
         (groupInfo.data.groupStatus.length > 0) ?
         <>
-          <p className='font-bold text-md text-gray-500 mb-2'>Kehadiran Hari Ini ({dateToday.getDate()}/{dateToday.getMonth()+1})</p>
+          <p className='font-bold mb-2'>Kehadiran Hari Ini ({dateToday.getDate()}/{dateToday.getMonth()+1})</p>
           <div className='flex gap-1 overflow-x-auto'>
             <Chip text="Semua" count="20" enable={true} /> 
             {groupInfo.data.groupStatus.map((val, index) => 
@@ -47,12 +47,12 @@ const GroupAttendanceInformation = () => {
           :
           (attendanceInfo === 'noGroup') ? 
           <>
-            <p className='font-bold text-md text-gray-500 mb-2'>Kehadiran Hari Ini</p>
-            <Alert additionalClass="mt-2" text="Belum ada grup." type={'info'}/>
+            <p className='font-bold mb-2'>Kehadiran Hari Ini</p>
+            <p className='font-bold text-sm text-gray-500 text-center p-4'>-Belum ada grup-</p>
           </>
           :
           (attendanceInfo === 'noAttendance') ? 
-          <Alert additionalClass="mt-2" text="Belum ada kehadiran" type={'info'}/>
+          <p className='font-bold text-sm text-gray-500 text-center p-4'>-Belum ada kehadiran-</p>
           :
           <>
           {attendanceInfo.map((val, index) => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString() ?

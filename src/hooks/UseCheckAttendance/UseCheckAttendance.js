@@ -13,14 +13,13 @@ const UseCheckAttendance = (option) => {
     const checkAttandance = () => {
         try{
             const unsubGetUser = onSnapshot(doc(db, 'users', uid), (docAccountInfo)=> {
-                const attendanceAllQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]))
-                const attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()))
                 if(docAccountInfo.data().group){
                     const unsubGetGroup = onSnapshot(doc(db, 'groupInformation', docAccountInfo.data().group[0]), (doc)=>{
                         const groupMember = doc.data().groupMember
                         const personalGroup = groupMember.find(o => o.userId === uid )
                         if(personalGroup.status === '01'){
                             if(option === 'now'){
+                                const attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()))
                                 const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
                                             attendance.forEach((doc) => {
                                                 attendanceData.push(doc.data());
@@ -36,6 +35,7 @@ const UseCheckAttendance = (option) => {
                                     )
                                 return unsubGetAttendance
                             }else if(option === "all"){
+                                const attendanceAllQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]))
                                 const usubGetAttendance = onSnapshot(attendanceAllQuery, (attendance)=> {
                                         attendance.forEach((doc) => {
                                             attendanceData.push(doc.data());
