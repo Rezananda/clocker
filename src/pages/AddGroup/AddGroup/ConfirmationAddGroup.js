@@ -4,7 +4,7 @@ import ButtonFill from '../../../components/Button/ButtonFill/ButtonFill'
 import ButtonOutline from '../../../components/Button/ButtonOutline/ButtonOutline'
 import SpinnerLoading from '../../../components/SpinnerLoading/SpinnerLoading'
 
-const ConfirmationAddGroup = ({ groupName, groupStatus, handleAddGroup, loadingSaveGroup, handleStepAddGroup, error, errorMessage}) => {
+const ConfirmationAddGroup = ({ groupName, groupStatus, locations, handleAddGroup, loadingSaveGroup, handleStepAddGroup, error, errorMessage}) => {
   return (
       <>
       {error&&<Alert type={'error'} text={errorMessage}/>}
@@ -16,7 +16,13 @@ const ConfirmationAddGroup = ({ groupName, groupStatus, handleAddGroup, loadingS
                 <div className='border-t border-gray-300'></div>
                 <li className=''> <p>Status Grup:</p> 
                   <div className='flex gap-2'>
-                    {groupStatus.map((item, i) => <div key={i} className='text-sm font-bold px-2 py-0.5 bg-blue-100 rounded-full text-blue-500'>{item}</div>)}
+                    {groupStatus.map((item, i) => <div key={i} className='p-1 bg-blue-100 rounded text-gray-500 flex items-center gap-1'>{item}</div>)}
+                  </div>
+                </li>
+                <div className='border-t border-gray-300'></div>
+                <li className=''> <p>Lokasi WFO:</p> 
+                  <div className='flex gap-2 flex-wrap'>
+                    {locations.map((item, i) => <div key={i} className='p-1 bg-blue-100 rounded text-gray-500 flex items-center gap-1'>{item}</div>)}
                   </div>
                 </li>
             </ul>

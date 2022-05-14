@@ -34,6 +34,8 @@ const reducer = (state, action) => {
             return {...state, initialize: action.payload}
         case "HANDLE ALERT":
             return {...state, alert: true, alertMessage: action.payload }
+        case "HANDLE ALERT CLOSE":
+            return {...state, alert: false}
         case "HANDLE LOGIN":
             return {...state, isLogin: action.payload }
         default:
@@ -47,7 +49,8 @@ const Login = () => {
     const validateForm = () => {
         return validator.isEmpty(state.email) || validator.isEmpty(state.password)
       }
-      
+    
+    console.log(state.alert)
 
     const handleLogin = () => {
         dispatch({type: "HANDLE INITIALIZE", payload: true})
@@ -89,7 +92,7 @@ const Login = () => {
             <div className='flex flex-col py-2 py-2 bg-white px-4 gap-4 rounded-xl w-full md:w-1/4'>
                 <LargeTypography textValue="Login Clocker" additionalClass="flex justify-center"/>
                 {state.alert&&
-                    <Alert type={'warning'} additionalClass="mt-2 mb-2" text={state.alertMessage}
+                    <Alert type={'warning'} additionalClass="mt-2 mb-2" text={state.alertMessage} handleClose={() => dispatch({type: "HANDLE ALERT CLOSE"})}
                 />}
                 <div>
                     <LabelTypography textValue="Email"/>
@@ -113,7 +116,7 @@ const Login = () => {
                     </div>
                 </div>
                 <ButtonFill disabled={validateForm()} additionalClass={validateForm() ? 'bg-blue-200 border-blue-200' : "bg-blue-500 border-blue-500"} handleClick={handleLogin} label="Login"/>
-                <div className='flex justify-center'>
+                <div className='flex justify-center text-sm'>
                     <p>Belum punya akun? registrasi</p>
                     <ButtonLink newProps={'ml-1'} linkTo={()=> navigate('/registration')} label="disini"/>    
                 </div>

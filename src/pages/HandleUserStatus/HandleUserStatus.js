@@ -25,6 +25,8 @@ const HandleUserStatus = () => {
   const navigate = useNavigate()
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  console.log(location.state)
+
   const handleChangeStatus = async(userId, displayName, photoURL, status, roleUser, groupId, userStatus) => {
     dispatch({type: "LOADING CHANGE STATUS", payload: true})
     console.log('masuk')
@@ -52,25 +54,24 @@ const HandleUserStatus = () => {
       dispatch({type: "LOADING CHANGE STATUS", payload: false})
       navigate('/detail-group')
     } else if(userStatus === 'reject'){
-      // const userRef = doc(db, 'users', userId)
-      // await updateDoc(userRef, {
-      //     group: deleteField()
-      // })
-      console.log('reject')
+      const userRef = doc(db, 'users', userId)
+      await updateDoc(userRef, {
+          group: deleteField()
+      })
       dispatch({type: "LOADING CHANGE STATUS", payload: false})
     }
 }
 
   return (
     <div className='min-h-screen bg-gray-50'>
-      <nav className='bg-white px-2 py-4 flex flex-row items-center drop-shadow'>
+      <nav className='bg-blue-500 px-2 py-4 flex flex-row items-center drop-shadow'>
         <div className='basis-1/2 flex items-center'>
             <ButtonIcon 
             actionFunction={()=> navigate(-1)} 
-            icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
             </svg>}/>
-            <p className='text-md font-bold text-blue-500 flex ml-1'>Ubah Status User</p>
+            <p className='text-md font-bold text-white flex ml-1'>Ubah Status User</p>
         </div>
       </nav>
       {state.initializeChangeStatus ? <SpinnerLoading/>
@@ -79,7 +80,7 @@ const HandleUserStatus = () => {
         <div className='bg-white rounded-lg p-4'> 
           <div className='flex flex-col gap-4'>
             <div className='flex items-center'>
-              <p className='text-lg'>Nama: </p><p className='font-bold ml-1 text-lg'>{location.state.name}</p>
+              <p className='text-lg'>Nama: </p><p className='font-bold ml-1 text-lg'>{location.state.displayName}</p>
             </div>
             <div className='border-t border-gray-100'></div>
             <ButtonFill additionalClass={'bg-blue-500 border-blue-500'} label={'Setuju'} handleClick={() => handleChangeStatus(location.state.userId, location.state.displayName, location.state.photoURL, location.state.status, location.state.roleUser, location.state.groupInfoId, 'approve')}/>

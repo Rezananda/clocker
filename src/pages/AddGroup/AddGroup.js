@@ -17,6 +17,7 @@ const initialState = {
   stepAddGroup: 1,
   stepJoinGroup: 1,
   groupName:"",
+  groupLocationName: "",
   loadingSaveGroup: false,
   loadingJoinGroup: false,
   groupId: "",
@@ -37,6 +38,8 @@ const reducer = (state, action) => {
       return {...state, stepJoinGroup: action.payload}
     case "HANDLE GROUP NAME":
       return {...state, groupName: action.payload}
+    case "HANDLE GROUP LOCATION NAME":
+      return {...state, groupLocationName: action.payload}
     case "HANDLE GROUP ID":
       return {...state, groupId: action.payload}
     case "HANDLE GROUP DATA":
@@ -66,6 +69,7 @@ const AddGroup = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const [groupStatus, setGroupStatus] = useState([])
+    const [locations, setLocations] = useState([])
 
     function handleStepAddGroup(statusStepAddGroup){
       if(statusStepAddGroup === "prev"){
@@ -109,6 +113,16 @@ const AddGroup = () => {
       }
     };
 
+    const handleLocation = () => {
+      setLocations(prevState => [...prevState, state.groupLocationName])
+      dispatch({type: "HANDLE GROUP LOCATION NAME", payload: ""})
+    }
+    
+    const handleRemoveLocation = (val) => {
+      const newLocation = locations.filter((item) => item !== val)
+      setLocations(newLocation)
+    }
+
     const handleAddGroup = async () => {
       dispatch({type: "HANDLE LOADING SAVE GROUP", payload: true})
       try{
@@ -127,6 +141,7 @@ const AddGroup = () => {
           ],
           groupCapacity: 50, 
           groupStatus: groupStatus,
+          groupLocation: locations,
           timestamps: serverTimestamp()
         })
         dispatch({type: "HANDLE GROUP ID", payload: docRef.id})
@@ -157,22 +172,22 @@ const AddGroup = () => {
         const personalAdditionalInformationRef = doc(db, "users", user.currentUser.uid)
         batch.set(personalAdditionalInformationRef, {group : [groupInformationRef.id]}, {merge: true})
 
-        const personalNotificationAdmin = doc(collection(db, 'personalNotifications'))
+        // const personalNotificationAdmin = doc(collection(db, 'personalNotifications'))
 
-        const getGroupAdmin = await getDoc(groupInformationRef)
+        // const getGroupAdmin = await getDoc(groupInformationRef)
 
-        batch.set(personalNotificationAdmin, {
-          typeNotification: 'approval-group',
-          destination: getGroupAdmin.data().groupOwnerId,
-          title: "Persetujuan Bergabung Grup",
-          message: "Ada yang bergabung ke grup mu nih, kamu bisa setujui / menolaknya",
-          additionalMessage: {
-            requestJoinId: user.currentUser.uid,
-            groupId: getGroupAdmin.id
-          },
-          opened : false,
-          timestamps: serverTimestamp()
-        })
+        // batch.set(personalNotificationAdmin, {
+        //   typeNotification: 'approval-group',
+        //   destination: getGroupAdmin.data().groupOwnerId,
+        //   title: "Persetujuan Bergabung Grup",
+        //   message: "Ada yang bergabung ke grup mu nih, kamu bisa setujui / menolaknya",
+        //   additionalMessage: {
+        //     requestJoinId: user.currentUser.uid,
+        //     groupId: getGroupAdmin.id
+        //   },
+        //   opened : false,
+        //   timestamps: Date.now()
+        // })
         await batch.commit()
         handleStepJoinGroup('next')
         dispatch({type: "HANDLE LOADING JOIN GROUP", payload: false})
@@ -193,7 +208,7 @@ const AddGroup = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                 </svg>}
                 />
-                <p className='text-md font-bold text-blue-500 flex ml-1'>Tambah Grup</p>
+                <p className='font-bold text-blue-500 flex ml-1'>Tambah Grup</p>
             </div>
             <ul className="flex mb-4">
                 <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 1})} className={state.tab === 1 ? "p-2 w-full text-blue-500 border-b-4 border-blue-500" : "p-2 w-full text-gray-500 rounded-t-lg border-b-2 border-transparent"}>Gabung Grup</button></li>
@@ -202,16 +217,16 @@ const AddGroup = () => {
         </div>
 
         <div className={state.tab === 1 ? "block px-4" : "hidden"}>
-          <div className='bg-white rounded-lg p-4'>
+          <div className='bg-white rounded-xl border border-gray-200 p-4'>
             <Stepper stepAddGroup={state.stepJoinGroup}/>
             {(state.stepJoinGroup === 1) ? <InputGroupCode setGroupCode={(e) => dispatch({type: "HANDLE GROUP CODE", payload: e.target.value})} groupCode={state.groupCode} handleCheckCodeGroup={handleCheckCodeGroup} groupCodeData={state.groupCodeData} initializingGroupCodeData={state.initializingGroupCodeData} /> : (state.stepJoinGroup === 2) ? <ConfirmationJoinGroup groupCodeData={state.groupCodeData} handleJoinGroup={handleJoinGroup} loadingJoinGroup={state.loadingJoinGroup} handleStepJoinGroup={handleStepJoinGroup} error={state.error} errorMessage={state.errorMessage} /> : (state.stepJoinGroup === 3 ) ? <ResultJoinGroup groupCodeData={state.groupCodeData}/> : <></>}
           </div>
         </div>
 
-        <div className={state.tab === 2 ? "block px-4 " : "hidden"}>
-          <div className='bg-white rounded-lg p-4'>
+        <div className={state.tab === 2 ? "block px-4" : "hidden"}>
+          <div className='bg-white rounded-xl border border-gray-200 p-4'>
             <Stepper stepAddGroup={state.stepAddGroup}/>
-            {(state.stepAddGroup === 1) ? <InputGroupName handleStepAddGroup={handleStepAddGroup} setGroupName={(e) => dispatch({type: "HANDLE GROUP NAME", payload: e.target.value})} handleGroupStatus={handleGroupStatus} groupName={state.groupName} groupStatus={groupStatus}/> : (state.stepAddGroup === 2) ?  <ConfirmationAddGroup  groupName={state.groupName} groupStatus={groupStatus} handleAddGroup={handleAddGroup} loadingSaveGroup={state.loadingSaveGroup} handleStepAddGroup={handleStepAddGroup} error={state.error} errorMessage={state.errorMessage}/> : (state.stepAddGroup === 3) ? <ResultAddGroup groupId={state.groupId}/> : <></>}
+            {(state.stepAddGroup === 1) ? <InputGroupName handleStepAddGroup={handleStepAddGroup} setGroupName={(e) => dispatch({type: "HANDLE GROUP NAME", payload: e.target.value})} handleGroupStatus={handleGroupStatus} groupName={state.groupName} groupStatus={groupStatus} handleLocation={handleLocation} handleRemoveLocation={handleRemoveLocation} setLocation={(e) => dispatch({type: "HANDLE GROUP LOCATION NAME", payload: e.target.value})} locations={locations} location={state.groupLocationName} /> : (state.stepAddGroup === 2) ?  <ConfirmationAddGroup  groupName={state.groupName} groupStatus={groupStatus} locations={locations} handleAddGroup={handleAddGroup} loadingSaveGroup={state.loadingSaveGroup} handleStepAddGroup={handleStepAddGroup} error={state.error} errorMessage={state.errorMessage}/> : (state.stepAddGroup === 3) ? <ResultAddGroup groupId={state.groupId}/> : <></>}
           </div>
         </div>
     </>

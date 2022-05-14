@@ -12,7 +12,7 @@ const AccountInformation = () => {
   const {handleRoute} = useRouteContext()
 
   return (
-    <div className='flex w-full p-4 bg-white mb-4 rounded-b-2xl items-center justify-between'>
+    <div className='flex w-full p-4 bg-white mb-4 rounded-b-2xl items-center justify-between border-b border-gray-200'>
       <div className='flex items-center'>
         <p className='text-xl'>Halo,</p>
         <p className='ml-1 text-xl font-bold'>{displayName} </p>

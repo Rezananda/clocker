@@ -49,6 +49,8 @@ const reducer = (state, action) => {
             return {...state, initialize: action.payload}
         case "HANDLE ALERT":
             return {...state, alert: true, alertMessage: action.payload}
+        case "HANDLE ALERT CLOSE":
+            return {...state, alert: false}
         case "HANDLE TOOLTIP":
             return {...state, tooltip: action.payload}
         default:
@@ -144,6 +146,7 @@ const Registration = () => {
                 additionalClass="mt-2 mb-2" 
                 type={'warning'}
                 text={state.alertMessage}
+                handleClose={() => dispatch({type: "HANDLE ALERT CLOSE"})}
                 />
                 :
                 state.alert?
@@ -151,6 +154,7 @@ const Registration = () => {
                 additionalClass="mt-2 mb-2" 
                 type={'info'}
                 text={state.alertMessage}
+                handleClose={() => dispatch({type: "HANDLE ALERT CLOSE"})}
                 />
                 : 
                 null
@@ -275,7 +279,7 @@ const Registration = () => {
                 <div>
                     <ButtonFill disabled={validateForm()} additionalClass={validateForm() ? 'bg-blue-200 border-blue-200' : "border-blue-500 bg-blue-500"} handleClick={handleRegister} label="Registrasi" />
                 </div>
-                <div className='flex justify-center'>
+                <div className='flex justify-center text-sm'>
                     <p>Kembali ke halaman</p>&nbsp;
                     <ButtonLink linkTo={()=> navigate('/login')} label="Login"/>
                 </div>

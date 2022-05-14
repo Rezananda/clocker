@@ -19,7 +19,7 @@ const AttendanceInformation = () => {
     
   return (
     <div className='px-4 mb-4'>
-        <div className='w-full rounded-lg flex flex-col bg-white border-b-8 border-blue-500'>
+        <div className='w-full rounded-2xl flex flex-col bg-white border border-gray-200'>
             {initilaizingGroupInfo? 
             <LoadingAttendanceInformation/>
             : 
@@ -46,14 +46,15 @@ const AttendanceInformation = () => {
                 personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()) ? 
                 <div className='flex flex-col gap-2 p-4'>
                     <AlertStatus type={'success'} text={`Kamu Sudah Clock-In`}/>
-                    <div className='flex items-center justify-end'>
-                        <div className='text-blue-500 font-bold px-2 py-1 rounded-full flex gap-2 font-bold bg-blue-100'>{personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()).status} 
-                        <div className='border-r border-blue-500'></div>                           
-                        <ButtonIcon icon={
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                            </svg>
-                        }/>
+                    <div className='flex items-center justify-between'>
+                        <p className='text-sm'>Clock-In pada {personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()).addTime.split(" ")[0]}</p>
+                        <div className='text-blue-500 font-bold px-2 py-1 rounded flex gap-2 font-bold bg-blue-100'>{personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()).status} 
+                            <div className='border-r border-blue-500'></div>                           
+                            <ButtonIcon icon={
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            }/>
                         </div>
                     </div>
                 </div>
@@ -69,21 +70,15 @@ const AttendanceInformation = () => {
             :
             (groupInfo.status === "02") ? 
             <>
-                <div className='flex justify-between h-10 items-center'>
+                <div className='flex flex-col gap-2 p-4'>
                     <div className='flex justify-start'>
-                        <p className='text-lg font-bold text-white'>{groupInfo.data.groupName}</p>
-                    </div>
-                    <div className=''>
-                        <ButtonIcon actionFunction={() => setDropDonw(!dropDown)} icon={<svg className="h-6 w-6 text-white"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="1" />  <circle cx="12" cy="19" r="1" />  <circle cx="12" cy="5" r="1" /></svg>}/>
-                        <div className='flex justify-end'>                            
-                            <ul className={`divide-y text-gray-700 absolute z-50 bg-white rounded px-4 py-2 ${dropDown? 'block' : 'hidden'} `}>
-                                <li className="">Keluar Grup</li>                            
-                                <li className="">Informasi</li>                                                   
-                            </ul>
-                        </div>
+                        <p className='text-lg font-bold'>{groupInfo.data.groupName}</p>
                     </div>
                 </div>
-                <Alert type={'info'} additionalClass={'mb-4'} text="Menunggu persetujuan Admin"/>
+                <div className='border-b border-gray-200'></div>
+                <div className='flex flex-col gap-2 p-4'>
+                    <AlertStatus type={'info'} text={'Menunggu persetujuan Admin'}/>
+                </div>
             </>
             :
             <div className='flex flex-col p-4 gap-4'>

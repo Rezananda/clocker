@@ -94,14 +94,14 @@ const DetailGroup = () => {
 
   return (
     <div className='min-h-screen bg-gray-50'>
-        <nav className='bg-white px-2 py-4 flex flex-row items-center drop-shadow'>
+        <nav className='bg-blue-500 px-2 py-4 flex flex-row items-center drop-shadow'>
             <div className='basis-1/2 flex items-center'>
                 <ButtonIcon 
                 actionFunction={()=> navgiate(-1)} 
-                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                 </svg>}/>
-                <p className='text-md font-bold text-blue-500 flex ml-1'>Informasi Grup</p>
+                <p className='text-md font-bold text-white flex ml-1'>Informasi Grup</p>
             </div>
         </nav>
         {initilaizingGroupInfo? <SpinnerLoading/> : 
@@ -128,16 +128,6 @@ const DetailGroup = () => {
                         {groupInfo.data.groupMember.map((val, index) => 
                             <li key={index}>
                                 <ListGroupMember val={val} groupInfo={groupInfo} dispatch={dispatch} state={state}/>
-                                {state.showModal ? 
-                                    <Modal question={'Setujui user berikut?'} name={val.displayName} handleAction={() => handleChangeStatus(val.userId, val.displayName, val.photoURL, val.status, val.roleUser, groupInfo.id)} handleClose={() => dispatch({type: "HANDLE SHOW MODAL", payload: false})} initializing={state.initializeChangeStatus}/>
-                                    :
-                                    ""
-                                }
-                                {state.showModalDeleteUser ? 
-                                    <Modal question={'Hapus user berikut?'} name={val.displayName} handleAction={() => handleDeleteUser(val.userId, val.displayName, val.photoURL, val.status, val.roleUser, groupInfo.id)} handleClose={() => {dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: false}); dispatch({type: "HANDLE DROPDOWN", payload: false})}} initializing={state.initializeChangeRoleUser}/>
-                                    :
-                                    ""
-                                }
                             </li>
                         )}
                     </ul>

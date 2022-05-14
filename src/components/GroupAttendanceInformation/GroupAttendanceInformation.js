@@ -16,7 +16,7 @@ const GroupAttendanceInformation = () => {
   let dateToday = new Date()
   
   return (
-    <div className='px-4'>
+    <div>
         {initilaizingGroupInfo ? 
         <>
           <LoadingChip/>
@@ -26,7 +26,7 @@ const GroupAttendanceInformation = () => {
         ""
         :
         (groupInfo.data.groupStatus.length > 0) ?
-        <>
+        <div className='px-4'>
           <p className='font-bold mb-2'>Kehadiran Hari Ini ({dateToday.getDate()}/{dateToday.getMonth()+1})</p>
           <div className='flex gap-1 overflow-x-auto'>
             <Chip text="Semua" count="20" enable={true} /> 
@@ -36,7 +36,7 @@ const GroupAttendanceInformation = () => {
 
             <Chip text={"Belum"} count="20" enable={false} /> 
           </div>
-        </>
+        </div>
         :
         ""
         }

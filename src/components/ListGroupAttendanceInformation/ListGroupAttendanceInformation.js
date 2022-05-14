@@ -3,7 +3,7 @@ import LetterAvatar from '../LetterAvatar/LetterAvatar'
 
 const ListGroupAttendanceInformation = ({letter, dateAdd, displayName, statusAttendance}) => {
   return (
-    <div className='flex items-center bg-white w-full border-l-4 border-blue-500 rounded px-2 py-1 mb-1'>
+    <div className='flex items-center bg-white w-full border-b border-gray-200 px-4 py-2'>
       <div>
         <LetterAvatar letter={letter}/>
       </div>
