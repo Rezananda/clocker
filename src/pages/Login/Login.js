@@ -49,8 +49,6 @@ const Login = () => {
     const validateForm = () => {
         return validator.isEmpty(state.email) || validator.isEmpty(state.password)
       }
-    
-    console.log(state.alert)
 
     const handleLogin = () => {
         dispatch({type: "HANDLE INITIALIZE", payload: true})

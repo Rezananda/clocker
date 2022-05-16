@@ -47,11 +47,10 @@ const AttendanceInformation = () => {
                 <div className='flex flex-col gap-2 p-4'>
                     <AlertStatus type={'success'} text={`Kamu Sudah Clock-In`}/>
                     <div className='flex items-center justify-between'>
-                        <p className='text-sm'>Clock-In pada {personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()).addTime.split(" ")[0]}</p>
+                        <p className='text-sm'>Clock-In pada {new Date(personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()).timestamp.seconds*1000).toString().split(" ")[4].substring(0, 5)}</p>
                         <div className='text-blue-500 font-bold px-2 py-1 rounded flex gap-2 font-bold bg-blue-100'>{personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()).status} 
-                            <div className='border-r border-blue-500'></div>                           
                             <ButtonIcon icon={
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                 </svg>
                             }/>

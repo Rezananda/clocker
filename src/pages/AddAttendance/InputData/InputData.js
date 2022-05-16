@@ -3,43 +3,42 @@ import Input from '../../../components/Input/Input'
 import LabelTypography from '../../../components/Typography/LabelTypography'
 import DatePicker from "react-datepicker"
 import ButtonFill from '../../../components/Button/ButtonFill/ButtonFill'
+import SpinnerLoading from '../../../components/SpinnerLoading/SpinnerLoading'
 
-const InputData = ({setAttendanceData, attendanceData, setDateCuti, dateCuti, initilaizingGroupInfo, groupInfo, handleStepAddAttendance}) => {
-  return (
+const InputData = ({setAttendanceData, attendanceData, initilaizingGroupInfo, groupInfo, handleStepAddAttendance}) => {
+
+    return (
+    <>
+    {initilaizingGroupInfo ? <SpinnerLoading/> :
     <div className='flex flex-col gap-4'>
-        <div>
-            <LabelTypography textValue="Waktu Kehadiran"/>
-            <Input type="date" handleChange={() => new Date().toISOString().split('T')[0]} value={new Date().toISOString().split('T')[0]} readOnly={true} additionalClass="text-gray-500"/>
+        <div className='flex gap-2'>
+            <Input type="text" handleChange={() => new Date().toISOString().split('T')[0]} value={new Date().toISOString().split('T')[0]} readOnly={true} additionalClass="text-gray-500 text-center"/>
+            <Input type="text" handleChange={() => groupInfo.data.groupName} value={groupInfo.data.groupName} readOnly={true} additionalClass="text-gray-500 text-center"/>
         </div>
-        <div>
-            <LabelTypography textValue="Grup"/>
-            {initilaizingGroupInfo ? <p>Loading...</p> :
-            <Input type="text" handleChange={() => groupInfo.data.groupName} value={groupInfo.data.groupName} readOnly={true} additionalClass="text-gray-500"/>
-            }
-        </div>
+            
         <div>
             <LabelTypography textValue="Pilih Status Kehadiran"/>
             <div className='mb-2'>
-            <input onChange={(e) => setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}  className="sr-only peer" type="radio" value="WFH" name="statusAttendance" id="wfh"/>
+            <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="WFH" name="statusAttendance" id="wfh"/>
             <label className="flex p-4 items-center bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-blue-100 peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white" htmlFor="wfh">WFH</label>
             </div>
             <div className='mb-2'>
-            <input onChange={(e) => setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}  className="sr-only peer" type="radio" value="WFO" name="statusAttendance" id="wfo"/>
+            <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="WFO" name="statusAttendance" id="wfo"/>
             <label className="flex items-center p-4 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-blue-100 peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white" htmlFor="wfo">WFO</label>
             </div>
             <div className='mb-2'>
-            <input onChange={(e) => setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}  className="sr-only peer" type="radio" value="Cuti" name="statusAttendance" id="cuti"/>
+            <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="Cuti" name="statusAttendance" id="cuti"/>
             <label className="flex items-center p-4 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-blue-100 peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white" htmlFor="cuti">Cuti</label>
             </div>
             <div>
-            <input onChange={(e) => setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}  className="sr-only peer" type="radio" value="Sakit" name="statusAttendance" id="sakit"/>
+            <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="Sakit" name="statusAttendance" id="sakit"/>
             <label className="flex items-center p-4 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-blue-100 peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white" htmlFor="sakit">Sakit</label>
             </div>
         </div>
         {attendanceData.status === 'Sakit' && 
         <div>
             <LabelTypography textValue="Alasan Sakit"/>
-            <Input handleChange={(e) => setAttendanceData((prevState) => ({...prevState, [e.target.name] : e.target.value}))} maxLength={20} type="text" name="sickReason" placeholder="Nama Grup..."/>
+            <Input handleChange={(e) => setAttendanceData((prevState) => ({...prevState, [e.target.name] : e.target.value}))} maxLength={20} type="text" name="sickReason" placeholder="Alasan Sakit"/>
         </div>
         }
         {attendanceData.status === 'Cuti' &&
@@ -48,11 +47,11 @@ const InputData = ({setAttendanceData, attendanceData, setDateCuti, dateCuti, in
             <div className='flex items-center gap-1'>
             <div className='relative'>
                 <DatePicker
-                selected={dateCuti.startDate}
-                onChange={(date) => setDateCuti((prevState) => ({...prevState, startDate: date}))}
+                selected={attendanceData.startDate}
+                onChange={(date) => setAttendanceData((prevState) => ({...prevState, startDate: date}))}
                 selectsStart
-                startDate={dateCuti.startDate}
-                endDate={dateCuti.endDate}
+                startDate={attendanceData.startDate}
+                endDate={attendanceData.endDate}
                 className='bg-blue-50 w-full px-4 py-3 rounded-lg text-md'
                 placeholderText='MM/DD/YYYY'
                 />
@@ -64,12 +63,12 @@ const InputData = ({setAttendanceData, attendanceData, setDateCuti, dateCuti, in
             <span>-</span>
             <div className='relative'>
                 <DatePicker
-                selected={dateCuti.endDate}
-                onChange={(date) => setDateCuti((prevState) => ({...prevState, endDate: date}))}
+                selected={attendanceData.endDate}
+                onChange={(date) => setAttendanceData((prevState) => ({...prevState, endDate: date}))}
                 selectsEnd
-                startDate={dateCuti.startDate}
-                endDate={dateCuti.endDate}
-                minDate={dateCuti.startDate}
+                startDate={attendanceData.startDate}
+                endDate={attendanceData.endDate}
+                minDate={attendanceData.startDate}
                 className='bg-blue-50 w-full px-4 py-3 rounded-lg text-md'
                 placeholderText='MM/DD/YYYY'
                 />
@@ -82,15 +81,20 @@ const InputData = ({setAttendanceData, attendanceData, setDateCuti, dateCuti, in
         </div>
         }
         {attendanceData.status === 'WFO' && 
-            <select className="bg-blue-50 text-gray-900 text-sm rounded-lg block w-full px-4 py-3">
-                <option selected disabled>Pilih...</option>
-                <option value="Wisma Asia">Wisma Asia</option>
-                <option value="Menara BCA">Menara BCA</option>
-                <option value="Gading Serpong">Gading Serpong</option>
+        <div>
+            <LabelTypography textValue="Lokasi WFO"/>
+            <select onChange={(e) => setAttendanceData((prevState) => ({...prevState, wfoLocation: e.target.value}))} defaultValue={'DEFAULT'} className="bg-blue-50 text-gray-900 text-sm rounded-lg block w-full px-4 py-3">
+                <option value={'DEFAULT'} disabled>Pilih...</option>
+                {groupInfo.data.groupLocation.map((val, index) => (
+                    <option key={index} value={val}>{val}</option>
+                ))}
             </select>
+        </div>
         }
-        <ButtonFill label="Lanjutkan" handleClick={() => handleStepAddAttendance('next')} />
+        <ButtonFill additionalClass={attendanceData.status === "WFH" || attendanceData.wfoLocation || attendanceData.sickReason || attendanceData.startDate || attendanceData.endDate ? `bg-blue-500 border-blue-500` : `bg-blue-100 border-blue-100`} label="Lanjutkan" handleClick={() => handleStepAddAttendance('next')} />
     </div>
+    }
+    </>
   )
 }
 

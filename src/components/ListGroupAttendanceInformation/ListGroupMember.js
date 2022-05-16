@@ -6,10 +6,9 @@ import LetterAvatar from '../LetterAvatar/LetterAvatar'
 const ListGroupMember = ({val, groupInfo, dispatch, state}) => {
     const navigate = useNavigate()
   return (
-    <div className='flex gap-2 flex-row items-center bg-white w-full border border-gray-200 rounded px-2 py-2 mb-1'>
-        <div className=''>
-            <LetterAvatar letter={val.photoURL}/>   
-        </div>
+    <div className='flex justify-between items-center bg-white border-b border-gray-200 px-2 py-2'>
+        <div className='flex items-center gap-2 w-full'>
+        <LetterAvatar letter={val.photoURL}/>   
         <div className='flex flex-col basis-2/3'>
             <span className='text-sm flex items-center text-gray-600'>
             {val.displayName}
@@ -29,6 +28,7 @@ const ListGroupMember = ({val, groupInfo, dispatch, state}) => {
                 </span>
             }
             
+        </div>
         </div>
         <div className='flex flex-end'>
             {(groupInfo.roleUser === '01' && val.status === '01' && val.roleUser === '01') ? 

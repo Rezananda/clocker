@@ -2,28 +2,32 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import Alert from '../../../components/Alert/Alert'
 import ButtonOutline from '../../../components/Button/ButtonOutline/ButtonOutline'
+import Input from '../../../components/Input/Input'
+import SpinnerLoading from '../../../components/SpinnerLoading/SpinnerLoading'
 
 const Result = ({initilaizingGroupInfo, groupInfo, attendanceData}) => {
     const navigate = useNavigate()
   return (
+    <>
+    {initilaizingGroupInfo ? <SpinnerLoading/> :
+  
     <div className='flex flex-col gap-4'>
-        <Alert text="Berhasil menambah kehadiran" color="green" icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-        </svg>} />
+        <Alert type={'success'} text="Berhasil menambah kehadiran"/>
+        <div className='flex gap-2'>
+          <Input type="text" handleChange={() => new Date().toISOString().split('T')[0]} value={new Date().toISOString().split('T')[0]} readOnly={true} additionalClass="text-gray-500 text-center"/>
+          <Input type="text" handleChange={() => groupInfo.data.groupName} value={groupInfo.data.groupName} readOnly={true} additionalClass="text-gray-500 text-center"/>
+        </div>
         <ul className='flex flex-col gap-2'>
-            <li className='flex items-center'><p>Waktu</p> <p className='font-bold'>: {new Date().toDateString()}</p></li>
-            <div className='border-t border-gray-300'></div>
-            {initilaizingGroupInfo ? <p>Loading...</p> :
-            <li className='flex items-center'><p>Grup</p> <p className='font-bold'>: {groupInfo.data.groupName}</p></li>
-            }
-            <div className='border-t border-gray-300'></div>
-            <li className='flex items-center'><p>Kehadiran</p> <p className='font-bold'>: {attendanceData.status}</p></li>
-            <div className='border-t border-gray-300'></div>
-            <li className='flex items-center'><p>Status</p> <p className='font-bold'>: Berhasil</p></li>
-            <div className='border-t border-gray-300'></div>
+        <li className='flex items-center'><p>Kehadiran</p> <p className='font-bold'>: {attendanceData.status}</p></li>
+          <div className='border-t border-gray-300'></div>
+          {attendanceData.wfoLocation&&<li className='flex items-center'><p>Lokasi WFO</p> <p className='font-bold'>: {attendanceData.wfoLocation}</p></li>}
+          {attendanceData.startDate&&attendanceData.endDate&&<li className='flex items-center'><p>Lama Cuti</p> <p className='font-bold'>: {new Date(attendanceData.startDate).toLocaleDateString()} - {new Date(attendanceData.endDate).toLocaleDateString()}</p></li>}
+          {attendanceData.sickReason&&<li className='flex items-center'><p>Alasan Sakit</p> <p className='font-bold'>: {attendanceData.sickReason}</p></li>}
         </ul>
-        <ButtonOutline handleClick={() => navigate(-1)} label="Kembali ke Beranda"/>
+        <ButtonOutline handleClick={() => navigate('/')} label="Kembali ke Beranda"/>
     </div>
+    }
+    </>
   )
 }
 

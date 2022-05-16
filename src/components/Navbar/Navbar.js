@@ -7,7 +7,7 @@ const Navbar = () => {
 
   return (
     <div className="relative z-10">
-        <nav className="w-full fixed bottom-0 shadow bg-white rounded-t-lg">
+        <nav className="w-full fixed bottom-0 shadow bg-white rounded-t-xl border-t border-gray-200">
             <ul className="container mx-auto grid grid-cols-4 gap-3">
                 <Link to={'/'} onClick={() => handleRoute(0)} className={navbar === 0 ? "flex flex-col justify-center items-center border-b-4 border-blue-500 py-2" : "flex flex-col justify-center items-center" }>
                     <svg className={`h-6 w-6 ${navbar === 0 ? `text-blue-500` : `text-gray-400`}`}  fill="none" viewBox="0 0 24 24" stroke="currentColor">
