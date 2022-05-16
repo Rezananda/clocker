@@ -1,10 +1,11 @@
-import { arrayRemove, arrayUnion, deleteField, doc, updateDoc } from 'firebase/firestore'
+import { arrayRemove, arrayUnion, collection, deleteField, doc, serverTimestamp, updateDoc, writeBatch } from 'firebase/firestore'
 import React, { useReducer } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ButtonFill from '../../components/Button/ButtonFill/ButtonFill'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
 import ButtonOutline from '../../components/Button/ButtonOutline/ButtonOutline'
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading'
+import useUserContext from '../../hooks/UseUserContext/UseUserContext'
 import { db } from '../../utils/Firebase/Firebase'
 
 const initialState = {
@@ -21,6 +22,7 @@ const reducer = (state, action) => {
 }
 
 const HandleUserStatus = () => {
+  const userContext = useUserContext()
   const location = useLocation()
   const navigate = useNavigate()
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -29,35 +31,66 @@ const HandleUserStatus = () => {
 
   const handleChangeStatus = async(userId, displayName, photoURL, status, roleUser, groupId, userStatus) => {
     dispatch({type: "LOADING CHANGE STATUS", payload: true})
-    console.log('masuk')
+    const batch = writeBatch(db)
     const memberRef = doc(db, 'groupInformation', groupId)
-    await updateDoc(memberRef, {
-        groupMember: arrayRemove({
-            displayName: displayName,
-            photoURL: photoURL,
-            roleUser: roleUser,
-            status: status,
-            userId: userId
-        })
-    })
-    if(userStatus === 'approve'){
-      await updateDoc(memberRef, {
-          groupMember: arrayUnion({
-              displayName: displayName,
-              photoURL: photoURL,
-              roleUser: roleUser,
-              status: '01',
-              userId: userId
-          })
+    const transacrionRef = doc(collection(db, "transactionInformation"))
+    const userRef = doc(db, 'users', userId)
+
+    const transactions = {
+      userId: userContext.currentUser.uid,
+      transaction: "approve group",
+      transactionType: 'add',
+      date: serverTimestamp()
+    }
+
+    batch.update(memberRef, {
+      groupMember: arrayRemove({
+        displayName: displayName,
+        photoURL: photoURL,
+        roleUser: roleUser,
+        status: status,
+        userId: userId
       })
-      console.log('approve')
+    })
+
+    batch.set(transacrionRef, transactions)
+
+    // await updateDoc(memberRef, {
+    //     groupMember: arrayRemove({
+    //         displayName: displayName,
+    //         photoURL: photoURL,
+    //         roleUser: roleUser,
+    //         status: status,
+    //         userId: userId
+    //     })
+    // })
+    if(userStatus === 'approve'){
+      batch.update(memberRef, {
+        groupMember: arrayUnion({
+          displayName: displayName,
+          photoURL: photoURL,
+          roleUser: roleUser,
+          status: '01',
+          userId: userId
+        })
+      })
+      await batch.commit()
+      // await updateDoc(memberRef, {
+      //     groupMember: arrayUnion({
+      //         displayName: displayName,
+      //         photoURL: photoURL,
+      //         roleUser: roleUser,
+      //         status: '01',
+      //         userId: userId
+      //     })
+      // })
       dispatch({type: "LOADING CHANGE STATUS", payload: false})
       navigate('/detail-group')
     } else if(userStatus === 'reject'){
-      const userRef = doc(db, 'users', userId)
-      await updateDoc(userRef, {
-          group: deleteField()
+      batch.update(userRef, {
+        group: deleteField()
       })
+      await batch.commit()
       dispatch({type: "LOADING CHANGE STATUS", payload: false})
     }
 }

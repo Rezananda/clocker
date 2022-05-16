@@ -126,7 +126,7 @@ const AddGroup = () => {
     const handleAddGroup = async () => {
       dispatch({type: "HANDLE LOADING SAVE GROUP", payload: true})
       try{
-        const docRef = await addDoc(collection(db, "groupInformation"), {
+        const groupData = {
           groupName: state.groupName,
           groupOwnerName: user.currentUser.displayName,
           groupOwnerId: user.currentUser.uid,
@@ -143,10 +143,27 @@ const AddGroup = () => {
           groupStatus: groupStatus,
           groupLocation: locations,
           timestamps: serverTimestamp()
-        })
-        dispatch({type: "HANDLE GROUP ID", payload: docRef.id})
+        }
+
+        const transactions = {
+          userId: user.currentUser.uid,
+          transaction: "add group",
+          transactionType: 'add',
+          date: serverTimestamp()
+        }
+
+        const batch = writeBatch(db)
+        const addGroupRef = doc(collection(db, "groupInformation"))
+        const transacrionRef = doc(collection(db, "transactionInformation"))
         const personalRef = doc(db, "users", user.currentUser.uid)
-        setDoc(personalRef, {group: [docRef.id]}, {merge: true})
+
+        batch.set(addGroupRef, groupData)
+        batch.set(transacrionRef, transactions)
+        batch.set(personalRef, {group: [addGroupRef.id]}, {merge: true})
+
+        await batch.commit()
+        dispatch({type: "HANDLE GROUP ID", payload: addGroupRef.id})
+        
         handleStepAddGroup('next')
         dispatch({type: "HANDLE LOADING SAVE GROUP", payload: false})
       }catch(error){
@@ -160,6 +177,16 @@ const AddGroup = () => {
       try{
         const batch = writeBatch(db)
         const groupInformationRef = doc(db, "groupInformation", state.groupCode)
+        const transacrionRef = doc(collection(db, "transactionInformation"))
+        const personalAdditionalInformationRef = doc(db, "users", user.currentUser.uid)
+
+        const transactions = {
+          userId: user.currentUser.uid,
+          transaction: "join group",
+          transactionType: 'add',
+          date: serverTimestamp()
+        }
+
         batch.update(groupInformationRef, {
           groupMember: arrayUnion({
             status: '02',
@@ -168,8 +195,7 @@ const AddGroup = () => {
             photoURL: user.currentUser.photoURL,
             userId: user.currentUser.uid})
         })
-  
-        const personalAdditionalInformationRef = doc(db, "users", user.currentUser.uid)
+        batch.set(transacrionRef, transactions)
         batch.set(personalAdditionalInformationRef, {group : [groupInformationRef.id]}, {merge: true})
 
         // const personalNotificationAdmin = doc(collection(db, 'personalNotifications'))
@@ -188,6 +214,7 @@ const AddGroup = () => {
         //   opened : false,
         //   timestamps: Date.now()
         // })
+
         await batch.commit()
         handleStepJoinGroup('next')
         dispatch({type: "HANDLE LOADING JOIN GROUP", payload: false})

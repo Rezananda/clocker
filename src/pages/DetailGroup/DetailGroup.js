@@ -110,11 +110,11 @@ const DetailGroup = () => {
                 <LetterAvatar letter={groupInfo.data.groupName.split(" ").length > 1? groupInfo.data.groupName.split(" ").shift().charAt(0) + groupInfo.data.groupName.split(" ").pop().charAt(0) : groupInfo.data.groupName.split(" ").shift().charAt(0)}/>
                 <p className='font-bold'>{groupInfo.data.groupName}</p>
                 <div className='px-4 flex justify-center'>
-                    <div className='flex w-fit p-2 items-center gap-2 bg-white rounded-lg'>
+                    <div className='flex w-fit p-2 items-center gap-2 bg-white rounded-lg border border-gray-200'>
                         <div>
                             <span className='flex text-xs font-bold '>Kode Grup</span> 
                             <p className='text-sm'>{groupInfo.id}</p>
-                            <div className='w-full border-t border-gray-300'></div>
+                            <div className='w-full'></div>
                         </div>
                         <div className='flex items-center gap-1'>
                             <button onClick={handleCopy} className='bg-blue-500 text-white text-sm font-bold rounded px-2 py-1'>Salin</button>
@@ -123,8 +123,8 @@ const DetailGroup = () => {
                 </div>
             </div>
             <div className='py-2 px-4'>
-                <p className='font-bold text-gray-500 mb-2'>Anggota Grup</p>
-                    <ul className='relative p-0'>
+                <p className='font-bold mb-2'>Anggota Grup</p>
+                    <ul className='relative p-0 flex flex-col gap-1'>
                         {groupInfo.data.groupMember.map((val, index) => 
                             <li key={index}>
                                 <ListGroupMember val={val} groupInfo={groupInfo} dispatch={dispatch} state={state}/>

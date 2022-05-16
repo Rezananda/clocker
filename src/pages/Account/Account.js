@@ -31,7 +31,16 @@ const Account = () => {
           <p className='font-bold'>{user.currentUser.displayName}</p>
         </div>
         <ul className='divide-y'>
-          <li className='bg-white p-2 cursor-pointer' onClick={handlelogout}>
+          <li className='bg-white py-2 px-4 cursor-pointer'>
+            Profil
+          </li>
+          <li className='bg-white py-2 px-4 cursor-pointer'>
+            Ubah Password
+          </li>
+          <li className='bg-white py-2 px-4 cursor-pointer'>
+            Tentang
+          </li>
+          <li className='bg-white py-2 px-4 cursor-pointer' onClick={handlelogout}>
             Keluar
           </li>
         </ul>

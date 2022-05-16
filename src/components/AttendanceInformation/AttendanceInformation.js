@@ -69,7 +69,7 @@ const AttendanceInformation = () => {
             :
             (groupInfo.status === "02") ? 
             <>
-                <div className='flex flex-col gap-2 p-4'>
+                <div className='flex flex-col gap-2 px-4 py-2'>
                     <div className='flex justify-start'>
                         <p className='text-lg font-bold'>{groupInfo.data.groupName}</p>
                     </div>
