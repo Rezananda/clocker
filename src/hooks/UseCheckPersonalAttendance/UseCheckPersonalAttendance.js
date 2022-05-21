@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
+import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { db } from '../../utils/Firebase/Firebase'
 import useUserContext from '../UseUserContext/UseUserContext'
@@ -9,27 +9,28 @@ const UseCheckPersonalAttendance = () => {
     const [initializePersonalAttendance, setInitializePersonalAttendance] = useState(true)
     const [personalAttendance, setPersonalAttendance] = useState()
 
-    const checkPersonalAttendance = () => {
-            const unsubGetUser = onSnapshot(doc(db, 'users', uid), (docAccountInfo)=> {
-                try{
-                    const q = query(collection(db, 'attendanceInformation'), where('groupId', '==', docAccountInfo.data().group[0]), where('userId', '==', docAccountInfo.id))
-                    const usubGetAttendance = onSnapshot(q, (attendance)=> {
-                            const attendanceData = []
-                            attendance.forEach((doc) => {
-                                attendanceData.push(doc.data());
-                            });
-                            setPersonalAttendance(attendanceData)
-                            setInitializePersonalAttendance(false)
-                        }
-                    )
-                    return usubGetAttendance
-                }catch(e){
-                    setPersonalAttendance(false)
-                    setInitializePersonalAttendance(false)
-                }
-                
+    const checkPersonalAttendance = async() => {
+        try{
+            const docRef = doc(db, "users", uid)
+            const docSnap = await getDoc(docRef)
+            const q = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id))
+            const unsubGetAttendance = onSnapshot(q, (attendance)=> {
+                const attendanceData = []
+                attendance.forEach((doc) => {
+                    attendanceData.push(doc.data());
+                });
+                setPersonalAttendance(attendanceData)
+                setInitializePersonalAttendance(false)
+                unsubGetAttendance()
+            }, (error) => {
+                setPersonalAttendance(false)
+                setInitializePersonalAttendance(false)
+                unsubGetAttendance()
             })
-            return unsubGetUser
+        }catch(e){
+            setPersonalAttendance(false)
+            setInitializePersonalAttendance(false)
+        }
     }
 
     useEffect(()=> {

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
 import LetterAvatar from '../../components/LetterAvatar/LetterAvatar'
 import ListGroupMember from '../../components/ListGroupAttendanceInformation/ListGroupMember'
-import Modal from '../../components/Modal/Modal'
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading'
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup'
 import { db } from '../../utils/Firebase/Firebase'
@@ -97,7 +96,7 @@ const DetailGroup = () => {
         <nav className='bg-blue-500 px-2 py-4 flex flex-row items-center drop-shadow'>
             <div className='basis-1/2 flex items-center'>
                 <ButtonIcon 
-                actionFunction={()=> navgiate(-1)} 
+                actionFunction={()=> navgiate('/')} 
                 icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                 </svg>}/>
