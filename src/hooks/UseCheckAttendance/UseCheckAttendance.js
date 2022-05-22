@@ -19,7 +19,7 @@ const UseCheckAttendance = () => {
             const docRef = doc(db, "users", uid)
             const docSnap = await getDoc(docRef)
                 if(docSnap.data().group){
-                    const attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()),orderBy('timestamp'), limit(1))
+                    const attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), orderBy('timestamp'), limit(1))
                     const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
                             attendance.forEach((doc) => {
                                 attendanceData.push({id: doc.id, ...doc.data()});

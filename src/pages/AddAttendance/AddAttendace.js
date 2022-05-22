@@ -17,9 +17,8 @@ const AddAttendace = () => {
   const [initilaizingGroupInfo, groupInfo] = useCheckGroup(user.currentUser.uid)
   const [attendanceData, setAttendanceData] = useState({})
   const [initializeAddAttendance, setInitializeAddAttendance] = useState(false)
-
   const [stepAddAttendance, setStepAddAttendance] = useState(1)
-
+  
   function handleStepAddAttendance(statusStepAddGroup){
     if(statusStepAddGroup === "prev"){
       setStepAddAttendance(stepAddAttendance - 1)
@@ -35,13 +34,14 @@ const AddAttendace = () => {
       setInitializeAddAttendance(true)
       const docRefGetUser = doc(db, "users", user.currentUser.uid);
       const docSnapGetUser = await getDoc(docRefGetUser);
+      const batch = writeBatch(db)
 
       const attendances = {
         userName: docSnapGetUser.data().displayName,
         userId: docSnapGetUser.id,
-        timestamp: Timestamp.now(),
+        timestamp: Timestamp.now() ,
         addDate: new Date(Timestamp.now().seconds*1000).toLocaleDateString(),
-        addTime: new Date(Timestamp.now().seconds*1000).toLocaleTimeString(),
+        addTime: new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5),
         updateDate: Timestamp.now(),
         groupId: docSnapGetUser.data().group[0],
         photoURL: docSnapGetUser.data().photoURL
@@ -49,16 +49,29 @@ const AddAttendace = () => {
 
       if(attendanceData.status === 'WFH'){
         attendances.status = 'WFH'
+        const attendanceRef = doc(collection(db, "attendanceInformation"))
+        batch.set(attendanceRef, attendances);
       }else if(attendanceData.status === 'WFO'){
         attendances.status = "WFO"
         attendances.wfoLocation = attendanceData.wfoLocation
+        const attendanceRef = doc(collection(db, "attendanceInformation"))
+        batch.set(attendanceRef, attendances);
       }else if(attendanceData.status === "Sakit"){
         attendances.status = "Sakit"
         attendances.sickReason = attendanceData.sickReason
+        const attendanceRef = doc(collection(db, "attendanceInformation"))
+        batch.set(attendanceRef, attendances);
       }else if(attendanceData.status === "Cuti"){
-        attendances.status = "Cuti"
-        attendances.startDate = new Date(attendanceData.startDate).toLocaleDateString()
-        attendances.endDate = new Date(attendanceData.endDate).toLocaleDateString()
+        for (let date = new Date(attendanceData.startDate); date <= new Date(attendanceData.endDate); date.setDate(date.getDate() + 1)){
+          attendances.status = "Cuti"
+          attendances.timestamp= date
+          attendances.addDate= date.toLocaleDateString()
+          attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
+          attendances.startDate = new Date(attendanceData.startDate).toLocaleDateString()
+          attendances.endDate = new Date(attendanceData.endDate).toLocaleDateString()
+          const attendanceRef = doc(collection(db, "attendanceInformation"))
+          batch.set(attendanceRef, attendances);
+        }
       }
 
       const transactions = {
@@ -68,11 +81,7 @@ const AddAttendace = () => {
         date: serverTimestamp()
       }
 
-      const batch = writeBatch(db)
-      const attendanceRef = doc(collection(db, "attendanceInformation"))
       const transacrionRef = doc(collection(db, "transactionInformation"))
-
-      batch.set(attendanceRef, attendances);
       batch.set(transacrionRef, transactions);
 
       await batch.commit()

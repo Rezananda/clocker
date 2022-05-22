@@ -32,6 +32,9 @@ const Account = () => {
         </div>
         <ul className='divide-y'>
           <li className='bg-white py-2 px-4 cursor-pointer'>
+            Kehadiran Saya
+          </li>
+          <li className='bg-white py-2 px-4 cursor-pointer'>
             Profil
           </li>
           <li className='bg-white py-2 px-4 cursor-pointer'>

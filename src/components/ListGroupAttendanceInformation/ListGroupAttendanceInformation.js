@@ -13,16 +13,16 @@ const ListGroupAttendanceInformation = ({val}) => {
               {val.userName}
           </p>
           <div className='flex items-center gap-1'>
-            <div className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded-full w-fit px-2 py-0.5'>{val.status}</div>
-            {val.status==='WFO'&&<div className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded-full w-fit px-2 py-0.5'>{val.wfoLocation}</div>}
-            {val.status==='Sakit'&&<div className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded-full w-fit px-2 py-0.5'>{val.sickReason}</div>}
-            {val.status==='Cuti'&&<div className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded-full w-fit px-2 py-0.5'>{val.startDate} - {val.endDate}</div>}
+            <div className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-2 py-0.5'>{val.status} {val.status === "WFH"? '🏠': val.status === "WFO" ? '🏢' : val.status === 'Sakit' ? '😷' : val.status === 'Cuti' ? '🏖️' :''} </div>
+            {val.status==='WFO'&&<div className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-2 py-0.5'>{val.wfoLocation}</div>}
+            {val.status==='Sakit'&&<div className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-2 py-0.5'>{val.sickReason}</div>}
+            {val.status==='Cuti'&&<div className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-2 py-0.5'>{val.startDate} - {val.endDate}</div>}
           </div>
         </div>
       </div>
     <div className='flex items-center'>
       <div className='text-xs'>
-            {new Date(val.timestamp.seconds*1000).toString().split(" ")[4].substring(0, 5)}
+            {val.addTime}
       </div>
     </div>
     </div>
