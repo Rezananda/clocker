@@ -16,13 +16,13 @@ const ConfirmationAddGroup = ({ groupName, groupStatus, locations, handleAddGrou
                 <div className='border-t border-gray-300'></div>
                 <li className=''> <p>Status Grup:</p> 
                   <div className='flex gap-2'>
-                    {groupStatus.map((item, i) => <div key={i} className='p-1 bg-blue-100 rounded text-gray-500 flex items-center gap-1'>{item}</div>)}
+                    {groupStatus.map((item, i) => <div key={i} className='px-2 bg-blue-100 rounded text-blue-500 flex items-center gap-1'>{item}</div>)}
                   </div>
                 </li>
                 <div className='border-t border-gray-300'></div>
                 <li className=''> <p>Lokasi WFO:</p> 
                   <div className='flex gap-2 flex-wrap'>
-                    {locations.map((item, i) => <div key={i} className='p-1 bg-blue-100 rounded text-gray-500 flex items-center gap-1'>{item}</div>)}
+                    {locations.map((item, i) => <div key={i} className='px-2 bg-blue-100 rounded text-blue-500 flex items-center gap-1'>{item}</div>)}
                   </div>
                 </li>
             </ul>

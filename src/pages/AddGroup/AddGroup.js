@@ -135,7 +135,7 @@ const AddGroup = () => {
               userId: user.currentUser.uid, 
               displayName: user.currentUser.displayName,
               photoURL: user.currentUser.photoURL,
-              roleUser: '01', 
+              roleUser: ['01', '03'], 
               status: '01'
             }
           ],
@@ -190,7 +190,7 @@ const AddGroup = () => {
         batch.update(groupInformationRef, {
           groupMember: arrayUnion({
             status: '02',
-            roleUser: '02',
+            // roleUser: '02',
             displayName: user.currentUser.displayName,
             photoURL: user.currentUser.photoURL,
             userId: user.currentUser.uid})

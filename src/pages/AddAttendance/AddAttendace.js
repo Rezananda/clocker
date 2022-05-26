@@ -18,7 +18,7 @@ const AddAttendace = () => {
   const [attendanceData, setAttendanceData] = useState({})
   const [initializeAddAttendance, setInitializeAddAttendance] = useState(false)
   const [stepAddAttendance, setStepAddAttendance] = useState(1)
-  
+
   function handleStepAddAttendance(statusStepAddGroup){
     if(statusStepAddGroup === "prev"){
       setStepAddAttendance(stepAddAttendance - 1)
@@ -62,15 +62,26 @@ const AddAttendace = () => {
         const attendanceRef = doc(collection(db, "attendanceInformation"))
         batch.set(attendanceRef, attendances);
       }else if(attendanceData.status === "Cuti"){
-        for (let date = new Date(attendanceData.startDate); date <= new Date(attendanceData.endDate); date.setDate(date.getDate() + 1)){
+        if(new Date(attendanceData.startDate).toLocaleDateString() === new Date(attendanceData.endDate).toLocaleDateString()){
           attendances.status = "Cuti"
-          attendances.timestamp= date
-          attendances.addDate= date.toLocaleDateString()
+          attendances.timestamp= new Date(attendanceData.startDate)
+          attendances.addDate= new Date(attendanceData.startDate).toLocaleDateString()
           attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
           attendances.startDate = new Date(attendanceData.startDate).toLocaleDateString()
           attendances.endDate = new Date(attendanceData.endDate).toLocaleDateString()
           const attendanceRef = doc(collection(db, "attendanceInformation"))
           batch.set(attendanceRef, attendances);
+        }else{
+          for (let date = new Date(attendanceData.startDate); date <= new Date(attendanceData.endDate); date.setDate(date.getDate() + 1)){
+            attendances.status = "Cuti"
+            attendances.timestamp= date
+            attendances.addDate= date.toLocaleDateString()
+            attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
+            attendances.startDate = new Date(attendanceData.startDate).toLocaleDateString()
+            attendances.endDate = new Date(attendanceData.endDate).toLocaleDateString()
+            const attendanceRef = doc(collection(db, "attendanceInformation"))
+            batch.set(attendanceRef, attendances);
+          }
         }
       }
 
@@ -110,7 +121,12 @@ const AddAttendace = () => {
       <div className='px-4 mt-20'>
         <div className='bg-white rounded-lg p-4 flex flex-col border border-gray-200'>
           <Stepper stepAddGroup={stepAddAttendance}/>
-          {stepAddAttendance === 1? <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} handleStepAddAttendance={handleStepAddAttendance}/> : stepAddAttendance === 2 ? <Confirmation initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} attendanceData={attendanceData} handleStepAddAttendance={handleStepAddAttendance} handleAddAttendance={handleAddAttendance} initializeAddAttendance={initializeAddAttendance}/> : stepAddAttendance === 3? <Result initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} attendanceData={attendanceData}/> : ""}
+          {stepAddAttendance === 1? 
+          <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} handleStepAddAttendance={handleStepAddAttendance}/> : 
+          stepAddAttendance === 2 ? 
+          <Confirmation initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} attendanceData={attendanceData} handleStepAddAttendance={handleStepAddAttendance} handleAddAttendance={handleAddAttendance} initializeAddAttendance={initializeAddAttendance}/> : 
+          stepAddAttendance === 3? 
+          <Result initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} attendanceData={attendanceData}/> : ""}
         </div>
       </div>
     </>

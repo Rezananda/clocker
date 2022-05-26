@@ -1,5 +1,5 @@
 import { arrayRemove, arrayUnion, collection, deleteField, doc, serverTimestamp, updateDoc, writeBatch } from 'firebase/firestore'
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ButtonFill from '../../components/Button/ButtonFill/ButtonFill'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
@@ -25,46 +25,44 @@ const HandleUserStatus = () => {
   const userContext = useUserContext()
   const location = useLocation()
   const navigate = useNavigate()
+  const [roleUser, setRoleUser] = useState([])
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  console.log(location.state)
+  const handleRoleUser = (event) => {
+    var updatedList = [...roleUser];
+    if (event.target.checked) {
+      updatedList = [...roleUser, event.target.value];
+    } else {
+      updatedList.splice(roleUser.indexOf(event.target.value), 1);
+    }
+    setRoleUser(updatedList);
+  };
 
-  const handleChangeStatus = async(userId, displayName, photoURL, status, roleUser, groupId, userStatus) => {
+  const handleChangeStatus = async(userId, displayName, photoURL, status,  groupId, userStatus) => {
     dispatch({type: "LOADING CHANGE STATUS", payload: true})
     const batch = writeBatch(db)
     const memberRef = doc(db, 'groupInformation', groupId)
     const transacrionRef = doc(collection(db, "transactionInformation"))
     const userRef = doc(db, 'users', userId)
 
-    const transactions = {
-      userId: userContext.currentUser.uid,
-      transaction: "approve group",
-      transactionType: 'add',
-      date: serverTimestamp()
-    }
-
     batch.update(memberRef, {
       groupMember: arrayRemove({
         displayName: displayName,
         photoURL: photoURL,
-        roleUser: roleUser,
         status: status,
         userId: userId
       })
     })
 
-    batch.set(transacrionRef, transactions)
-
-    // await updateDoc(memberRef, {
-    //     groupMember: arrayRemove({
-    //         displayName: displayName,
-    //         photoURL: photoURL,
-    //         roleUser: roleUser,
-    //         status: status,
-    //         userId: userId
-    //     })
-    // })
     if(userStatus === 'approve'){
+      const transactions = {
+        userId: userContext.currentUser.uid,
+        transaction: "approve group",
+        transactionType: 'add',
+        date: serverTimestamp()
+      }
+      batch.set(transacrionRef, transactions)
+
       batch.update(memberRef, {
         groupMember: arrayUnion({
           displayName: displayName,
@@ -75,18 +73,17 @@ const HandleUserStatus = () => {
         })
       })
       await batch.commit()
-      // await updateDoc(memberRef, {
-      //     groupMember: arrayUnion({
-      //         displayName: displayName,
-      //         photoURL: photoURL,
-      //         roleUser: roleUser,
-      //         status: '01',
-      //         userId: userId
-      //     })
-      // })
       dispatch({type: "LOADING CHANGE STATUS", payload: false})
       navigate('/detail-group')
-    } else if(userStatus === 'reject'){
+
+    } else if(userStatus === 'decline'){
+      const transactions = {
+        userId: userContext.currentUser.uid,
+        transaction: "decline group",
+        transactionType: 'add',
+        date: serverTimestamp()
+      }
+      batch.set(transacrionRef, transactions)
       batch.update(userRef, {
         group: deleteField()
       })
@@ -115,9 +112,20 @@ const HandleUserStatus = () => {
             <div className='flex items-center'>
               <p className='text-lg'>Nama: </p><p className='font-bold ml-1 text-lg'>{location.state.displayName}</p>
             </div>
+            <div>
+              <p className='text-lg'>Status:</p>
+              <div className='flex items-center gap-1'>
+                <input type={'checkbox'} value={'03'} onChange={handleRoleUser}/>
+                <span>User</span>
+              </div>
+              <div className='flex items-center gap-1'>
+                <input type={'checkbox'} value={'02'} onChange={handleRoleUser} disabled={!roleUser.includes('03')}/>
+                <span>Manajer</span>
+              </div>
+            </div>
             <div className='border-t border-gray-100'></div>
-            <ButtonFill additionalClass={'bg-blue-500 border-blue-500'} label={'Setuju'} handleClick={() => handleChangeStatus(location.state.userId, location.state.displayName, location.state.photoURL, location.state.status, location.state.roleUser, location.state.groupInfoId, 'approve')}/>
-            <ButtonOutline label={'Tolak'}/>
+            <ButtonFill disabled={!roleUser.includes('03')} additionalClass={!roleUser.includes('03') ?'bg-blue-200 border-blue-200' : 'bg-blue-500 border-blue-500'} label={'Setuju'} handleClick={() => handleChangeStatus(location.state.userId, location.state.displayName, location.state.photoURL, location.state.status, location.state.groupInfoId, 'approve')}/>
+            <ButtonOutline label={'Tolak'} handleClick={() => handleChangeStatus(location.state.userId, location.state.displayName, location.state.photoURL, location.state.status, location.state.groupInfoId, 'decline')}/>
           </div>
         </div>
       </div>

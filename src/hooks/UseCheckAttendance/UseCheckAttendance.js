@@ -13,32 +13,44 @@ const UseCheckAttendance = () => {
     const [attendanceEmpty, setAttendanceEmpty] = useState(false)
     const attendanceData = []
 
-    const checkAttandance = async () => {
+    const checkAttandance = async (type) => {
+        console.log(type)
         try{
             setInitializeAttendance(true)
             const docRef = doc(db, "users", uid)
             const docSnap = await getDoc(docRef)
+            let attendanceNowQuery;
                 if(docSnap.data().group){
-                    const attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), orderBy('timestamp'), limit(1))
-                    const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
-                            attendance.forEach((doc) => {
-                                attendanceData.push({id: doc.id, ...doc.data()});
-                            });
-                            if(attendanceData.length > 0){
-                                setAttandanceInfo(attendanceData)
-                                setlastvisibility(attendance.docs[attendance.docs.length-1])
-                                setInitializeAttendance(false)
-                                unsubGetAttendance()
-                            }else{
-                                setAttandanceInfo('noAttendance')
-                                setInitializeAttendance(false)
-                                unsubGetAttendance()
-                            }
-                        }, (error) => {
-                            console.log(error)
-                        }
-
-                    )
+                    if(type === 'all'){
+                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), orderBy('timestamp'), limit(10))
+                }else if(type === 'wfh'){
+                    console.log('wfh nih')
+                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'WFH'), orderBy('timestamp'), limit(10))
+                }else if(type === 'wfo'){
+                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'WFO'), orderBy('timestamp'), limit(10))
+                }else if(type === 'cuti'){
+                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'Cuti'), orderBy('timestamp'), limit(10))
+                }else if(type === 'sakit'){
+                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'Sakit'), orderBy('timestamp'), limit(10))
+                }
+                const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
+                    attendance.forEach((doc) => {
+                        attendanceData.push({id: doc.id, ...doc.data()});
+                    });
+                    if(attendanceData.length > 0){
+                        setAttandanceInfo(attendanceData)
+                        setlastvisibility(attendance.docs[attendance.docs.length-1])
+                        setInitializeAttendance(false)
+                        unsubGetAttendance()
+                    }else{
+                        setAttandanceInfo('noAttendance')
+                        setInitializeAttendance(false)
+                        unsubGetAttendance()
+                    }
+                }, (error) => {
+                    console.log(error)
+                }
+            )                       
                 }else{
                     setAttandanceInfo('noGroup')
                     setInitializeAttendance(false)
@@ -49,7 +61,7 @@ const UseCheckAttendance = () => {
     }
     
     useEffect(()=> {
-        const getAttendance = checkAttandance()
+        const getAttendance = checkAttandance('all')
         return getAttendance
     }, [])
 
@@ -85,7 +97,7 @@ const scroll = async() => {
     }
 }
 
-  return [initializeAttendance, initializeAttendanceMore, attendanceInfo, attendanceEmpty, scroll]
+  return [initializeAttendance, initializeAttendanceMore, attendanceInfo, attendanceEmpty, scroll, checkAttandance]
 }
 
 export default UseCheckAttendance

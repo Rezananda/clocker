@@ -12,7 +12,27 @@ import LoadingListAttendance from '../LoadingPulse/LoadingListAttendance'
 
 const GroupAttendanceInformation = () => {
   const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
-  const [initializeAttendance, initializeAttendanceMore, attendanceInfo, attendanceEmpty, scroll] = UseCheckAttendance()
+  const [initializeAttendance, initializeAttendanceMore, attendanceInfo, attendanceEmpty, scroll, checkAttandance] = UseCheckAttendance()
+  const [filter, setFilter] = useState('all')
+
+  const handleFilter = (type) => {
+    if(type === 'all'){
+      setFilter('all')
+      checkAttandance('all')
+    }else if(type === 'wfh'){
+      setFilter('WFH')
+      checkAttandance('wfh')
+    }else if(type === 'wfo'){
+      setFilter('WFO')
+      checkAttandance('wfo')
+    }else if(type === 'sakit'){
+      setFilter('Sakit')
+      checkAttandance('sakit')
+    }else if(type === 'cuti'){
+      setFilter('Cuti')
+      checkAttandance('cuti')
+    }
+  }
 
   return (
     <div className='px-4'>
@@ -42,7 +62,7 @@ const GroupAttendanceInformation = () => {
             {groupInfo.data.groupStatus.map((val, index) => 
               <Chip key={index} text={val} enable={false} emoji={val === "WFH"? '🏠': val === "WFO" ? '🏢' : val === 'Sakit' ? '😷' : val === 'Cuti' ? '🏖️' :''}/>
             )}
-            <Chip text={"Belum "} emoji={'⛔'} enable={false} /> 
+            <Chip text={"Belum "} emoji={'⛔'} enable={false} />
           </div>
           <p className='text-sm text-gray-500 text-center'>-Belum Ada Kehadiran-</p>
           <FloatingButton/>
@@ -54,11 +74,11 @@ const GroupAttendanceInformation = () => {
           <div>
             <p className='font-bold mb-2'>Kehadiran Hari Ini ({new Date().getDate()}/{new Date().getMonth()+1})</p>
             <div className='flex gap-1 overflow-x-auto'>
-              <Chip text="Semua" enable={true} emoji={'📖'} /> 
+              <Chip text="Semua" enable={filter === 'all'} emoji={'📖'} handleClick={() => handleFilter('all')} /> 
               {groupInfo.data.groupStatus.map((val, index) => 
-                <Chip key={index} text={val} enable={false} emoji={val === "WFH"? '🏠': val === "WFO" ? '🏢' : val === 'Sakit' ? '😷' : val === 'Cuti' ? '🏖️' :''}/>
+                <Chip key={index} text={val} enable={val === filter} emoji={val === "WFH"? '🏠': val === "WFO" ? '🏢' : val === 'Sakit' ? '😷' : val === 'Cuti' ? '🏖️' :''} handleClick={() => handleFilter(val === "WFH"? 'wfh': val === "WFO" ? 'wfo' : val === 'Sakit' ? 'sakit' : val === 'Cuti' ? 'cuti' :'')}/>
               )}
-              <Chip text={"Belum "} emoji={'⛔'} enable={false} /> 
+              <Chip text={"Belum "} emoji={'⛔'} enable={false} handleClick={() => handleFilter('belum')} /> 
             </div>
             <FloatingButton/>
           </div>

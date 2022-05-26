@@ -15,6 +15,7 @@ import Login from './pages/Login/Login'
 import Notifications from './pages/Notifications/Notifications'
 import Registration from './pages/Registration/Registration'
 import Transactions from './pages/Transactions/Transactions'
+import UpdateAttendance from './pages/UpdateAttendance/UpdateAttendance'
 import PrivateRoute from './utils/Route/PrivateRoute/PrivateRoute'
 import PublicRoute from './utils/Route/PublicRoute/PublicRoute'
 
@@ -35,6 +36,7 @@ const App = () => {
                 <Route path="/notifications" element={<DashboardSectionWithNavbar> <Notifications/></DashboardSectionWithNavbar>}/>
                 <Route path="/profile" element={<DashboardSectionWithNavbar><Account/></DashboardSectionWithNavbar>} />
                 <Route path='/add-attendance' element={<DashboardSectionWithoutNavbar><AddAttendace/></DashboardSectionWithoutNavbar>}/>
+                <Route path='/update-attendance' element={<DashboardSectionWithoutNavbar><UpdateAttendance/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/add-group' element={<DashboardSectionWithoutNavbar><AddGroup/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/detail-group' element={<DashboardSectionWithoutNavbar><DetailGroup/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/change-status' element={<DashboardSectionWithoutNavbar><HandleUserStatus/></DashboardSectionWithoutNavbar>}/>

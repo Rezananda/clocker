@@ -43,31 +43,6 @@ const DetailGroup = () => {
         navigator.clipboard.writeText(groupInfo.id)
     }
 
-    const handleChangeStatus = async(userId, displayName, photoURL, status, roleUser, groupId) => {
-        dispatch({type: "HANDLE SHOW MODAL", payload: false})
-        dispatch({type: "LOADING CHANGE STATUS", payload: true})
-        const memberRef = doc(db, 'groupInformation', groupId)
-        await updateDoc(memberRef, {
-            groupMember: arrayRemove({
-                displayName: displayName,
-                photoURL: photoURL,
-                roleUser: roleUser,
-                status: status,
-                userId: userId
-            })
-        })
-        await updateDoc(memberRef, {
-            groupMember: arrayUnion({
-                displayName: displayName,
-                photoURL: photoURL,
-                roleUser: roleUser,
-                status: '01',
-                userId: userId
-            })
-        })
-        dispatch({type: "LOADING CHANGE STATUS", payload: false})
-    }
-
     const handleDeleteUser =  async(userId, displayName, photoURL, status, roleUser, groupId) => {
         dispatch({type: "HANDLE DROPDOWN", payload: false})
         dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: false})

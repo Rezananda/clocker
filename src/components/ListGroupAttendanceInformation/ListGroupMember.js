@@ -13,28 +13,40 @@ const ListGroupMember = ({val, groupInfo, dispatch, state}) => {
             <span className='text-sm flex items-center text-gray-600'>
             {val.displayName}
             </span>
-            
-            {val.roleUser === '01' ? 
+
+            <div className='flex items-center gap-1'>
+                {val.hasOwnProperty('roleUser')&&val.roleUser.includes('01')&&
                 <span className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-1 py-0.5'>
                     Admin
-                </span>
-            : val.roleUser === '02' &&  val.status === '01' ? 
+                </span>                
+                }
+
+                {val.hasOwnProperty('roleUser')&&val.roleUser.includes('03')&&
                 <span className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-1 py-0.5'>
                     User
                 </span>
-            : 
+                }   
+                
+                {val.hasOwnProperty('roleUser')&&val.roleUser.includes('02')&&
+                <span className='text-xs font-bold text-blue-500 flex items-center bg-blue-100 rounded w-fit px-1 py-0.5'>
+                    Manajer
+                </span>
+                }
+
+                {!val.hasOwnProperty('roleUser')&&
                 <span className='text-xs font-bold text-yellow-500 flex items-center bg-yellow-100 rounded w-fit px-1 py-0.5'>
                     Permohonan User
                 </span>
-            }
+                }       
+            </div>
             
         </div>
         </div>
         <div className='flex flex-end'>
-            {(groupInfo.roleUser === '01' && val.status === '01' && val.roleUser === '01') ? 
+            {(groupInfo.roleUser.includes('01') && val.status === '01' && val.roleUser.includes('01')) ? 
             null
                 :
-            (groupInfo.roleUser === '01' && val.status === '02' && val.roleUser === '02') ?
+            ((groupInfo.roleUser.includes('01') || groupInfo.roleUser.includes('02')) && val.status === '02') ?
             <>                                    
                 <button onClick={() => navigate('/change-status', {state:{userId: val.userId, displayName:val.displayName, photoURL:val.photoURL, status:val.status, roleUser:val.roleUser, groupInfoId: groupInfo.id}})} className='bg-blue-500 rounded-full text-xs text-white font-bold px-2 py-1 flex gap-1 items-center'>Ubah 
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
@@ -43,7 +55,7 @@ const ListGroupMember = ({val, groupInfo, dispatch, state}) => {
                 </button>
             </>
             :
-            (groupInfo.roleUser === '01' && val.status === '01' && val.roleUser === '02') ?
+            (groupInfo.roleUser.includes('01') && val.status === '01' && val.roleUser.includes('02')) ?
             <div>
                 <ButtonIcon actionFunction={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} icon={<svg className="h-6 w-6 text-blue-500"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="1" />  <circle cx="12" cy="19" r="1" />  <circle cx="12" cy="5" r="1" /></svg>}/>
                 <div className='flex justify-end'>                            
@@ -51,7 +63,6 @@ const ListGroupMember = ({val, groupInfo, dispatch, state}) => {
                         <li onClick={() => dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser})} className="text-center cursor-pointer">Hapus User</li> 
                     </ul>
                 </div>
-
             </div> 
             :
             null

@@ -17,7 +17,7 @@ const UseCheckPersonalAttendance = () => {
             const unsubGetAttendance = onSnapshot(q, (attendance)=> {
                 const attendanceData = []
                 attendance.forEach((doc) => {
-                    attendanceData.push(doc.data());
+                    attendanceData.push({id: doc.id, data: doc.data()});
                 });
                 setPersonalAttendance(attendanceData)
                 setInitializePersonalAttendance(false)
