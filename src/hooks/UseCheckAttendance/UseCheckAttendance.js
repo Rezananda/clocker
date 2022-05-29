@@ -14,7 +14,6 @@ const UseCheckAttendance = () => {
     const attendanceData = []
 
     const checkAttandance = async (type) => {
-        console.log(type)
         try{
             setInitializeAttendance(true)
             const docRef = doc(db, "users", uid)
@@ -22,35 +21,34 @@ const UseCheckAttendance = () => {
             let attendanceNowQuery;
                 if(docSnap.data().group){
                     if(type === 'all'){
-                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), orderBy('timestamp'), limit(10))
-                }else if(type === 'wfh'){
-                    console.log('wfh nih')
-                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'WFH'), orderBy('timestamp'), limit(10))
-                }else if(type === 'wfo'){
-                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'WFO'), orderBy('timestamp'), limit(10))
-                }else if(type === 'cuti'){
-                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'Cuti'), orderBy('timestamp'), limit(10))
-                }else if(type === 'sakit'){
-                    attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'Sakit'), orderBy('timestamp'), limit(10))
-                }
-                const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
-                    attendance.forEach((doc) => {
-                        attendanceData.push({id: doc.id, ...doc.data()});
-                    });
-                    if(attendanceData.length > 0){
-                        setAttandanceInfo(attendanceData)
-                        setlastvisibility(attendance.docs[attendance.docs.length-1])
-                        setInitializeAttendance(false)
-                        unsubGetAttendance()
-                    }else{
-                        setAttandanceInfo('noAttendance')
-                        setInitializeAttendance(false)
-                        unsubGetAttendance()
+                        attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), orderBy('timestamp', 'desc'), limit(10))
+                    }else if(type === 'wfh'){
+                        attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'WFH'), orderBy('timestamp', 'desc'), limit(10))
+                    }else if(type === 'wfo'){
+                        attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'WFO'), orderBy('timestamp', 'desc'), limit(10))
+                    }else if(type === 'cuti'){
+                        attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'Cuti'), orderBy('timestamp', 'desc'), limit(10))
+                    }else if(type === 'sakit'){
+                        attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'Sakit'), orderBy('timestamp', 'desc'), limit(10))
                     }
-                }, (error) => {
-                    console.log(error)
-                }
-            )                       
+                    const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
+                        attendance.forEach((doc) => {
+                            attendanceData.push({id: doc.id, ...doc.data()});
+                        });
+                        if(attendanceData.length > 0){
+                            setAttandanceInfo(attendanceData)
+                            setlastvisibility(attendance.docs[attendance.docs.length-1])
+                            setInitializeAttendance(false)
+                            unsubGetAttendance()
+                        }else{
+                            setAttandanceInfo('noAttendance')
+                            setInitializeAttendance(false)
+                            unsubGetAttendance()
+                        }
+                    }, (error) => {
+                        console.log(error)
+                    }
+                )                       
                 }else{
                     setAttandanceInfo('noGroup')
                     setInitializeAttendance(false)
@@ -61,8 +59,10 @@ const UseCheckAttendance = () => {
     }
     
     useEffect(()=> {
-        const getAttendance = checkAttandance('all')
-        return getAttendance
+        checkAttandance('all')
+        return () => (
+            checkAttandance('all')
+        )
     }, [])
 
 const updateData = (attendance) => {
@@ -78,12 +78,23 @@ const updateData = (attendance) => {
     }
 }
 
-const scroll = async() => {
+const scroll = async(type) => {
     try{
         setInitializeAttendanceMore(true)
         const docRef = doc(db, "users", uid)
         const docSnap = await getDoc(docRef)
-        const attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), orderBy('timestamp'), startAfter(lastvisibility), limit(1))
+        let attendanceNowQuery;
+        if(type === 'all'){
+            attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(1))
+        }else if(type === 'wfo'){
+            attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'WFO'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(1))
+        }else if(type === 'wfh'){
+            attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'WFH'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(1))
+        }else if(type === 'cuti'){
+            attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'Cuti'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(1))
+        }else if(type === 'sakit'){
+            attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', new Date(Date.now()).toLocaleDateString()), where('status', '==', 'Sakit'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(1))           
+        }
         const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
             updateData(attendance)
             setInitializeAttendanceMore(false)

@@ -13,9 +13,16 @@ const useGetHistory = () => {
     const [historyData, setHistoryData] = useState([])
     const historys = []
 
-    const getHistory = async() => {
+    const getHistory = async(type) => {
         setInitializeHistory(true)
-        const historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), orderBy('date'), limit(5))
+        let historyQuery;
+        if(type === 'all'){
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), orderBy('date', 'desc'), limit(5))
+        }else if(type === 'tambah'){
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'add'), orderBy('date', 'desc'), limit(5))
+        }else if(type === 'ubah'){
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'update'), orderBy('date', 'desc'), limit(5))
+        }
         const unsubGetAttendance = onSnapshot(historyQuery, (history)=> {
             history.forEach((doc) => {
                 historys.push({id: doc.id, ...doc.data()});
@@ -35,7 +42,7 @@ const useGetHistory = () => {
     }
 
     useEffect(() => {
-        const getAttendance = getHistory()
+        const getAttendance = getHistory('all')
         return getAttendance
     }, [])
     
@@ -52,10 +59,17 @@ const useGetHistory = () => {
         }
     }
 
-    const scroll = async() => {
+    const scroll = async(type) => {
         try{
             setInitializeHistoryMore(true)
-            const historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), orderBy('date'), startAfter(lastvisibility), limit(5))
+            let historyQuery;
+            if(type === 'all'){
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), orderBy('date', 'desc'), startAfter(lastvisibility), limit(5))
+            }else if(type === 'tambah'){
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'add'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(5))               
+            }else if(type === 'ubah'){
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'update'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(5))               
+            }
             const unsubGetAttendance = onSnapshot(historyQuery, (history)=> {
                 updateData(history)
                 setInitializeHistoryMore(false)
@@ -68,7 +82,7 @@ const useGetHistory = () => {
         }
     }
 
-  return [historyData, historyEmpty, initializeHistory, initializeHistoryMore, scroll]
+  return [historyData, historyEmpty, initializeHistory, initializeHistoryMore, scroll, getHistory]
 }
 
 export default useGetHistory

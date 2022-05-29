@@ -21,9 +21,9 @@ const Result = ({initilaizingGroupInfo, groupInfo, attendanceData}) => {
         <ul className='flex flex-col gap-2'>
           <li><p className=''>Kehadiran</p> <p className='font-bold text-lg'>{attendanceData.status}</p></li>
           <div className='border-t border-gray-300'></div>
-          {attendanceData.wfoLocation&&<li className='flex items-center'><p className=''>Lokasi WFO</p> <p className='font-bold text-lg'>: {attendanceData.wfoLocation}</p></li>}
+          {attendanceData.wfoLocation&&<li className=''><p className=''>Lokasi WFO</p> <p className='font-bold text-lg'>{attendanceData.wfoLocation}</p></li>}
           {attendanceData.startDate&&attendanceData.endDate&&<li className=''><p className=''>Lama Cuti</p> <p className='font-bold text-lg'>{new Date(attendanceData.startDate).toLocaleDateString()} - {new Date(attendanceData.endDate).toLocaleDateString()}</p></li>}
-          {attendanceData.sickReason&&<li className='flex items-center'><p className=''>Alasan Sakit</p> <p className='font-bold text-lg'>: {attendanceData.sickReason}</p></li>}
+          {attendanceData.sickReason&&<li className=''><p className=''>Alasan Sakit</p> <p className='font-bold text-lg'>: {attendanceData.sickReason}</p></li>}
           <div className='border-t border-gray-300'></div>
         </ul>
         <ButtonOutline handleClick={() => navigate('/')} label="Kembali ke Beranda"/>

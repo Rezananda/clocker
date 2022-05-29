@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ButtonLink from '../../components/Button/ButtonLink/ButtonLink'
 import Chip from '../../components/Chip/Chip'
+import LoadingTransaction from '../../components/LoadingPulse/LoadingTransaction'
 import useGetHistory from '../../hooks/UseGetHistory/useGetHistory'
 
 const Transactions = () => {
-  const [historyData, historyEmpty, initializeHistory, initializeHistoryMore, scroll] = useGetHistory()
+  const [historyData, historyEmpty, initializeHistory, initializeHistoryMore, scroll, getHistory] = useGetHistory()
+  const [filter, setFilter] = useState('all')
+
+  const handleFilter = (type) => {
+    if(type === 'all'){
+      setFilter('all')
+      getHistory('all')
+    }else if(type === 'tambah'){
+      setFilter('tambah')
+      getHistory('tambah')
+    }else if(type === 'ubah'){
+      setFilter('ubah')
+      getHistory('ubah')
+    }
+  }
+
   return (
     <>
         <nav className='py-3 px-2 bg-blue-500 drop-shadow mb-2'>
@@ -13,11 +29,12 @@ const Transactions = () => {
             </p>
         </nav>
         <div className='flex items-center gap-2 p-1'>
-          <Chip text={"Tambah"} enable={true} /> 
-          <Chip text={"Ubah"} enable={false} /> 
+          <Chip text={"Semua"} enable={filter === 'all'} handleClick={() => handleFilter('all')} /> 
+          <Chip text={"Tambah"} enable={filter === 'tambah'} handleClick={() => handleFilter('tambah')} /> 
+          <Chip text={"Ubah"} enable={filter === 'ubah'} handleClick={() => handleFilter('ubah')} /> 
         </div>
         {initializeHistory? 
-        <p>Loading...</p>
+        <LoadingTransaction/>
         :
         <div>
           {historyData === 'noHistory' ? 
@@ -26,16 +43,25 @@ const Transactions = () => {
           historyData.map((val, index) => (
             <div key={index} className='bg-white border-b border-gray-200'>
               <div className='p-2 flex items-center justify-between'>
-                <div className='flex flex-col'>
-                  {val.transaction === "attendance"&&<p className='font-bold'>Kehadiran</p>}
-                  {val.transaction === "join group"&&<p className='font-bold'>Bergabung Grup</p>}
-                  {val.transaction === "add group"&&<p className='font-bold'>Tambah Grup</p>}
-                  {val.transaction === "approve group"&&<p className='font-bold'>Menyetujui User</p>}
-                  {val.transactionType === "add"&&<div className='bg-blue-100 w-fit text-xs text-blue-500 rounded py-0.5 px-1'>Tambah</div>}
-                  {val.transactionType === "update"&&<div className='bg-blue-100 border border-blue-500 text-blue-500 rounded p-1'>Ubah</div>}
-               </div>
+                <div className='flex items-center gap-2'>
+                  {val.transaction === 'attendance'&&'🕖'
+                  }
+                  {val.transaction === 'join group'&&'👥'
+                  }
+                  {val.transaction === 'add group'&&'➕'
+                  }
+                  {val.transaction === 'approve group'&&'✔️'
+                  }
+                  <div className='flex flex-col'>
+                    {val.transaction === "attendance"&&<p className='font-bold'>Kehadiran</p>}
+                    {val.transaction === "join group"&&<p className='font-bold'>Bergabung Grup</p>}
+                    {val.transaction === "add group"&&<p className='font-bold'>Buat Grup</p>}
+                    {val.transaction === "approve group"&&<p className='font-bold'>Menyetujui User</p>}
+                    {val.transactionType === "add"&&<div className='bg-blue-100 w-fit text-xs text-blue-500 rounded py-0.5 px-1'>Tambah</div>}
+                    {val.transactionType === "update"&&<div className='bg-orange-100 w-fit text-xs text-orange-500 rounded py-0.5 px-1'>Ubah</div>}
+                </div>
+                </div>
                <p className='text-xs'>{new Date(val.date.seconds * 1000).toLocaleDateString()}, {new Date(val.date.seconds * 1000).toTimeString().split(' ')[0].substring(0,5)} </p>
- 
               </div>
             </div>
           ))}
@@ -48,7 +74,7 @@ const Transactions = () => {
                   </svg>
                 </div>
             }
-            {!initializeHistoryMore&&!historyEmpty&&<ButtonLink linkTo={scroll} newProps={'text-sm'} label={'Selanjutnya'}/>}
+            {!initializeHistoryMore&&!historyEmpty&&<ButtonLink linkTo={() => scroll(filter === 'all' ? 'all' : filter === 'tambah'? 'tambah' : filter === 'ubah' ? 'ubah' : '')} newProps={'text-sm'} label={'Selanjutnya'}/>}
           </div>
         </div>
         }

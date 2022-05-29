@@ -1,4 +1,4 @@
-import { doc, getDoc, Timestamp, writeBatch } from 'firebase/firestore'
+import { collection, doc, getDoc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
 import React, { useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
@@ -31,7 +31,6 @@ const UpdateAttendance = () => {
 
     useEffect(() => {
       getAttendance()
-    
       return () => {
         getAttendance()
       }
@@ -102,6 +101,16 @@ const UpdateAttendance = () => {
             }
           }
         }
+        const transactions = {
+          userId: docSnapGetUser.id,
+          transaction: "attendance",
+          transactionType: 'update',
+          date: serverTimestamp()
+        }
+  
+        const transacrionRef = doc(collection(db, "transactionInformation"))
+        batch.set(transacrionRef, transactions);
+
         await batch.commit()
         setInitializeUpdateAttendance(false)
         handleStepUpdateAttendance('next')

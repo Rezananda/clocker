@@ -42,20 +42,20 @@ const AttendanceInformation = () => {
                 <div className='border-b border-gray-200'></div>
                 {initializePersonalAttendance ? <LoadingAttendanceInformationClockInStatus/>
                 :
-                personalAttendance.find(val => val.data.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()) ? 
+                personalAttendance.find(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()) ? 
                 <>
-                {personalAttendance.filter(val => val.data.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()).map((val, index) => (
+                {personalAttendance.filter(val => val.addDate === new Date(Timestamp.now().seconds*1000).toLocaleDateString()).map((val, index) => (
                     <div key={index} className='flex flex-col gap-2 p-4'>
                         <AlertStatus type={'success'} text={`Kamu Sudah Clock-In`}/>
                         <div className='flex items-center justify-between'>
-                            <p className='text-sm'>Clock-In pada {val.data.addTime}</p>
+                            <p className='text-sm'>Clock-In pada {val.addTime}</p>
                             <div className='font-bold px-2 py-1 rounded flex gap-2 font-bold bg-blue-100'>
                                 <div className='flex items-center gap-1'>
                                     <p className='text-blue-500'>
-                                        {val.data.status} 
+                                        {val.status} 
                                     </p>
                                     <p>
-                                        {val.data.status === "WFH"? '🏠': val.data.status === "WFO" ? '🏢' : val.data.status === 'Sakit' ? '😷' : val.data.status === 'Cuti' ? '🏖️' :''}
+                                        {val.status === "WFH"? '🏠': val.status === "WFO" ? '🏢' : val.status === 'Sakit' ? '😷' : val.status === 'Cuti' ? '🏖️' :''}
                                     </p>
                                 </div>
                                 <div className='border-r border-blue-500'></div>
@@ -83,7 +83,7 @@ const AttendanceInformation = () => {
             <>
                 <div className='flex flex-col gap-2 px-4 py-2'>
                     <div className='flex justify-start'>
-                        <p className='text-lg font-bold'>{groupInfo.data.groupName}</p>
+                        <p className='text-lg font-bold'>{groupInfo.groupName}</p>
                     </div>
                 </div>
                 <div className='border-b border-gray-200'></div>

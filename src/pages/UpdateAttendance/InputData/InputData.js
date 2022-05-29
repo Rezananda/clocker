@@ -32,7 +32,7 @@ const InputData = ({setAttendanceData, attendanceData, handleStepUpdateAttendanc
         {attendanceData.status === 'Sakit' && 
         <div>
             <LabelTypography textValue="Alasan Sakit"/>
-            <Input handleChange={(e) => setAttendanceData((prevState) => ({...prevState, [e.target.name] : e.target.value}))} maxLength={20} type="text" name="sickReason" placeholder="Alasan Sakit"/>
+            <Input value={attendanceData.sickReason} handleChange={(e) => setAttendanceData((prevState) => ({...prevState, [e.target.name] : e.target.value}))} maxLength={20} type="text" name="sickReason" placeholder="Alasan Sakit"/>
         </div>
         }
         {attendanceData.status === 'Cuti' &&
@@ -75,7 +75,7 @@ const InputData = ({setAttendanceData, attendanceData, handleStepUpdateAttendanc
             <select onChange={(e) => setAttendanceData((prevState) => ({...prevState, wfoLocation: e.target.value}))} defaultValue={'DEFAULT'} className="bg-blue-50 text-gray-900 text-sm rounded-lg block w-full px-4 py-3">
                 <option value={'DEFAULT'} disabled>Pilih...</option>
                 {groupInfo.data.groupLocation.map((val, index) => (
-                    <option key={index} value={val}>{val}</option>
+                    <option selected={val} key={index} value={val}>{val}</option>
                 ))}
             </select>
             }

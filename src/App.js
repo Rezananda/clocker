@@ -6,12 +6,15 @@ import AuthProvider from './context/AuthProvider/AuthProvider'
 import RouteProvider from './context/RouteProvider/RouteProvider'
 import Account from './pages/Account/Account'
 import AddAttendace from './pages/AddAttendance/AddAttendace'
+import AddFromMyDate from './pages/AddFromMyDate/AddFromMyDate'
 import AddGroup from './pages/AddGroup/AddGroup'
 import DetailGroup from './pages/DetailGroup/DetailGroup'
 import ForgetPassword from './pages/ForgetPassword/ForgetPassword'
 import HandleUserStatus from './pages/HandleUserStatus/HandleUserStatus'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
+import MyAttendance from './pages/MyAttendance/MyAttendance'
+import MyDate from './pages/MyDate/MyDate'
 import Notifications from './pages/Notifications/Notifications'
 import Registration from './pages/Registration/Registration'
 import Transactions from './pages/Transactions/Transactions'
@@ -40,6 +43,9 @@ const App = () => {
                 <Route path='/add-group' element={<DashboardSectionWithoutNavbar><AddGroup/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/detail-group' element={<DashboardSectionWithoutNavbar><DetailGroup/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/change-status' element={<DashboardSectionWithoutNavbar><HandleUserStatus/></DashboardSectionWithoutNavbar>}/>
+                <Route path='/my-date' element={<DashboardSectionWithoutNavbar><MyDate/></DashboardSectionWithoutNavbar>}/>
+                <Route path='/add-my-date' element={<DashboardSectionWithoutNavbar><AddFromMyDate/></DashboardSectionWithoutNavbar>}/>
+                <Route path='/my-attendance' element={<DashboardSectionWithoutNavbar><MyAttendance/></DashboardSectionWithoutNavbar>}/>
               </Route>
               <Route path="*" element={<p>Page Not Found</p>}/>
           </Routes>
