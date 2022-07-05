@@ -10,23 +10,20 @@ const ConfirmationAddGroup = ({ groupName, groupStatus, locations, handleAddGrou
       {error&&<Alert type={'error'} text={errorMessage}/>}
         <div className='flex flex-col'>
             <ul className='flex flex-col gap-2 mb-4'>
-                <li className='flex items-center'><p>Nama Grup</p> <span className='font-bold'>: {groupName}</span></li>
-                <div className='border-t border-gray-300'></div>
-                <li className='flex items-center'><p>Kapasitas Group</p> <span className='font-bold'>: 50</span></li>
-                <div className='border-t border-gray-300'></div>
-                <li className=''> <p>Status Grup:</p> 
-                  <div className='flex gap-2'>
-                    {groupStatus.map((item, i) => <div key={i} className='px-2 bg-blue-100 rounded text-blue-500 flex items-center gap-1'>{item}</div>)}
+                <li><p>Nama Grup</p><p className='font-bold text-lg'>{groupName}</p></li>
+                <li><p>Kapasitas Group</p><p className='font-bold text-lg'>50</p></li>
+                <li> <p>Status Grup</p> 
+                  <div className='flex gap-2 flex-wrap'>
+                    {groupStatus.map((item, i) => <div key={i} className='px-2 bg-blue-100 rounded-lg text-blue-500 flex items-center gap-1 text-lg font-bold'>{item}</div>)}
                   </div>
                 </li>
-                <div className='border-t border-gray-300'></div>
-                <li className=''> <p>Lokasi WFO:</p> 
+                <li> <p>Lokasi WFO</p> 
                   <div className='flex gap-2 flex-wrap'>
-                    {locations.map((item, i) => <div key={i} className='px-2 bg-blue-100 rounded text-blue-500 flex items-center gap-1'>{item}</div>)}
+                    {locations.map((item, i) => <div key={i} className='px-2 bg-blue-100 rounded-lg text-blue-500 flex items-center gap-1 text-lg font-bold'>{item}</div>)}
                   </div>
                 </li>
             </ul>
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-2'>
               <ButtonFill label="Tambah" handleClick={handleAddGroup} additionalClass={'bg-blue-500 border-blue-500'}/>
               <ButtonOutline label="Kembali" handleClick={() => handleStepAddGroup('prev')}/>
             </div>

@@ -50,7 +50,9 @@ const ForgetPassword = () => {
   return (
     <>
         <div className='flex justify-center min-h-screen bg-gray-100 md:items-center'>
-            {(state.step === 1)? <InputData dispatch={dispatch} email={state.email} handleEmailReset={handleEmailReset} validateForm={validateForm()}/> : (state.step === 2)? <ResultReset/> : ""}
+            <div className='px-4 py-4 w-full'>
+                {(state.step === 1)? <InputData dispatch={dispatch} email={state.email} handleEmailReset={handleEmailReset} validateForm={validateForm()}/> : (state.step === 2)? <ResultReset/> : ""}
+            </div>
         </div>
         {state.initialize ? 
         <SpinnerLoading/>

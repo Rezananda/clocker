@@ -8,14 +8,13 @@ const useGetCalender = () => {
     const uid = userContext.currentUser.uid
     const [calenderData, getCalenderData] = useState([])
     const [initializeCalenderData, getInitializeCalenderData] = useState(false)
-    const [initializeAttendanceMore, setInitializeAttendanceMore] = useState(false)
     const [lastvisibility, setlastvisibility] = useState();
     const [attendanceEmpty, setAttendanceEmpty] = useState(false)
     const calenders = []
 
     const handleGetCalenderData = () => {
         getInitializeCalenderData(true)
-        const calenderQuery = query(collection(db, 'attendanceInformation'), where('status', '==', 'Cuti'), where('userId', '==', uid), orderBy('timestamp', 'desc'), limit(2))
+        const calenderQuery = query(collection(db, 'attendanceInformation'), where('status', '==', 'Cuti'), where('userId', '==', uid), orderBy('timestamp', 'desc'), limit(10))
         const unsubGetCalenderData = onSnapshot(calenderQuery, (calender)=> {
             calender.forEach((doc) => {
                 calenders.push({id: doc.id, ...doc.data()});
@@ -55,11 +54,9 @@ const useGetCalender = () => {
 
     const scroll = async() => {
       try{
-          setInitializeAttendanceMore(true)
-          const calenderQuery = query(collection(db, 'attendanceInformation'), where('status', '==', 'Cuti'), where('userId', '==', uid), orderBy('timestamp', 'desc'),startAfter(lastvisibility), limit(2))
+          const calenderQuery = query(collection(db, 'attendanceInformation'), where('status', '==', 'Cuti'), where('userId', '==', uid), orderBy('timestamp', 'desc'),startAfter(lastvisibility), limit(10))
           const unsubGetAttendance = onSnapshot(calenderQuery, (calender)=> {
               updateData(calender)
-              setInitializeAttendanceMore(false)
               unsubGetAttendance()
           })
       }catch (e){
@@ -67,7 +64,7 @@ const useGetCalender = () => {
       }
   }
     
-  return [calenderData, initializeCalenderData, initializeAttendanceMore, attendanceEmpty, scroll]
+  return [calenderData, initializeCalenderData, attendanceEmpty, scroll]
 }
 
 export default useGetCalender

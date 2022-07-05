@@ -1,7 +1,6 @@
 import { collection, doc, getDoc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
 import React, { useContext, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
+import { useLocation } from 'react-router-dom'
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading'
 import Stepper from '../../components/Stepper/Stepper'
 import { AuthContext } from '../../context/AuthProvider/AuthProvider'
@@ -10,12 +9,13 @@ import { db } from '../../utils/Firebase/Firebase'
 import Result from './Result/Result'
 import Confirmation from './Confirmation/Confirmation'
 import InputData from './InputData/InputData'
+import TopNavbar from '../../components/Navbar/TopNavbar'
 
 const UpdateAttendance = () => {
     const location = useLocation()
-    const navigate = useNavigate()
     const user = useContext(AuthContext)
     const [attendanceData, setAttendanceData] = useState({})
+    const [attendanceDataBefore, setAttendanceDataBefore] = useState()
     const [initializeUpdateAttendance, setInitializeUpdateAttendance] = useState(false)
     const [initializeGetAttendance, setInitializeGetAttendance] = useState(false)
     const [initilaizingGroupInfo, groupInfo] = useCheckGroup(user.currentUser.uid)
@@ -26,6 +26,7 @@ const UpdateAttendance = () => {
         const docRefAttendance = doc(db, "attendanceInformation", location.state)
         const docSnapAttendance = await getDoc(docRefAttendance)
         setAttendanceData(docSnapAttendance.data())
+        setAttendanceDataBefore(docSnapAttendance.data())
         setInitializeGetAttendance(false)
     }
 
@@ -105,6 +106,10 @@ const UpdateAttendance = () => {
           userId: docSnapGetUser.id,
           transaction: "attendance",
           transactionType: 'update',
+          data: {
+            before:attendanceDataBefore,
+            after:attendances
+          },
           date: serverTimestamp()
         }
   
@@ -123,31 +128,23 @@ const UpdateAttendance = () => {
   return (
     <>
     {initializeGetAttendance? <SpinnerLoading/> :
-    <>    
-    <nav className="mb-2 px-2 py-4 bg-blue-500 drop-shadow-md fixed top-0 w-full z-10">
-        <div className='flex justify-start items-center'>
-        <ButtonIcon 
-        actionFunction={() => navigate(-1)}
-        icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-        </svg>}
-        />
-        <p className='text-md font-bold text-white flex ml-1'>Ubah Kehadiran</p>
-        </div>
-    </nav>
-    <div className='px-4 mt-20'>
-        <div className='bg-white rounded-lg p-4 flex flex-col border border-gray-200'>
+    <div className='flex flex-col h-screen'>
+      <div className='flex sticky top-0 flex-col'>
+        <TopNavbar navbarColor={'bg-blue-500'} label={'Ubah Kehadiran'} labelColor={'text-white'} back={true} navigateTo={-1}/>
+      </div>    
+      <div className='px-4 py-4 flex overflow-y-auto flex-col'>
         <Stepper stepAddGroup={stepUpdateAttendance}/>
-        {stepUpdateAttendance === 1? 
-        <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} handleStepUpdateAttendance={handleStepUpdateAttendance} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo}/> : 
-        stepUpdateAttendance === 2 ? 
-        <Confirmation attendanceData={attendanceData} handleStepUpdateAttendance={handleStepUpdateAttendance} handleUpdateAttendance={handleUpdateAttendance} initializeUpdateAttendance={initializeUpdateAttendance} /> : 
-        stepUpdateAttendance === 3 ?
-        <Result attendanceData={attendanceData}/>:
-        ""}
+        <div className='bg-white rounded-lg p-4 flex flex-col border border-gray-200 dark:bg-slate-800 dark:border-gray-600'>
+          {stepUpdateAttendance === 1? 
+          <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} handleStepUpdateAttendance={handleStepUpdateAttendance} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo}/> : 
+          stepUpdateAttendance === 2 ? 
+          <Confirmation attendanceData={attendanceData} handleStepUpdateAttendance={handleStepUpdateAttendance} handleUpdateAttendance={handleUpdateAttendance} initializeUpdateAttendance={initializeUpdateAttendance} /> : 
+          stepUpdateAttendance === 3 ?
+          <Result attendanceData={attendanceData}/>:""}
         </div>
+        <div className='h-20'></div>
+      </div>
     </div>
-    </>
     }
     </>
   )

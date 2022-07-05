@@ -27,8 +27,8 @@ const InputData = ({startDate, endDate, handleStepAddCalender, setCalender}) => 
             </div>
         </div>
         <div>
-            <LabelTypography textValue={`Pilih Jenis`}/>
-            <select onChange={(e) => setCalender((prevState) => ({...prevState, status: e.target.value}))} defaultValue={'DEFAULT'} className="bg-blue-50 text-gray-900 text-sm rounded-lg block w-full px-4 py-3">
+            <LabelTypography textValue={`Pilih Agenda`}/>
+            <select onChange={(e) => setCalender((prevState) => ({...prevState, status: e.target.value}))} defaultValue={'DEFAULT'} className="bg-blue-50 text-gray-900 text-sm rounded-lg block w-full px-4 h-12">
                 <option value={'DEFAULT'} disabled>Pilih...</option>
                 <option value={'Cuti'}>Cuti</option>
             </select>  

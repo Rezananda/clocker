@@ -12,16 +12,17 @@ const useCheckGroup = () => {
     const checkGroup = async() =>{
         try{
             const docRef = doc(db, "users", uid)
-            const docSnap = await getDoc(docRef)
+            // const docSnap = await getDoc(docRef)
+            const unsubGetUser = onSnapshot(docRef, async(docSnap) => {
             if(docSnap.data().group){
                 const unsubGetGroup = onSnapshot(doc(db, 'groupInformation', docSnap.data().group[0]), (doc)=>{
                     const groupMember = doc.data().groupMember
                     const personalGroup = groupMember.find(o => o.userId === uid )
                     setGroupInfo({
                         status: personalGroup.status,
-                        data: doc.data(),
                         id: doc.id,
-                        roleUser: personalGroup.roleUser
+                        roleUser: personalGroup.roleUser, 
+                        ...doc.data()
                     })
                     setInitializingGroupInfo(false)
                     unsubGetGroup()
@@ -29,16 +30,20 @@ const useCheckGroup = () => {
             }else{
                 setGroupInfo(false)
                 setInitializingGroupInfo(false)
-            }
+            }})
+            return unsubGetUser
         }catch (e){
             console.log(e)
         }
     }
+    useEffect(() => {
+        checkGroup()
     
-    useEffect(()=> {
-        const getGroup = checkGroup()
-        return getGroup
+      return () => {
+        checkGroup()
+      }
     }, [])
+    
 
   return [initilaizingGroupInfo, groupInfo]
 }

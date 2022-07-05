@@ -79,22 +79,6 @@ const Registration = () => {
                     })
                 }
             }
-            if(prop === 'password'){
-                if(!validator.isStrongPassword(state[prop])){
-                    errors.push({
-                        label: prop,
-                        errorType: 'invalid'
-                    })
-                }
-            }
-            if(prop === 'confirmPassword'){
-                if(state[prop] !== state.password){
-                    errors.push({
-                        label: 'confirmPassword',
-                        errorType: 'invalid'
-                    })
-                }
-            }
         }
 
         if(errors.length === 0){
@@ -118,6 +102,7 @@ const Registration = () => {
                         dispatch({type: "HANDLE ALERT", payload: "Lakukan aktivasi pada link yang dikirim pada emailmu."})
                         dispatch({type: "HANDLE RESET FIELD"})
                         dispatch({type: "HANDLE INITIALIZE", payload: false})
+                        window.scrollTo(0,0)
                     })
                 })
             })
@@ -137,11 +122,12 @@ const Registration = () => {
 
   return (
     <>
-        <div className='flex justify-center min-h-screen bg-gray-100 md:items-center'>
-            <div className='flex flex-col gap-4 w-full py-4 px-4 rounded-xl md:w-1/4'>
+        <div className='flex justify-center min-h-screen bg-gray-100 md:items-center overflow-y-auto dark:bg-black'>
+            <div className='flex flex-col gap-2 w-full py-4 px-4 rounded-xl md:w-1/4'>
+                <div className='flex absolute top-0 right-0 left-0 h-2/6 bg-blue-500 w-full'></div>
                 {state.alert&&state.alertMessage === "auth/email-already-in-use" ? 
                 <Alert 
-                    additionalClass="mt-2 mb-2" 
+                    additionalClass="mt-2" 
                     type={'warning'}
                     text={state.alertMessage}
                     handleClose={() => dispatch({type: "HANDLE ALERT CLOSE"})}
@@ -149,7 +135,7 @@ const Registration = () => {
                 :
                 state.alert?
                     <Alert 
-                    additionalClass="mt-2 mb-2" 
+                    additionalClass="mt-2" 
                     type={'info'}
                     text={state.alertMessage}
                     handleClose={() => dispatch({type: "HANDLE ALERT CLOSE"})}
@@ -158,16 +144,27 @@ const Registration = () => {
                 null
                 }
 
-                <div className='flex flex-col gap-4 rounded-xl bg-white border border-gray-200'>
-                    <div className='border-b border-gray-200 flex items-center px-4 py-2'>
-                        <LargeTypography textValue="Registrasi"/>
+                <div className='flex flex-col justify-center items-center relative'>
+                    <svg className="h-16 w-16 text-white"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  
+                        <path stroke="none" d="M0 0h24v24H0z"/>  
+                        <circle cx="12" cy="13" r="7" />  
+                        <polyline points="12 10 12 13 14 13" />  
+                        <line x1="7" y1="4" x2="4.25" y2="6" /> 
+                        <line x1="17" y1="4" x2="19.75" y2="6" />
+                    </svg>
+                    <p className='text-2xl font-bold text-white'>CLOCKER</p>
+                </div>
+
+                <div className='flex flex-col gap-4 rounded-xl bg-white border border-gray-200 relative dark:bg-slate-800 dark:border-gray-600'>
+                    <div className='border-b border-gray-200 flex items-center px-4 py-2 dark:border-gray-600'>
+                        <LargeTypography textValue="Registrasi" additionalClass={'dark:text-white'}/>
                     </div>
                     <div className='px-4'>
                         <LabelTypography textValue="Nama Depan*"/>
                         <div className='relative'>
-                            <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="text" name="firstName" value={state.firstName} placeholder="Maksimal 50 Karakter." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
+                            <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="text" name="firstName" value={state.firstName} placeholder="Masukkan Nama Depan" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                {validator.isLength(state.firstName, {min: 1, max: 50}) &&
+                                {validator.isLength(state.firstName, {min: 1, max: 50}) &&  
                                 <div className='flex items-center'>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -181,7 +178,7 @@ const Registration = () => {
                     <div className='px-4'>
                         <LabelTypography textValue="Nama Belakang*"/>
                         <div className='relative'>
-                            <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="text" name="lastName" value={state.lastName} placeholder="Maksimal 50 Karakter." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
+                            <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="text" name="lastName" value={state.lastName} placeholder="Masukkan Nama Belakang" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                                 {validator.isLength(state.lastName, {min: 1, max: 50}) &&
                                 <div className='flex items-center'>
@@ -197,7 +194,7 @@ const Registration = () => {
                     <div className='px-4'>
                         <LabelTypography textValue="Email*"/>
                         <div className='relative'>
-                            <Input  handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="email" name="email" value={state.email} placeholder="email@email.com" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
+                            <Input  handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type="email" name="email" value={state.email} placeholder="Masukkan Alamat Email" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                                 {validator.isEmail(state.email) &&
                                 <div className='flex items-center'>
@@ -212,27 +209,12 @@ const Registration = () => {
                         </div>
                     </div>
                     <div className='px-4'>
-                        <div className='flex items-center'>
-                            <LabelTypography textValue="Password*"/>
-                            <div className='relative flex flex-col items-center'>
-                                <ButtonIcon actionFunction={()=> dispatch({type: "HANDLE TOOLTIP", payload: !state.tooltip})} icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                                </svg>}/>
-                                {state.tooltip ?                   
-                                <div className="absolute flex bottom-0 flex-col items-center mb-6">
-                                    <span className="relative z-10 p-2 text-xs w-44 leading-none text-white bg-black rounded-lg shadow-lg">Password harus terdiri dari minimal 8 huruf, 1 angka, 1 huruf kapital dan symbol</span>
-                                    <div className="w-3 h-3 -mt-2 rotate-45 bg-black"></div>
-                                </div>
-                                :
-                                ""
-                                }
-                            </div>
-                        </div>
+                        <LabelTypography textValue="Password*"/>
                         <div className='relative'>
-                            <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type={state.showPasswordToggle1 ? 'text' : 'password'} name="password" value={state.password} placeholder="Password." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
+                            <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} type={state.showPasswordToggle1 ? 'text' : 'password'} name="password" value={state.password} placeholder="Masukkan Password" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                             
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                {validator.isStrongPassword(state.password) &&
+                                {validator.isLength(state.password, {min: 5}) &&
                                 <div className='flex items-center'>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -256,9 +238,9 @@ const Registration = () => {
                     <div className='px-4'>
                         <LabelTypography textValue="Konfirmasi Password*"/>
                         <div className='relative'>
-                            <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} handleKeyPress={handleKeyPress} type={state.showPasswordToggle2 ? 'text' : 'password'} name="confirmPassword" value={state.confirmPassword} placeholder="Konfirmasi Password." additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
+                            <Input handleChange={(e) => dispatch({type: "HANDLE INPUT TEXT", field: e.target.name, payload: e.target.value})} handleKeyPress={handleKeyPress} type={state.showPasswordToggle2 ? 'text' : 'password'} name="confirmPassword" value={state.confirmPassword} placeholder="Masukkan Konfirmasi Password" additionalClass='focus:outline-none focus:ring-blue-500 focus:ring-2'/>
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                {state.password === state.confirmPassword && validator.isLength(state.confirmPassword, {min: 1}) &&
+                                {state.password === state.confirmPassword && validator.isLength(state.confirmPassword, {min: 5}) &&
                                 <div className='flex items-center'>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -282,7 +264,7 @@ const Registration = () => {
                     </div>
                 </div>
                 <div className='flex justify-center text-sm'>
-                    <p>Kembali ke halaman</p>&nbsp;
+                    <p className='dark:text-white'>Kembali ke halaman</p>&nbsp;
                     <ButtonLink linkTo={()=> navigate('/login')} label="Login"/>
                 </div>
             </div>

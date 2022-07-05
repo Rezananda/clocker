@@ -7,7 +7,6 @@ const useGetHistory = () => {
     const userContext = useUserContext()
     const uid = userContext.currentUser.uid
     const [initializeHistory, setInitializeHistory] = useState(false)
-    const [initializeHistoryMore, setInitializeHistoryMore] = useState(false)
     const [historyEmpty, setHistoryEmpty] = useState(false)
     const [lastvisibility, setlastvisibility] = useState();
     const [historyData, setHistoryData] = useState([])
@@ -17,11 +16,19 @@ const useGetHistory = () => {
         setInitializeHistory(true)
         let historyQuery;
         if(type === 'all'){
-            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), orderBy('date', 'desc'), limit(5))
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), orderBy('date', 'desc'), limit(15))
         }else if(type === 'tambah'){
-            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'add'), orderBy('date', 'desc'), limit(5))
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'add'), orderBy('date', 'desc'), limit(15))
         }else if(type === 'ubah'){
-            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'update'), orderBy('date', 'desc'), limit(5))
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'update'), orderBy('date', 'desc'), limit(15))
+        }else if(type === 'join group'){
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transaction', '==', 'join group'), orderBy('date', 'desc'), limit(15))
+        }else if(type === 'add group'){
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transaction', '==', 'add group'), orderBy('date', 'desc'), limit(15))
+        }else if(type === 'attendance'){
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transaction', '==', 'attendance'), orderBy('date', 'desc'), limit(15))
+        }else if(type === 'approve group'){
+            historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transaction', '==', 'approve group'), orderBy('date', 'desc'), limit(15))
         }
         const unsubGetAttendance = onSnapshot(historyQuery, (history)=> {
             history.forEach((doc) => {
@@ -61,18 +68,24 @@ const useGetHistory = () => {
 
     const scroll = async(type) => {
         try{
-            setInitializeHistoryMore(true)
             let historyQuery;
             if(type === 'all'){
-                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), orderBy('date', 'desc'), startAfter(lastvisibility), limit(5))
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), orderBy('date', 'desc'), startAfter(lastvisibility), limit(15))
             }else if(type === 'tambah'){
-                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'add'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(5))               
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'add'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(15))               
             }else if(type === 'ubah'){
-                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'update'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(5))               
-            }
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transactionType', '==', 'update'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(15))               
+            }else if(type === 'join group'){
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transaction', '==', 'join group'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(15))
+            }else if(type === 'add group'){
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transaction', '==', 'add group'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(15))
+            }else if(type === 'attendance'){
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transaction', '==', 'attendance'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(15))
+            }else if(type === 'approve group'){
+                historyQuery = query(collection(db, 'transactionInformation'), where('userId', '==', uid), where('transaction', '==', 'approve group'), orderBy('date', 'desc'), startAfter(lastvisibility), limit(15))
+            }            
             const unsubGetAttendance = onSnapshot(historyQuery, (history)=> {
                 updateData(history)
-                setInitializeHistoryMore(false)
                 unsubGetAttendance()
             }, (error) => {
                 console.log(error)
@@ -82,7 +95,7 @@ const useGetHistory = () => {
         }
     }
 
-  return [historyData, historyEmpty, initializeHistory, initializeHistoryMore, scroll, getHistory]
+  return [historyData, historyEmpty, initializeHistory,  scroll, getHistory]
 }
 
 export default useGetHistory

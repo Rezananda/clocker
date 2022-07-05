@@ -18,7 +18,7 @@ const InputGroupName = ({handleStepAddGroup, handleGroupStatus, setGroupName, gr
       <div className='flex flex-col gap-4'>
         <div>
           <LabelTypography textValue="Nama Grup"/>
-          <Input additionalClass={!checkLength() ? "focus:outline-none focus:ring-red-500 focus:ring-2" : ""} maxLength={20} type="text" name="groupName" handleChange={setGroupName} value={groupName} placeholder="Nama Grup"/>
+          <Input additionalClass={!checkLength() ? "focus:outline-none focus:ring-red-500 focus:ring-2" : "focus:outline-none focus:ring-blue-500 focus:ring-2"} maxLength={20} type="text" name="groupName" handleChange={setGroupName} value={groupName} placeholder="Masukkan Nama Grup"/>
           {!checkLength() ? <span className='text-xs text-red-500'>Maksimal 20 karakter</span> : ""}
           
         </div>

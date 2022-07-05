@@ -57,22 +57,27 @@ const Login = () => {
           const user = userCredential.user;
           if(user&&user.emailVerified){
                 dispatch({type: "HANDLE LOGIN", payload: true})
+                window.scrollTo(0,0)
           }else{
                 dispatch({type: "HANDLE ALERT", payload: "Emailmu belum aktif."})
-                
+                window.scrollTo(0,0)     
           }
         })
         .catch((error) => {
             if(error.code === 'auth/user-not-found'){
                 dispatch({type: "HANDLE ALERT", payload: 'User Tidak Ditemukan.'})
+                window.scrollTo(0,0)
             }else if(error.code === "auth/wrong-password"){
                 dispatch({type: "HANDLE ALERT", payload: 'Username/Password Salah'})
+                window.scrollTo(0,0)
             }else{
                 const errorCode = error.code;
                 dispatch({type: "HANDLE ALERT", payload: errorCode})
+                window.scrollTo(0,0)
             }
         }).finally(() => {
             dispatch({type: "HANDLE INITIALIZE", payload: false})
+            window.scrollTo(0,0)
         })
     }
     if(state.isLogin){
@@ -86,15 +91,27 @@ const Login = () => {
 
   return (
       <>
-        <div className='flex justify-center min-h-screen bg-gray-100 md:items-center'>
+        <div className='flex flex-col min-h-screen bg-gray-100 md:items-center dark:bg-black'>
             <div className='flex flex-col py-4 px-4 gap-4 w-full md:w-2/4'>
+                <div className='flex absolute top-0 right-0 left-0 h-2/6 bg-blue-500 w-full'></div>
                 {state.alert&&
                     <Alert type={'warning'} additionalClass="mt-2 mb-2" text={state.alertMessage} handleClose={() => dispatch({type: "HANDLE ALERT CLOSE"})}
-                />}
+                    />}
+                    
+                <div className='flex flex-col justify-center items-center relative'>
+                    <svg className="h-16 w-16 text-white"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  
+                        <path stroke="none" d="M0 0h24v24H0z"/>  
+                        <circle cx="12" cy="13" r="7" />  
+                        <polyline points="12 10 12 13 14 13" />  
+                        <line x1="7" y1="4" x2="4.25" y2="6" /> 
+                        <line x1="17" y1="4" x2="19.75" y2="6" />
+                    </svg>
+                    <p className='text-2xl font-bold text-white'>CLOCKER</p>
+                </div>
 
-                <div className='flex flex-col gap-4 rounded-xl bg-white border border-gray-200'>
-                    <div className='border-b border-gray-200 flex items-center px-4 py-2'>
-                        <LargeTypography textValue="Login" additionalClass=""/>
+                <div className='flex flex-col gap-4 rounded-xl bg-white border border-gray-200 relative dark:bg-slate-800 dark:border-gray-600'>
+                    <div className='border-b border-gray-200 flex items-center px-4 py-2 dark:border-gray-600'>
+                        <LargeTypography textValue="Login" additionalClass={'dark:text-white'}/>
                     </div>
 
                     <div className='px-4'>
@@ -124,7 +141,7 @@ const Login = () => {
                 </div>
                 
                 <div className='flex justify-center text-sm'>
-                    <p>Belum punya akun? registrasi</p>
+                    <p className='dark:text-white'>Belum punya akun? registrasi</p>
                     <ButtonLink newProps={'ml-1'} linkTo={()=> navigate('/registration')} label="disini"/>    
                 </div>
                 <div className='flex justify-center'>

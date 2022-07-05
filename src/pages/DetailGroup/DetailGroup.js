@@ -1,11 +1,11 @@
-import { arrayRemove, arrayUnion, deleteField, doc, updateDoc} from 'firebase/firestore'
-import React, { useReducer, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
+import { arrayRemove, collection, deleteField, doc, Timestamp, writeBatch} from 'firebase/firestore'
+import React, { useReducer } from 'react'
 import LetterAvatar from '../../components/LetterAvatar/LetterAvatar'
 import ListGroupMember from '../../components/ListGroupAttendanceInformation/ListGroupMember'
-import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading'
+import LoadingDetailGroup from '../../components/LoadingPulse/LoadingDetailGroup'
+import TopNavbar from '../../components/Navbar/TopNavbar'
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup'
+import useUserContext from '../../hooks/UseUserContext/UseUserContext'
 import { db } from '../../utils/Firebase/Firebase'
 
 const initialState = {
@@ -13,7 +13,8 @@ const initialState = {
     initializeChangeRoleUser: false,
     showModal: false,
     showModalDeleteUser: false,
-    dropDown: false
+    dropDown: false,
+    showToltip: false
 }
 
 const reducer = (state, action) => {
@@ -28,83 +29,122 @@ const reducer = (state, action) => {
             return {...state, showModalDeleteUser: action.payload}
         case "HANDLE DROPDOWN":
             return {...state, dropDown: action.payload}
+        case "HANDLE TOLTIP":
+            return {...state, showToltip: action.payload}
         default:
             break;
     }
 }
 
 const DetailGroup = () => {
-    const navgiate = useNavigate()
     const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
-
+    const userContext = useUserContext()
     const [state, dispatch] = useReducer(reducer, initialState)
-
     const handleCopy = () => {
         navigator.clipboard.writeText(groupInfo.id)
+        dispatch({type: "HANDLE TOLTIP", payload: !state.showToltip})
     }
 
-    const handleDeleteUser =  async(userId, displayName, photoURL, status, roleUser, groupId) => {
-        dispatch({type: "HANDLE DROPDOWN", payload: false})
-        dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: false})
-        dispatch({type: "LOADING CHANGE ROLE USER", payload: true})
+    const handleChangeStatus = async(userId, displayName, photoURL, status,  groupId, roleUser) => {
+        dispatch({type: "LOADING CHANGE STATUS", payload: true})
+        const batch = writeBatch(db)
         const memberRef = doc(db, 'groupInformation', groupId)
-        await updateDoc(memberRef, {
-            groupMember: arrayRemove({
+        const transacrionRef = doc(collection(db, "transactionInformation"))
+        const transacrionDeclineRef = doc(collection(db, "transactionInformation"))
+        const userRef = doc(db, 'users', userId)
+    
+        batch.update(memberRef, {
+          groupMember: arrayRemove({
+            displayName: displayName,
+            photoURL: photoURL,
+            status: status,
+            userId: userId
+          })
+        })
+        
+        const transactions = {
+            userId: userContext.currentUser.uid,
+            transaction: "remove user",
+            transactionType: 'add',
+            data: {
                 displayName: displayName,
                 photoURL: photoURL,
                 roleUser: roleUser,
-                status: status,
                 userId: userId
-            })
-        })
+                },
+            date: Timestamp.now()
+        }
 
-        const userRef = doc(db, 'users', userId)
-        await updateDoc(userRef, {
+        const transactionUser = {
+            userId: userId,
+            transaction: "removed by admin",
+            transactionType: 'update',
+            data: {
+                groupId: groupId
+            },
+            date: Timestamp.now()
+        }
+
+        console.log(transactions)
+        console.log(transactionUser)
+    
+          batch.set(transacrionDeclineRef, transactions)
+          batch.set(transacrionRef, transactionUser)
+    
+          batch.update(userRef, {
             group: deleteField()
-        })
-
-        dispatch({type: "LOADING CHANGE ROLE USER", payload: false})
+          })
+          
+          await batch.commit()
+          dispatch({type: "LOADING CHANGE STATUS", payload: false})
+          dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser})
     }
 
   return (
-    <div className='min-h-screen bg-gray-50'>
-        <nav className='bg-blue-500 px-2 py-4 flex flex-row items-center drop-shadow'>
-            <div className='basis-1/2 flex items-center'>
-                <ButtonIcon 
-                actionFunction={()=> navgiate('/')} 
-                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                </svg>}/>
-                <p className='text-md font-bold text-white flex ml-1'>Informasi Grup</p>
-            </div>
-        </nav>
-        {initilaizingGroupInfo? <SpinnerLoading/> : 
-        <div>
-            <div className='flex flex-col gap-1 items-center p-10'>
-                <LetterAvatar letter={groupInfo.data.groupName.split(" ").length > 1? groupInfo.data.groupName.split(" ").shift().charAt(0) + groupInfo.data.groupName.split(" ").pop().charAt(0) : groupInfo.data.groupName.split(" ").shift().charAt(0)}/>
-                <p className='font-bold'>{groupInfo.data.groupName}</p>
-                <div className='px-4 flex justify-center'>
-                    <div className='flex w-fit p-2 items-center gap-2 bg-white rounded-lg border border-gray-200'>
-                        <div>
+    <div className='flex flex-col h-screen'>
+        <div className='flex sticky top-0 flex-col'>
+            <TopNavbar navbarColor={'bg-blue-500'} label={'Informasi Grup'} labelColor={'text-white'} back={true} navigateTo={'/'}/>
+        </div>
+        {initilaizingGroupInfo? <LoadingDetailGroup/> : 
+        <div className='py-4 flex overflow-y-auto flex-col gap-3 h-screen'>
+            <div className='flex flex-col gap-1 items-center'>
+                <LetterAvatar letter={groupInfo.groupName.split(" ").length > 1? groupInfo.groupName.split(" ").shift().charAt(0) + groupInfo.groupName.split(" ").pop().charAt(0) : groupInfo.groupName.split(" ").shift().charAt(0)}/>
+                <p className='text-xl font-bold dark:text-white'>{groupInfo.groupName}</p>
+                <div className='flex justify-center'>
+                    <div className='flex p-2 items-center gap-2 bg-white rounded-lg border border-gray-200 dark:bg-slate-800 dark:border-gray-600 dark:text-white'>
+                        <div className='flex flex-col'>
                             <span className='flex text-xs font-bold '>Kode Grup</span> 
                             <p className='text-sm'>{groupInfo.id}</p>
-                            <div className='w-full'></div>
                         </div>
-                        <div className='flex items-center gap-1'>
+                        <div className='relative flex items-center gap-1 justify-center'>
                             <button onClick={handleCopy} className='bg-blue-500 text-white text-sm font-bold rounded px-2 py-1'>Salin</button>
+                            {state.showToltip ? 
+                            <div className="absolute flex bottom-0 flex-col items-center mb-8">
+                                <div className="relative z-10 p-2 text-xs leading-none text-white bg-black rounded-lg shadow-lg flex items-center gap-1">
+                                    <p>Tersalin</p>
+                                    <p className='text-gray-300'>|</p>
+                                    <p className='text-gray-300' onClick={() => dispatch({type: "HANDLE TOLTIP", payload: !state.showToltip})}>x</p>
+                                </div>
+                                <div className="w-3 h-3 -mt-2 rotate-45 bg-black"></div>
+                            </div>
+                            :
+                            null
+                            }
                         </div>
                     </div> 
                 </div>
             </div>
-            <div className='py-2 px-4'>
-                <p className='font-bold mb-2'>Anggota Grup</p>
-                    <ul className='relative p-0 flex flex-col gap-1'>
-                        {groupInfo.data.groupMember.map((val, index) => 
+            <div className='px-4'>
+                <p className='font-bold mb-2 dark:text-white'>Anggota Grup</p>
+                <div className='flex flex-col overflow-y-auto border-gray-200 rounded-xl dark:border-gray-600'>
+                    <ul>
+                        {groupInfo.groupMember.map((val, index) => 
                             <li key={index}>
-                                <ListGroupMember val={val} groupInfo={groupInfo} dispatch={dispatch} state={state}/>
+                                <ListGroupMember val={val} groupInfo={groupInfo} dispatch={dispatch} state={state} handleChangeStatus={handleChangeStatus}/>
                             </li>
                         )}
                     </ul>
+                </div>
             </div>
         </div>
         }

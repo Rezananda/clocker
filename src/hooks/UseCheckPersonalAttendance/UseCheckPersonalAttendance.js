@@ -7,7 +7,6 @@ const UseCheckPersonalAttendance = () => {
     const userContext = useUserContext()
     const uid = userContext.currentUser.uid
     const [initializePersonalAttendance, setInitializePersonalAttendance] = useState(false)
-    const [initializeAttendanceMore, setInitializeAttendanceMore] = useState(false)
     const [lastvisibility, setlastvisibility] = useState();
     const [attendanceEmpty, setAttendanceEmpty] = useState(false)
     const [personalAttendance, setPersonalAttendance] = useState([])
@@ -17,34 +16,41 @@ const UseCheckPersonalAttendance = () => {
         try{
             setInitializePersonalAttendance(true)
             const docRef = doc(db, "users", uid)
-            const docSnap = await getDoc(docRef)
+            // const docSnap = await getDoc(docRef)
+            const unsubGetUser = onSnapshot(docRef, async(docSnap) => {
             let queryAttendance;
-            if(type === 'all'){
-                queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), orderBy('timestamp', 'desc'), limit(10))
-            }else if(type === 'wfo'){
-                queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'WFO'), orderBy('timestamp', 'desc'), limit(10))
-            }else if(type === 'wfh'){
-                queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'WFH'), orderBy('timestamp', 'desc'), limit(10))
-            }else if(type === 'cuti'){
-                queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Cuti'), orderBy('timestamp', 'desc'), limit(10))
-            }else if(type === 'sakit'){
-                queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Sakit'), orderBy('timestamp', 'desc'), limit(10))
-            }
-            const unsubGetAttendance = onSnapshot(queryAttendance, (attendance)=> {
-                attendance.forEach((doc) => {
-                    attendanceData.push({id: doc.id, ...doc.data()});
-                });
-                if(attendanceData.length > 0){
-                    setPersonalAttendance(attendanceData)
-                    setlastvisibility(attendance.docs[attendance.docs.length-1])
-                    setInitializePersonalAttendance(false)
-                    unsubGetAttendance()
-                }else {
-                    setPersonalAttendance('noAttendance')
-                    setInitializePersonalAttendance(false)
-                    unsubGetAttendance()
+            if(docSnap.data().group){                
+                if(type === 'all'){
+                    queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), orderBy('timestamp', 'desc'), limit(15))
+                }else if(type === 'wfo'){
+                    queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'WFO'), orderBy('timestamp', 'desc'), limit(10))
+                }else if(type === 'wfh'){
+                    queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'WFH'), orderBy('timestamp', 'desc'), limit(10))
+                }else if(type === 'cuti'){
+                    queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Cuti'), orderBy('timestamp', 'desc'), limit(10))
+                }else if(type === 'sakit'){
+                    queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Sakit'), orderBy('timestamp', 'desc'), limit(10))
                 }
-            })
+                const unsubGetAttendance = onSnapshot(queryAttendance, (attendance)=> {
+                    attendance.forEach((doc) => {
+                        attendanceData.push({id: doc.id, ...doc.data()});
+                    });
+                    if(attendanceData.length > 0){
+                        setPersonalAttendance(attendanceData)
+                        setlastvisibility(attendance.docs[attendance.docs.length-1])
+                        setInitializePersonalAttendance(false)
+                        unsubGetAttendance()
+                    }else {
+                        setPersonalAttendance('noAttendance')
+                        setInitializePersonalAttendance(false)
+                        unsubGetAttendance()
+                    }
+                })
+            }else {
+                setPersonalAttendance('noGroup')
+                setInitializePersonalAttendance(false)
+            }})
+            return unsubGetUser
         }catch(e){
             console.log(e)
             setPersonalAttendance(false)
@@ -74,12 +80,11 @@ const UseCheckPersonalAttendance = () => {
     
     const scroll = async(type) => {
         try{
-            setInitializeAttendanceMore(true)
             const docRef = doc(db, "users", uid)
             const docSnap = await getDoc(docRef)
             let queryAttendance;
             if(type === 'all'){
-                queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(10))
+                queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(15))
             }else if(type === 'wfo'){
                 queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'WFO'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(10))
             }else if(type === 'wfh'){
@@ -91,7 +96,6 @@ const UseCheckPersonalAttendance = () => {
             }
             const unsubGetAttendance = onSnapshot(queryAttendance, (attendance)=> {
                 updateData(attendance)
-                setInitializeAttendanceMore(false)
                 unsubGetAttendance()
             })
         }catch (e){
@@ -99,7 +103,7 @@ const UseCheckPersonalAttendance = () => {
         }
     }
 
-  return [initializePersonalAttendance, personalAttendance, initializeAttendanceMore, attendanceEmpty, scroll, checkPersonalAttendance]
+  return [initializePersonalAttendance, personalAttendance, attendanceEmpty, scroll, checkPersonalAttendance]
 }
 
 export default UseCheckPersonalAttendance

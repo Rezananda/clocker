@@ -19,7 +19,7 @@ const SwipeClockIn = () => {
         }, 1000)
     }
   return (
-    <div className='bg-gray-100 flex items-center rounded-full'>
+    <div className='bg-gray-100 flex items-center rounded-full dark:bg-black'>
         <Swiper
             dir="rtl"
             slidesPerView={1}

@@ -2,7 +2,7 @@ import React from 'react'
 
 const LabelTypography = ({textValue, additionalClass}) => {
   return (
-    <p className={`font-bold ${additionalClass}`}>
+    <p className={`font-bold dark:text-white text-black ${additionalClass}`}>
         {textValue}
     </p>
   )

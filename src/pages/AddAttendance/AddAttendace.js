@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
 import "react-datepicker/dist/react-datepicker.css";
 import Stepper from '../../components/Stepper/Stepper'
 import { AuthContext } from '../../context/AuthProvider/AuthProvider'
@@ -9,12 +8,12 @@ import Result from './Result/Result'
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup'
 import { collection, doc, getDoc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
 import { db } from '../../utils/Firebase/Firebase'
-import { useNavigate } from 'react-router-dom'
+import TopNavbar from '../../components/Navbar/TopNavbar';
+import moment from 'moment';
 
 const AddAttendace = () => {
-  const navigate = useNavigate()
   const user = useContext(AuthContext)
-  const [initilaizingGroupInfo, groupInfo] = useCheckGroup(user.currentUser.uid)
+  const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
   const [attendanceData, setAttendanceData] = useState({})
   const [initializeAddAttendance, setInitializeAddAttendance] = useState(false)
   const [stepAddAttendance, setStepAddAttendance] = useState(1)
@@ -40,8 +39,8 @@ const AddAttendace = () => {
         userName: docSnapGetUser.data().displayName,
         userId: docSnapGetUser.id,
         timestamp: Timestamp.now() ,
-        addDate: new Date(Timestamp.now().seconds*1000).toLocaleDateString(),
-        addTime: new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5),
+        addDate: moment(Timestamp.now().toDate()).format('DD/MM/YYYY'),
+        addTime: moment(Timestamp.now().toMillis()).format('HH:mm') ,
         updateDate: Timestamp.now(),
         groupId: docSnapGetUser.data().group[0],
         photoURL: docSnapGetUser.data().photoURL
@@ -62,25 +61,29 @@ const AddAttendace = () => {
         const attendanceRef = doc(collection(db, "attendanceInformation"))
         batch.set(attendanceRef, attendances);
       }else if(attendanceData.status === "Cuti"){
-        if(new Date(attendanceData.startDate).toLocaleDateString() === new Date(attendanceData.endDate).toLocaleDateString()){
+        if(moment(attendanceData.startDate).toDate() === moment(attendanceData.endDate).toDate()){
           attendances.status = "Cuti"
-          attendances.timestamp= new Date(attendanceData.startDate)
-          attendances.addDate= new Date(attendanceData.startDate).toLocaleDateString()
-          attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
-          attendances.startDate = new Date(attendanceData.startDate).toLocaleDateString()
-          attendances.endDate = new Date(attendanceData.endDate).toLocaleDateString()
+          attendances.timestamp= Timestamp.fromDate(moment(attendanceData.startDate).toDate())
+          attendances.addDate= moment(attendanceData.startDate).format('DD/MM/YYYY')
+          attendances.addTime= moment(Timestamp.now().toMillis()).format('HH:mm')
+          attendances.startDate = moment(attendanceData.startDate).format('DD/MM/YYYY')
+          attendances.endDate = moment(attendanceData.endDate).format('DD/MM/YYYY')
           const attendanceRef = doc(collection(db, "attendanceInformation"))
           batch.set(attendanceRef, attendances);
         }else{
-          for (let date = new Date(attendanceData.startDate); date <= new Date(attendanceData.endDate); date.setDate(date.getDate() + 1)){
+          let start = moment(attendanceData.startDate)
+          let endDate = moment(attendanceData.endDate).add(1, 'days')
+          while(start.isBefore(endDate, 'day')){
             attendances.status = "Cuti"
-            attendances.timestamp= date
-            attendances.addDate= date.toLocaleDateString()
-            attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
-            attendances.startDate = new Date(attendanceData.startDate).toLocaleDateString()
-            attendances.endDate = new Date(attendanceData.endDate).toLocaleDateString()
+            attendances.timestamp= Timestamp.fromDate(start.toDate())
+            attendances.addDate= moment(start).format('DD/MM/YYYY')
+            attendances.addTime= moment(Timestamp.now().toMillis()).format('HH:mm')
+            attendances.startDate = moment(start).format('DD/MM/YYYY')
+            attendances.endDate = moment(attendanceData.endDate).format('DD/MM/YYYY')
             const attendanceRef = doc(collection(db, "attendanceInformation"))
             batch.set(attendanceRef, attendances);
+
+            start.add(1, 'days')
           }
         }
       }
@@ -89,6 +92,7 @@ const AddAttendace = () => {
         userId: docSnapGetUser.id,
         transaction: "attendance",
         transactionType: 'add',
+        data: attendances,
         date: serverTimestamp()
       }
 
@@ -106,21 +110,13 @@ const AddAttendace = () => {
   }
 
   return (
-    <>
-      <nav className="mb-2 px-2 py-4 bg-blue-500 drop-shadow-md fixed top-0 w-full z-10">
-          <div className='flex justify-start items-center'>
-            <ButtonIcon 
-            actionFunction={()=> navigate(-1)} 
-            icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-            </svg>}
-            />
-            <p className='text-md font-bold text-white flex ml-1'>Tambah Kehadiran</p>
-          </div>
-      </nav>
-      <div className='px-4 mt-20'>
-        <div className='bg-white rounded-lg p-4 flex flex-col border border-gray-200'>
-          <Stepper stepAddGroup={stepAddAttendance}/>
+    <div className='flex flex-col h-screen'>
+      <div className='flex sticky top-0 flex-col'>
+        <TopNavbar navbarColor={'bg-blue-500'} label={'Tambah Kehadiran'} labelColor={'text-white'} back={true} navigateTo={-1}/>
+      </div>
+      <div className='px-4 py-4 flex overflow-y-auto flex-col'>
+        <Stepper stepAddGroup={stepAddAttendance}/>
+        <div className='bg-white rounded-lg p-4 border border-gray-200 h-full overflow-y-auto dark:bg-slate-800 dark:border-gray-600'>
           {stepAddAttendance === 1? 
           <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} handleStepAddAttendance={handleStepAddAttendance}/> : 
           stepAddAttendance === 2 ? 
@@ -128,8 +124,9 @@ const AddAttendace = () => {
           stepAddAttendance === 3? 
           <Result initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} attendanceData={attendanceData}/> : ""}
         </div>
+        <div className='h-20'></div>
       </div>
-    </>
+    </div>
   )
 }
 

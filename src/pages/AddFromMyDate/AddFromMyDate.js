@@ -17,7 +17,6 @@ const AddFromMyDate = () => {
     const [stepAddCalender, setStepAddCalender] = useState(1)
     const [initializeAddCalender, setInitializeAddCalender] = useState(false)
     const [calender, setCalender] = useState(location.state)
-    console.log(calender)
     
     function handleStepAddCalender(statusAddCalender){
         if(statusAddCalender === "prev"){
@@ -46,27 +45,27 @@ const AddFromMyDate = () => {
             photoURL: docSnapGetUser.data().photoURL
           }
     
-            if(new Date(calender.startDate).toLocaleDateString() === new Date(calender.endDate).toLocaleDateString()){
+          if(new Date(calender.startDate).toLocaleDateString() === new Date(calender.endDate).toLocaleDateString()){
+            attendances.status = "Cuti"
+            attendances.timestamp= new Date(calender.startDate)
+            attendances.addDate= new Date(calender.startDate).toLocaleDateString()
+            attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
+            attendances.startDate = new Date(calender.startDate).toLocaleDateString()
+            attendances.endDate = new Date(calender.endDate).toLocaleDateString()
+            const attendanceRef = doc(collection(db, "attendanceInformation"))
+            batch.set(attendanceRef, attendances);
+          }else{
+            for (let date = new Date(calender.startDate); date <= new Date(calender.endDate); date.setDate(date.getDate() + 1)){
               attendances.status = "Cuti"
-              attendances.timestamp= new Date(calender.startDate)
-              attendances.addDate= new Date(calender.startDate).toLocaleDateString()
+              attendances.timestamp= date
+              attendances.addDate= date.toLocaleDateString()
               attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
               attendances.startDate = new Date(calender.startDate).toLocaleDateString()
               attendances.endDate = new Date(calender.endDate).toLocaleDateString()
               const attendanceRef = doc(collection(db, "attendanceInformation"))
               batch.set(attendanceRef, attendances);
-            }else{
-              for (let date = new Date(calender.startDate); date <= new Date(calender.endDate); date.setDate(date.getDate() + 1)){
-                attendances.status = "Cuti"
-                attendances.timestamp= date
-                attendances.addDate= date.toLocaleDateString()
-                attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
-                attendances.startDate = new Date(calender.startDate).toLocaleDateString()
-                attendances.endDate = new Date(calender.endDate).toLocaleDateString()
-                const attendanceRef = doc(collection(db, "attendanceInformation"))
-                batch.set(attendanceRef, attendances);
-              }
             }
+          }
     
           const transactions = {
             userId: docSnapGetUser.id,
@@ -108,7 +107,7 @@ const AddFromMyDate = () => {
           stepAddCalender === 2 ? 
           <Confirmation initializeAddCalender={initializeAddCalender} handleStepAddCalender={handleStepAddCalender} calender={calender} handleAddCalender={handleAddCalender}/> : 
           stepAddCalender === 3? 
-          <Result/> : ""}
+          <Result calender={calender}/> : ""}
         </div>
       </div>
     </div>

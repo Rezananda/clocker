@@ -1,3 +1,4 @@
+import moment from 'moment'
 import React from 'react'
 import ButtonFill from '../../../components/Button/ButtonFill/ButtonFill'
 import ButtonOutline from '../../../components/Button/ButtonOutline/ButtonOutline'
@@ -11,8 +12,7 @@ const Confirmation = ({initializeAddCalender, calender, handleStepAddCalender, h
             <div>
             <ul className='flex flex-col gap-2'>
             <li><p className=''>Kehadiran</p> <p className='font-bold text-lg'>{calender.status}</p></li>
-            <div className='border-t border-gray-300'></div>
-            {calender.startDate&&calender.endDate&&<li className=''><p className=''>Lama Cuti</p> <p className='font-bold text-lg'>{new Date(calender.startDate).toLocaleDateString()} - {new Date(calender.endDate).toLocaleDateString()}</p></li>}
+            {calender.startDate&&calender.endDate&&<li className=''><p className=''>Lama Cuti</p> <p className='font-bold text-lg'>{moment(moment(calender.startDate)).format('DD/MM/YYYY')} - {moment(moment(calender.endDate)).format('DD/MM/YYYY')}</p></li>}
         </ul>
             </div>
             <div className='flex flex-col gap-2'>

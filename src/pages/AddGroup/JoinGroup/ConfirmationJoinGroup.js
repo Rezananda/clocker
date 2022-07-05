@@ -8,11 +8,10 @@ const ConfirmationJoinGroup = ({groupCodeData, handleJoinGroup, loadingJoinGroup
   return (
     <>
       {error&&<Alert type={'error'} text={errorMessage}/>}
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-2'>
           <ul className='flex flex-col gap-2'>
-              <li>Nama Grup: <span className='font-bold'>{groupCodeData.groupName}</span></li>
-              <div className='border-t border-gray-300'></div>
-              <li>Pemilik: <span className='font-bold'>{groupCodeData.groupOwnerName}</span></li>
+              <li><p>Nama Grup</p><p className='font-bold text-lg'>{groupCodeData.groupName}</p></li>
+              <li><p>Pemilik Grup</p><p className='font-bold text-lg'>{groupCodeData.groupOwnerName}</p></li>
           </ul>
           <ButtonFill additionalClass={'bg-blue-500 border-blue-500'} label="Gabung Grup" handleClick={handleJoinGroup}/>
           <ButtonOutline label="Kembali" handleClick={() => handleStepJoinGroup('prev')}/>
