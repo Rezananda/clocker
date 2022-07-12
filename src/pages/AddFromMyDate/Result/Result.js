@@ -1,6 +1,5 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import Alert from '../../../components/Alert/Alert'
 import ButtonOutline from '../../../components/Button/ButtonOutline/ButtonOutline'
 
 const Result = ({calender}) => {
