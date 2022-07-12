@@ -5,7 +5,7 @@ import ButtonIcon from '../Button/ButtonIcon/ButtonIcon'
 const TopNavbar = ({navbarColor, label, labelColor, back, navigateTo}) => {
     const navigate = useNavigate()
   return (
-    <nav className={`${navbarColor} px-2 py-4 flex flex-row items-center drop-shadow z-50`}>
+    <nav className={`${navbarColor} px-2 py-4 flex flex-row items-center drop-shadow`}>
         <div className='flex items-center'>
             {back?                 
                 <ButtonIcon 

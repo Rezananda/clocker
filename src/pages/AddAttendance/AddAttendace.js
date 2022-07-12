@@ -110,11 +110,11 @@ const AddAttendace = () => {
   }
 
   return (
-    <div className='flex flex-col h-screen'>
-      <div className='flex sticky top-0 flex-col'>
+    <div className='flex flex-col overflow-y-auto'>
+      <div className='flex sticky top-0 flex-col z-50'>
         <TopNavbar navbarColor={'bg-blue-500'} label={'Tambah Kehadiran'} labelColor={'text-white'} back={true} navigateTo={-1}/>
       </div>
-      <div className='px-4 py-4 flex overflow-y-auto flex-col'>
+      <div className='px-4 py-4 flex flex-col'>
         <Stepper stepAddGroup={stepAddAttendance}/>
         <div className='bg-white rounded-lg p-4 border border-gray-200 h-full overflow-y-auto dark:bg-slate-800 dark:border-gray-600'>
           {stepAddAttendance === 1? 

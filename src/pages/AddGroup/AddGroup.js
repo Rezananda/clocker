@@ -11,6 +11,7 @@ import ConfirmationJoinGroup from './JoinGroup/ConfirmationJoinGroup'
 import ResultJoinGroup from './JoinGroup/ResultJoinGroup'
 import Stepper from '../../components/Stepper/Stepper'
 import { useNavigate } from 'react-router-dom'
+import TopNavbar from '../../components/Navbar/TopNavbar'
 
 const initialState = {
   tab: 1,
@@ -230,25 +231,15 @@ const AddGroup = () => {
     }
 
   return (
-    <>
-        <div className="bg-blue-500 drop-shadow-md">
-            <nav className={`px-2 py-4 flex flex-row items-center`}>
-              <div className='flex items-center'>
-                    <ButtonIcon 
-                    actionFunction={()=> navigate('/')} 
-                    icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                    </svg>}/>
-                  <p className={`text-md font-bold text-white flex ml-1`}>{`Tambah Grup`}</p>
-              </div>
-            </nav>   
-            <ul className="flex">
-                <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 1})} className={state.tab === 1 ? "p-2 w-full text-white border-b-4 border-white" : "p-2 w-full text-blue-300 rounded-t-lg border-b-2 border-transparent"}>Gabung Grup</button></li>
-                <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 2})} className={state.tab === 2 ? "p-2 w-full text-white border-b-4 border-white" : "p-2 w-full text-blue-300 rounded-t-lg border-b-2 border-transparent"}>Buat Grup</button></li>
-            </ul>
+    <div className='flex flex-col overflow-y-auto'>
+        <div className='flex sticky top-0 flex-col z-50'>
+          <TopNavbar navbarColor={'bg-blue-500'} label={'Tambah Grup'} labelColor={'text-white'} back={true} navigateTo={'/'}/>
+          <ul className="flex bg-white">
+              <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 1})} className={state.tab === 1 ? "p-4 w-full text-blue-500 border-b-4 border-blue-500" : "p-4 w-full text-gray-400 rounded-t-lg border-b-2 border-transparent"}>Gabung Grup</button></li>
+              <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 2})} className={state.tab === 2 ? "p-4 w-full text-blue-500 border-b-4 border-blue-500" : "p-4 w-full text-gray-400 rounded-t-lg border-b-2 border-transparent"}>Buat Grup</button></li>
+          </ul>
         </div>
-
-        <div className={state.tab === 1 ? "block px-4 py-4" : "hidden"}>
+        <div className={state.tab === 1 ? "flex flex-col px-4 py-4" : "hidden"}>
           <div className='bg-white rounded-xl border border-gray-200 p-4'>
             <Stepper stepAddGroup={state.stepJoinGroup}/>
             {(state.stepJoinGroup === 1) ? 
@@ -258,7 +249,7 @@ const AddGroup = () => {
           </div>
         </div>
 
-        <div className={state.tab === 2 ? "block px-4 py-4" : "hidden"}>
+        <div className={state.tab === 2 ? "flex flex-col px-4 py-4" : "hidden"}>
           <div className='bg-white rounded-xl border border-gray-200 p-4'>
             <Stepper stepAddGroup={state.stepAddGroup}/>
             {(state.stepAddGroup === 1) ? 
@@ -266,8 +257,9 @@ const AddGroup = () => {
             <ConfirmationAddGroup  groupName={state.groupName} groupStatus={groupStatus} locations={locations} handleAddGroup={handleAddGroup} loadingSaveGroup={state.loadingSaveGroup} handleStepAddGroup={handleStepAddGroup} error={state.error} errorMessage={state.errorMessage}/> : (state.stepAddGroup === 3) ? 
             <ResultAddGroup groupId={state.groupId}/> : <></>}
           </div>
+          <div className='h-20'></div>
         </div>
-    </>
+    </div>
   )
 }
 

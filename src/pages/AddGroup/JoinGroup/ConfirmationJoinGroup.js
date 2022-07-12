@@ -9,7 +9,7 @@ const ConfirmationJoinGroup = ({groupCodeData, handleJoinGroup, loadingJoinGroup
     <>
       {error&&<Alert type={'error'} text={errorMessage}/>}
       <div className='flex flex-col gap-2'>
-          <ul className='flex flex-col gap-2'>
+          <ul className='flex flex-col gap-2 text-center'>
               <li><p>Nama Grup</p><p className='font-bold text-lg'>{groupCodeData.groupName}</p></li>
               <li><p>Pemilik Grup</p><p className='font-bold text-lg'>{groupCodeData.groupOwnerName}</p></li>
           </ul>

@@ -3,8 +3,8 @@ import Navbar from '../Navbar/Navbar'
 
 const DashboardSectionWithNavbar = ({children}) => {
   return (
-        <div className='min-h-screen flex flex-col h-screen bg-white md:flex md:justify-center md:items-center'>
-          <div className='flex-grow md:w-1/4 bg-gray-100 drop-shadow-xl dark:bg-black transition duration-300 delay-150'>
+        <div className='min-h-screen flex flex-col h-screen bg-gray-100 dark:bg-black md:flex md:justify-center md:items-center'>
+          <div className='md:w-1/4 transition duration-300 delay-150'>
             {children}
           </div>
           <Navbar/>

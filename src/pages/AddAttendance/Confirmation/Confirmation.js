@@ -10,13 +10,13 @@ const Confirmation = ({initilaizingGroupInfo, groupInfo, attendanceData, handleS
     <>
     {initilaizingGroupInfo ? <SpinnerLoading/> :
     <div className='flex flex-col gap-4'>
-      <ul className='flex flex-col gap-2 dark:text-white'>
+      <ul className='flex flex-col gap-2 dark:text-white text-center'>
           <li><p className='font-bold'>Tanggal</p><p className='text-lg'>{moment(Timestamp.now().toDate()).format('DD/MM/YYYY')}</p></li>
           <li><p className='font-bold'>Grup</p><p className='text-lg'>{groupInfo.groupName}</p></li>
-          <li><p className=''>Kehadiran</p> <p className='font-bold text-lg'>{attendanceData.status}</p></li>
-          {attendanceData.wfoLocation&&<li><p>Lokasi WFO</p> <p className='font-bold text-lg'> {attendanceData.wfoLocation}</p></li>}
-          {attendanceData.startDate&&attendanceData.endDate&&<li><p>Lama Cuti</p> <p className='font-bold text-lg'>{moment(moment(attendanceData.startDate)).format('DD/MM/YYYY')} - {moment(moment(attendanceData.endDate)).format('DD/MM/YYYY')}</p></li>}
-          {attendanceData.sickReason&&<li><p>Alasan Sakit</p> <p className='font-bold text-lg'> {attendanceData.sickReason}</p></li>}
+          <li><p className='font-bold'>Kehadiran</p> <p className='text-lg'>{attendanceData.status}</p></li>
+          {attendanceData.wfoLocation&&<li><p className='font-bold'>Lokasi WFO</p> <p className='text-lg'> {attendanceData.wfoLocation}</p></li>}
+          {attendanceData.startDate&&attendanceData.endDate&&<li><p className='font-bold'>Lama Cuti</p> <p className='font-bold text-lg'>{moment(moment(attendanceData.startDate)).format('DD/MM/YYYY')} - {moment(moment(attendanceData.endDate)).format('DD/MM/YYYY')}</p></li>}
+          {attendanceData.sickReason&&<li><p className='font-bold'>Alasan Sakit</p> <p className='font-bold text-lg'> {attendanceData.sickReason}</p></li>}
       </ul>
       <div className='flex flex-col gap-2'>
         <ButtonFill additionalClass={`bg-blue-500 border-blue-500`} label="Tambah" handleClick={() => handleAddAttendance()}/>
