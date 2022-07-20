@@ -1,7 +1,7 @@
 import { collection, doc, getDoc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
 import moment from 'moment'
 import React, { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
 import Stepper from '../../components/Stepper/Stepper'
 import useUserContext from '../../hooks/UseUserContext/UseUserContext'

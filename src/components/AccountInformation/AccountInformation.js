@@ -14,7 +14,7 @@ const AccountInformation = () => {
   return (
     <div className='flex w-full p-4 bg-white mb-4 rounded-b-2xl items-center justify-between dark:bg-slate-800 dark:border-gray-600'>
       <div className='flex items-center dark:text-white'>
-        <p className='text-xl'>Halo,</p>
+        <p className='text-xl'>Hi,</p>
         <p className='ml-1 text-xl font-bold uppercase'>{displayName} </p>
       </div>
       <div>

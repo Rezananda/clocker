@@ -39,7 +39,9 @@ const reducer = (state, action) => {
 
 const DetailGroup = () => {
     const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
-    const [initializeGetAllAttendance, allAttendance] = UseCheckAllAttendance()
+    const [initializeGetAllAttendance, allAttendance, attendanceEmpty, scroll, getAllAttendance] = UseCheckAllAttendance()
+
+    const [filter, setFilter] = useState('all')
     const [tab, setTab] = useState(1)
     const userContext = useUserContext()
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -87,9 +89,6 @@ const DetailGroup = () => {
             },
             date: Timestamp.now()
         }
-
-        console.log(transactions)
-        console.log(transactionUser)
     
           batch.set(transacrionDeclineRef, transactions)
           batch.set(transacrionRef, transactionUser)
@@ -103,11 +102,18 @@ const DetailGroup = () => {
           dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser})
     }
 
+    const handleFilter = (type) => {
+        if(type === 'all'){
+          setFilter('all')
+          getAllAttendance('all')
+        }
+      }
+
   return (
-    <div className='flex flex-col h-screen overflow-y-auto'>
+    <div className='flex flex-col h-screen overflow-y-auto' id="scrollableDiv">
     {initilaizingGroupInfo? <LoadingDetailGroup/> : 
     <>
-        <div className='flex sticky top-0 flex-col'>
+        <div className='flex sticky top-0 flex-col z-50'>
             <TopNavbar navbarColor={'bg-blue-500'} label={'Informasi Grup'} labelColor={'text-white'} back={true} navigateTo={'/'}/>
             {groupInfo.roleUser.includes('02')&&       
             <ul className="flex bg-blue-500 z-50 drop-shadow-sm">
@@ -119,7 +125,7 @@ const DetailGroup = () => {
         {tab === 1 ?
         <GroupDetail groupInfo={groupInfo} handleCopy={handleCopy} dispatch={dispatch} state={state} handleChangeStatus={handleChangeStatus}/>
         : tab === 2 ? 
-        <GroupAttendance initializeGetAllAttendance={initializeGetAllAttendance} allAttendance={allAttendance}/>
+        <GroupAttendance initializeGetAllAttendance={initializeGetAllAttendance} allAttendance={allAttendance} attendanceEmpty={attendanceEmpty} scroll={scroll} filter={filter}/>
         :
         null
         }

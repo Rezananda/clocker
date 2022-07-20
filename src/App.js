@@ -44,7 +44,7 @@ const App = () => {
               <Route element={<PrivateRoute/>}>
                 <Route path="/" element={<DashboardSectionWithNavbar><Home/></DashboardSectionWithNavbar>} />
                 <Route path="/calendar" element={<DashboardSectionWithNavbar><MyCalendar/></DashboardSectionWithNavbar>}/>
-                <Route path="/transactions" element={<DashboardSectionWithNavbar><Transactions/></DashboardSectionWithNavbar>}/>
+                <Route path="/transactions" element={<DashboardSectionWithoutNavbar><Transactions/></DashboardSectionWithoutNavbar>}/>
                 <Route path="/notifications" element={<DashboardSectionWithNavbar> <Notifications/></DashboardSectionWithNavbar>}/>
                 <Route path="/profile" element={<DashboardSectionWithNavbar><Account/></DashboardSectionWithNavbar>} />
                 <Route path="/detail-profile" element={<DashboardSectionWithoutNavbar><DetailProfile/></DashboardSectionWithoutNavbar>} />

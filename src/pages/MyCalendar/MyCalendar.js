@@ -10,8 +10,10 @@ import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup';
 import UseCheckPersonalAttendance from '../../hooks/UseCheckPersonalAttendance/UseCheckPersonalAttendance';
 import moment from 'moment';
 import FloatingButton from '../../components/Button/FloatingButton/FloatingButton';
+import { useNavigate } from 'react-router-dom';
 
 const MyCalendar = () => {
+  const navigate = useNavigate()
   const [calendar, setCalendar] = useState(new Date())
   const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
   const [initializePersonalAttendance, personalAttendance, attendanceEmpty, scroll, checkPersonalAttendance] = UseCheckPersonalAttendance()
@@ -41,20 +43,32 @@ const MyCalendar = () => {
     }
   return (
     <div className='flex flex-col gap-4 h-screen overflow-y-auto scrollable'>
-      <TopNavbar navbarColor={`bg-blue-500`} label={`Kalender`} labelColor={`text-white`} navigateTo={false} 
-      rightButton={true} 
-      rightIcon={
-        <svg className={`h-6 w-6 text-white`}  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  
-          <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="12 8 12 12 14 14" />  <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
-        </svg>    
-      }/>
-      <style>
-      {
-          `.theCalendar {
-            border-style: none;
-        }`
+      <TopNavbar
+        navbarColor={`bg-blue-500`}
+        label={`Kalender`}
+        labelColor={`text-white`}
+        navigateTo={false}
+        rightButton={true}
+        rightIcon={
+          <svg
+            className={`h-6 w-6 text-white`}
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            strokeWidth="2"
+            stroke="currentColor"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" />{" "}
+            <polyline points="12 8 12 12 14 14" />{" "}
+            <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
+          </svg>
         }
-      </style>
+        rightAction={() => navigate("/transactions")}
+      />
+      
       {initilaizingGroupInfo || initializePersonalAttendance ? 
 
       <div className='mt-4'>
@@ -73,6 +87,9 @@ const MyCalendar = () => {
         <div className='flex w-full justify-center'>
         <style>
             {`
+            .react-calendar {
+              border-style: none
+            }
             .wfo {
               background-color: #f59e0b;
               color: white;
@@ -120,7 +137,7 @@ const MyCalendar = () => {
                 <Chip key={index} text={val} enable={val === filter} emoji={val === "WFH"? '🏠': val === "WFO" ? '🏢' : val === 'Sakit' ? '😷' : val === 'Cuti' ? '🏖️' :''} handleClick={() => handleFilter(val === "WFH"? 'wfh': val === "WFO" ? 'wfo' : val === 'Sakit' ? 'sakit' : val === 'Cuti' ? 'cuti' :'')} color={val === "WFH"? 'green': val === "WFO" ? 'amber' : val === 'Sakit' ? 'red' : val === 'Cuti' ? 'indigo' :''}/>
                 )}
         </div>     
-        <div className='flex flex-col overflow-y-auto h-screen px-4' id="scrollableDiv">
+        <div className='flex flex-col overflow-y-auto h-screen px-4 scrollable' id="scrollableDiv">
           {personalAttendance === 'noAttendance'&&<p className='text-sm text-gray-500 text-center'>-Belum Ada Kehadiran-</p>}
           <ul>
             {personalAttendance !== 'noAttendance'&&
