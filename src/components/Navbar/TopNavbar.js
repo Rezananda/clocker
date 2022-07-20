@@ -2,11 +2,12 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import ButtonIcon from '../Button/ButtonIcon/ButtonIcon'
 
-const TopNavbar = ({navbarColor, label, labelColor, back, navigateTo}) => {
+const TopNavbar = ({navbarColor, label, labelColor, back, navigateTo, rightButton, rightAction, rightIcon}) => {
     const navigate = useNavigate()
   return (
     <nav className={`${navbarColor} px-2 py-4 flex flex-row items-center drop-shadow`}>
-        <div className='flex items-center'>
+        <div className='flex items-center justify-between'>
+          <div>
             {back?                 
                 <ButtonIcon 
                 actionFunction={()=> navigate(navigateTo)} 
@@ -17,6 +18,18 @@ const TopNavbar = ({navbarColor, label, labelColor, back, navigateTo}) => {
                 null
             }
             <p className={`text-md font-bold ${labelColor} flex ml-1`}>{label}</p>
+          </div>
+          <div>
+
+            {rightButton?
+            <ButtonIcon
+              actionFunction={rightAction}
+              icon={rightIcon}
+            />
+            :
+            null
+            }
+          </div>
         </div>
     </nav>
   )

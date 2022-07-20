@@ -18,6 +18,7 @@ import HandleUserStatus from './pages/HandleUserStatus/HandleUserStatus'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import MyAttendance from './pages/MyAttendance/MyAttendance'
+import MyCalendar from './pages/MyCalendar/MyCalendar'
 import MyDate from './pages/MyDate/MyDate'
 import Notifications from './pages/Notifications/Notifications'
 import Registration from './pages/Registration/Registration'
@@ -42,6 +43,7 @@ const App = () => {
               </Route>
               <Route element={<PrivateRoute/>}>
                 <Route path="/" element={<DashboardSectionWithNavbar><Home/></DashboardSectionWithNavbar>} />
+                <Route path="/calendar" element={<DashboardSectionWithNavbar><MyCalendar/></DashboardSectionWithNavbar>}/>
                 <Route path="/transactions" element={<DashboardSectionWithNavbar><Transactions/></DashboardSectionWithNavbar>}/>
                 <Route path="/notifications" element={<DashboardSectionWithNavbar> <Notifications/></DashboardSectionWithNavbar>}/>
                 <Route path="/profile" element={<DashboardSectionWithNavbar><Account/></DashboardSectionWithNavbar>} />
@@ -55,7 +57,7 @@ const App = () => {
                 <Route path='/detail-group' element={<DashboardSectionWithoutNavbar><DetailGroup/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/change-status' element={<DashboardSectionWithoutNavbar><HandleUserStatus/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/my-date' element={<DashboardSectionWithoutNavbar><MyDate/></DashboardSectionWithoutNavbar>}/>
-                <Route path='/add-my-date' element={<DashboardSectionWithoutNavbar><AddFromMyDate/></DashboardSectionWithoutNavbar>}/>
+                <Route path='/add-calendar' element={<DashboardSectionWithoutNavbar><AddFromMyDate/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/my-attendance' element={<DashboardSectionWithoutNavbar><MyAttendance/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/detail-transaction' element={<DashboardSectionWithoutNavbar><DetailTransaction/></DashboardSectionWithoutNavbar>}/>
               </Route>

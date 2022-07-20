@@ -72,7 +72,7 @@ const Transactions = () => {
           <>
           <ul>
             <InfiniteScroll
-              className='rounded-xl border border-gray-200 dark:border-gray-600'
+              className='flex flex-col gap-1'
               dataLength={historyData.length}
               next={() => scroll(filter === 'all' ? 'all' : filter === 'WFO' ? 'wfo' : filter === 'WFH' ? 'wfh' : filter === 'Cuti' ? 'cuti' : '' )}
               hasMore={!historyEmpty}
@@ -87,7 +87,7 @@ const Transactions = () => {
               scrollableTarget={'scrollableDiv'}
               >
             {historyData.map((val, index) => (
-              <li key={index} className='bg-white border-b border-gray-200 dark:bg-slate-800 dark:border-gray-600' onClick={() => navigate('/detail-transaction', {state: val})}>
+              <li key={index} className='bg-white rounded dark:bg-slate-800 dark:border-gray-600' onClick={() => navigate('/detail-transaction', {state: val})}>
                 <div className='px-4 py-2 flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
                     {val.transaction === 'attendance'&&'🕖'

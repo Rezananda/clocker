@@ -8,9 +8,19 @@ const Home = () => {
   useDarkMode()
   return (
     <>
-      <AccountInformation/>
-      <AttendanceInformation/>
-      <GroupAttendanceInformation/>
+      <style>
+        {
+          `.scrollable::-webkit-scrollbar {
+            display: none;
+        }`
+        }
+      </style>
+      <div className='h-screen overflow-y-auto scrollable'>
+        <AccountInformation/>
+        <AttendanceInformation/>
+        <GroupAttendanceInformation/>
+        <div className='h-96 w-full'></div>
+      </div>
     </>
   )
 }

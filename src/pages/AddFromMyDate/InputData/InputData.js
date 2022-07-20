@@ -3,25 +3,42 @@ import ReactDatePicker from 'react-datepicker'
 import ButtonFill from '../../../components/Button/ButtonFill/ButtonFill'
 import LabelTypography from '../../../components/Typography/LabelTypography'
 
-const InputData = ({startDate, endDate, handleStepAddCalender, setCalender}) => {
+const InputData = ({handleStepAddCalender, calendar,  setCalender}) => {
+
+    const handleDateChangeRaw = (e) => {
+        e.preventDefault();
+    }
+
   return (
     <div className='flex flex-col gap-4'>
         <div>
-            <LabelTypography textValue="Kalender"/>
+            <LabelTypography textValue="Tanggal"/>
             <div className='flex items-center gap-1'>
                 <div>
                     <ReactDatePicker
-                    selected={new Date(startDate)}
-                    className='bg-blue-50 w-full px-4 py-3 rounded-lg text-md text-gray-500'
-                    disabled
+                    className='bg-blue-50 w-full px-4 py-2 rounded-lg text-md text-gray-500'
+                    selected={calendar.startDate}
+                    onChange={(date) => setCalender((prevState => ({...prevState, startDate: new Date(date)})))}
+                    selectsStart
+                    startDate={calendar.startDate}
+                    endDate={calendar.endDate}           
+                    minDate={new Date()}
+                    placeholderText='Tanggal Awal'
+                    onChangeRaw={handleDateChangeRaw}
                     />
                 </div>
                 <span>-</span>
                 <div>
                     <ReactDatePicker
-                    selected={new Date(endDate)}
-                    className='bg-blue-50 w-full px-4 py-3 rounded-lg text-md text-gray-500'
-                    disabled
+                    className='bg-blue-50 w-full px-4 py-2 rounded-lg text-md text-gray-500'
+                    selected={calendar.endDate}
+                    onChange={(date) => setCalender((prevState => ({...prevState, endDate: new Date(date)})))}
+                    selectsEnd
+                    startDate={calendar.startDate}
+                    endDate={calendar.endDate}
+                    minDate={calendar.startDate}     
+                    placeholderText='Tanggal Akhir'     
+                    onChangeRaw={handleDateChangeRaw}  
                     />
                 </div>
             </div>

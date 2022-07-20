@@ -1,4 +1,5 @@
 import { collection, doc, getDoc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
+import moment from 'moment'
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
@@ -13,10 +14,12 @@ const AddFromMyDate = () => {
     const userContext = useUserContext()
     const uid = userContext.currentUser.uid
     const navigate = useNavigate()
-    const location = useLocation()
     const [stepAddCalender, setStepAddCalender] = useState(1)
     const [initializeAddCalender, setInitializeAddCalender] = useState(false)
-    const [calender, setCalender] = useState(location.state)
+    const [calendar, setCalendar] = useState({
+      startDate: '',
+      endDate: ''
+    })
     
     function handleStepAddCalender(statusAddCalender){
         if(statusAddCalender === "prev"){
@@ -37,31 +40,31 @@ const AddFromMyDate = () => {
           const attendances = {
             userName: docSnapGetUser.data().displayName,
             userId: docSnapGetUser.id,
-            timestamp: Timestamp.now() ,
-            addDate: new Date(Timestamp.now().seconds*1000).toLocaleDateString(),
-            addTime: new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5),
+            timestamp: Timestamp.now(),
+            addDate: moment(Timestamp.now().toDate()).format('DD/MM/YYYY'),
+            addTime: moment(Timestamp.now().toMillis()).format('HH:mm') ,
             updateDate: Timestamp.now(),
             groupId: docSnapGetUser.data().group[0],
             photoURL: docSnapGetUser.data().photoURL
           }
     
-          if(new Date(calender.startDate).toLocaleDateString() === new Date(calender.endDate).toLocaleDateString()){
+          if(new Date(calendar.startDate).toLocaleDateString() === new Date(calendar.endDate).toLocaleDateString()){
             attendances.status = "Cuti"
-            attendances.timestamp= new Date(calender.startDate)
-            attendances.addDate= new Date(calender.startDate).toLocaleDateString()
-            attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
-            attendances.startDate = new Date(calender.startDate).toLocaleDateString()
-            attendances.endDate = new Date(calender.endDate).toLocaleDateString()
+            attendances.timestamp= Timestamp.fromDate(moment(calendar.startDate).toDate())
+            attendances.addDate= moment(calendar.startDate).format('DD/MM/YYYY')
+            attendances.addTime= moment(Timestamp.now().toMillis()).format('HH:mm')
+            attendances.startDate = moment(calendar.startDate).format('DD/MM/YYYY')
+            attendances.endDate = moment(calendar.endDate).format('DD/MM/YYYY')
             const attendanceRef = doc(collection(db, "attendanceInformation"))
             batch.set(attendanceRef, attendances);
           }else{
-            for (let date = new Date(calender.startDate); date <= new Date(calender.endDate); date.setDate(date.getDate() + 1)){
+            for (let date = new Date(calendar.startDate); date <= new Date(calendar.endDate); date.setDate(date.getDate() + 1)){
               attendances.status = "Cuti"
-              attendances.timestamp= date
-              attendances.addDate= date.toLocaleDateString()
-              attendances.addTime= new Date(Timestamp.now().seconds*1000).toTimeString().split(' ')[0].substring(0,5)
-              attendances.startDate = new Date(calender.startDate).toLocaleDateString()
-              attendances.endDate = new Date(calender.endDate).toLocaleDateString()
+              attendances.timestamp= Timestamp.fromDate(moment(date).toDate())
+              attendances.addDate= moment(date).format('DD/MM/YYYY')
+              attendances.addTime= moment(Timestamp.now().toMillis()).format('HH:mm')
+              attendances.startDate = moment(date).format('DD/MM/YYYY')
+              attendances.endDate = moment(calendar.endDate).format('DD/MM/YYYY')
               const attendanceRef = doc(collection(db, "attendanceInformation"))
               batch.set(attendanceRef, attendances);
             }
@@ -91,7 +94,7 @@ const AddFromMyDate = () => {
         <nav className="mb-2 px-2 py-4 bg-blue-500 drop-shadow-md fixed top-0 w-full z-10">
           <div className='flex justify-start items-center'>
           <ButtonIcon 
-          actionFunction={() => navigate('/my-date')}
+          actionFunction={() => navigate(-1)}
           icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
           </svg>}
@@ -100,14 +103,14 @@ const AddFromMyDate = () => {
           </div>
       </nav>
       <div className='px-4 mt-20'>
-        <div className='bg-white rounded-lg p-4 flex flex-col border border-gray-200'>
-          <Stepper stepAddGroup={stepAddCalender}/>
+        <Stepper stepAddGroup={stepAddCalender}/>
+        <div className='bg-white rounded-lg p-4 flex flex-col'>
           {stepAddCalender === 1? 
-          <InputData startDate={location.state.startDate} endDate={location.state.endDate} handleStepAddCalender={handleStepAddCalender} setCalender={setCalender}/> : 
+          <InputData handleStepAddCalender={handleStepAddCalender} calendar={calendar} setCalender={setCalendar}/> : 
           stepAddCalender === 2 ? 
-          <Confirmation initializeAddCalender={initializeAddCalender} handleStepAddCalender={handleStepAddCalender} calender={calender} handleAddCalender={handleAddCalender}/> : 
+          <Confirmation initializeAddCalender={initializeAddCalender} handleStepAddCalender={handleStepAddCalender} calender={calendar} handleAddCalender={handleAddCalender}/> : 
           stepAddCalender === 3? 
-          <Result calender={calender}/> : ""}
+          <Result calender={calendar}/> : ""}
         </div>
       </div>
     </div>

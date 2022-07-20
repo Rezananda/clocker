@@ -16,10 +16,25 @@ const Result = ({initilaizingGroupInfo, groupInfo, attendanceData}) => {
           <p className='text-lg font-bold text-center dark:text-white'>BERHASIL TAMBAH KEHADIRAN</p>
         </div>
         <ul className='flex flex-col gap-2 text-center bg-blue-50 rounded-xl py-2'>
-          <li><p className='font-bold'>Kehadiran</p> <p className='text-lg'>{attendanceData.status}</p></li>
-          {attendanceData.wfoLocation&&<li className=''><p className='font-bold'>Lokasi WFO</p> <p className='text-lg'>{attendanceData.wfoLocation}</p></li>}
-          {attendanceData.startDate&&attendanceData.endDate&&<li className=''><p className='font-bold'>Lama Cuti</p> <p className='text-lg'>{new Date(attendanceData.startDate).toLocaleDateString()} - {new Date(attendanceData.endDate).toLocaleDateString()}</p></li>}
-          {attendanceData.sickReason&&<li className=''><p className='font-bold'>Alasan Sakit</p> <p className='text-lg'>: {attendanceData.sickReason}</p></li>}
+          <li>
+            <p className='text-sm'>Kehadiran</p>
+            <p className='text-lg font-bold'>{attendanceData.status}</p>
+          </li>
+          {attendanceData.wfoLocation&&
+          <li>
+            <p className='text-sm'>Lokasi WFO</p>
+            <p className='text-lg font-bold'>{attendanceData.wfoLocation}</p>
+          </li>}
+          {attendanceData.startDate&&attendanceData.endDate&&
+          <li>
+            <p className='text-sm'>Lama Cuti</p>
+            <p className='text-lg font-bold'>{new Date(attendanceData.startDate).toLocaleDateString()} - {new Date(attendanceData.endDate).toLocaleDateString()}</p>
+          </li>}
+          {attendanceData.sickReason&&
+          <li>
+            <p className='text-sm'>Alasan Sakit</p>
+            <p className='text-lg font-bold'>: {attendanceData.sickReason}</p>
+          </li>}
         </ul>
         <ButtonOutline handleClick={() => navigate('/')} label="Kembali ke Beranda"/>
     </div>

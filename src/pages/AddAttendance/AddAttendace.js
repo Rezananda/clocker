@@ -38,7 +38,7 @@ const AddAttendace = () => {
       const attendances = {
         userName: docSnapGetUser.data().displayName,
         userId: docSnapGetUser.id,
-        timestamp: Timestamp.now() ,
+        timestamp: Timestamp.now(),
         addDate: moment(Timestamp.now().toDate()).format('DD/MM/YYYY'),
         addTime: moment(Timestamp.now().toMillis()).format('HH:mm') ,
         updateDate: Timestamp.now(),
@@ -116,7 +116,7 @@ const AddAttendace = () => {
       </div>
       <div className='px-4 py-4 flex flex-col'>
         <Stepper stepAddGroup={stepAddAttendance}/>
-        <div className='bg-white rounded-lg p-4 border border-gray-200 h-full overflow-y-auto dark:bg-slate-800 dark:border-gray-600'>
+        <div className='bg-white rounded-lg p-4 h-full overflow-y-auto dark:bg-slate-800 dark:border-gray-600'>
           {stepAddAttendance === 1? 
           <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} handleStepAddAttendance={handleStepAddAttendance}/> : 
           stepAddAttendance === 2 ? 

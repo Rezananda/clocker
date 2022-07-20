@@ -7,7 +7,7 @@ import LetterAvatar from '../LetterAvatar/LetterAvatar'
 const ListGroupMember = ({val, groupInfo, dispatch, state, handleChangeStatus}) => {
     const navigate = useNavigate()
   return (
-    <div className='flex justify-between items-center bg-white border-b border-gray-200 px-4 py-2 dark:bg-slate-800 dark:border-gray-600'>
+    <div className='flex justify-between items-center bg-white rounded px-4 py-2 dark:bg-slate-800 dark:border-gray-600'>
         <div className='flex items-center gap-2 w-full'>
         <LetterAvatar letter={val.photoURL}/>   
         <div className='flex flex-col basis-2/3'>
