@@ -14,10 +14,19 @@ import { useNavigate } from 'react-router-dom';
 
 const MyCalendar = () => {
   const navigate = useNavigate()
-  const [calendar, setCalendar] = useState(new Date())
+  const [calendar, setCalendar] = useState([])
   const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
   const [initializePersonalAttendance, personalAttendance, attendanceEmpty, scroll, checkPersonalAttendance] = UseCheckPersonalAttendance()
   const [filter, setFilter] = useState('all')
+
+  console.log(calendar)
+
+  const getDateRange = (date) => {
+    setCalendar(date)
+    if(date.length === 2){
+      navigate('/add-calendar', {state: {startDate: date[0], endDate: date[0]}})
+    }
+  }
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -90,27 +99,28 @@ const MyCalendar = () => {
             .react-calendar {
               border-style: none
             }
-            .wfo {
+            .wfo:disabled {
               background-color: #f59e0b;
               color: white;
             }
-            .wfh {
+            .wfh:disabled {
               background-color: #22c55e;
               color: white;
             }
-            .cuti {
+            .cuti:disabled {
               background-color: #6366f1;
               color: white;
             }
-            .sakit {
+            .sakit:disabled {
               background-color: #ef4444;
               color: white;
             }
             `}
           </style>
           <Calendar 
-            onChange={setCalendar} 
-            value={calendar} 
+            onChange={(date) => getDateRange(date)} 
+            selectRange={true}
+            value={new Date()} 
             className={`drop-shadow-lg rounded-md border-none`} 
             tileClassName={({date}) => {
               try{
@@ -127,7 +137,10 @@ const MyCalendar = () => {
                 return ''
               }
             }}
-        
+            tileDisabled={({ date }) => personalAttendance.find(x => x.addDate === moment(date).format('DD/MM/YYYY'))}
+            minDate={
+              new Date()
+            }
           />
 
         </div>

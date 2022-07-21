@@ -17,8 +17,8 @@ const AddFromMyDate = () => {
     const [stepAddCalender, setStepAddCalender] = useState(1)
     const [initializeAddCalender, setInitializeAddCalender] = useState(false)
     const [calendar, setCalendar] = useState({
-      startDate: '',
-      endDate: ''
+      startDate: new Date(),
+      endDate: new Date()
     })
     
     function handleStepAddCalender(statusAddCalender){
