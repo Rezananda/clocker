@@ -16,9 +16,9 @@ const Result = ({calender}) => {
       </div>
 
       <ul className='flex flex-col gap-2 text-center bg-blue-50 rounded-xl py-2'>
-        <li><p className='font-bold'>Cuti</p> <p className='text-lg'>{new Date(calender.startDate).toLocaleDateString()} - {new Date(calender.endDate).toLocaleDateString()}</p></li>
+        <li><p className='text-sm'>Cuti</p> <p className='font-bold text-lg'>{new Date(calender.startDate).toLocaleDateString()} - {new Date(calender.endDate).toLocaleDateString()}</p></li>
       </ul>
-        <ButtonOutline label="Kembali ke Kalender" handleClick={() => navigate('/my-date')}/>
+        <ButtonOutline label="Kembali ke Kalender" handleClick={() => navigate('/calendar')}/>
     </div>
   )
 }

@@ -101,7 +101,9 @@ const Transactions = () => {
         </div>
       </div>
       {initializeHistory ? (
-        <LoadingTransaction />
+        <div className="px-4">
+            <LoadingTransaction />
+        </div>
       ) : (
         <div
           className="flex flex-col overflow-y-auto h-screen px-4"
@@ -156,7 +158,7 @@ const Transactions = () => {
                   {historyData.map((val, index) => (
                     <li
                       key={index}
-                      className="bg-white rounded dark:bg-slate-800 dark:border-gray-600"
+                      className="bg-white rounded-lg dark:bg-slate-800 dark:border-gray-600"
                       onClick={() =>
                         navigate("/detail-transaction", { state: val })
                       }

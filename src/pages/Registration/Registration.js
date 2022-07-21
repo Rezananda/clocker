@@ -99,7 +99,7 @@ const Registration = () => {
                     }
                     await setDoc(doc(db, "users", userCredential.user.uid), userData)
                     sendEmailVerification(user).then(()=> {
-                        dispatch({type: "HANDLE ALERT", payload: "Lakukan aktivasi pada link yang dikirim pada emailmu."})
+                        dispatch({type: "HANDLE ALERT", payload: "Lakukan aktivasi akunmu melalui email"})
                         dispatch({type: "HANDLE RESET FIELD"})
                         dispatch({type: "HANDLE INITIALIZE", payload: false})
                         window.scrollTo(0,0)
@@ -122,7 +122,14 @@ const Registration = () => {
 
   return (
     <>
-        <div className='flex justify-center min-h-screen bg-gray-100 md:items-center overflow-y-auto dark:bg-black'>
+        <style>
+            {
+            `.scrollable::-webkit-scrollbar {
+                display: none;
+            }`
+            }
+        </style>
+        <div className='flex justify-center min-h-screen bg-gray-100 md:items-center overflow-y-auto dark:bg-black scrollable'>
             <div className='flex flex-col gap-2 w-full py-4 px-4 rounded-xl md:w-1/4'>
                 <div className='flex absolute top-0 right-0 left-0 h-2/6 bg-blue-500 w-full'></div>
                 {state.alert&&state.alertMessage === "auth/email-already-in-use" ? 
@@ -155,7 +162,7 @@ const Registration = () => {
                     <p className='text-2xl font-bold text-white'>CLOCKER</p>
                 </div>
 
-                <div className='flex flex-col gap-4 rounded-xl bg-white border border-gray-200 relative dark:bg-slate-800 dark:border-gray-600'>
+                <div className='flex flex-col gap-4 rounded-xl bg-white relative dark:bg-slate-800'>
                     <div className='border-b border-gray-200 flex items-center px-4 py-2 dark:border-gray-600'>
                         <LargeTypography textValue="Registrasi" additionalClass={'dark:text-white'}/>
                     </div>

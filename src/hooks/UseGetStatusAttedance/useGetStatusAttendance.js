@@ -11,20 +11,25 @@ const useGetStatusAttendance = () => {
     const [statusAttendance, setStatusAttendance] = useState()
 
     const getStatusAttendance = async() => {
+       setInitializeGetStatusAttendance(true)
         try {
-            setInitializeGetStatusAttendance(true)
             const docRef = doc(db, "users", uid)
             const docSnap = await getDoc(docRef)
-            
-            const queryGetStatusAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('addDate', '==', moment(Timestamp.now().toDate()).format('DD/MM/YYYY')))
-            const queryGetStatusAttendanceSnapshot = await getDocs(queryGetStatusAttendance)
-
-            queryGetStatusAttendanceSnapshot.forEach((doc)=> (
-                setStatusAttendance({id: doc.id, ...doc.data()})
-            ))
-            setInitializeGetStatusAttendance(false)
+            if(docSnap.data().group[0]){
+              const queryGetStatusAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('addDate', '==', moment(Timestamp.now().toDate()).format('DD/MM/YYYY')))
+              const queryGetStatusAttendanceSnapshot = await getDocs(queryGetStatusAttendance)
+  
+              queryGetStatusAttendanceSnapshot.forEach((doc)=> (
+                  setStatusAttendance({id: doc.id, ...doc.data()})
+              ))
+              setInitializeGetStatusAttendance(false)
+            }else{
+              setStatusAttendance('noGroup')
+              setInitializeGetStatusAttendance(false)
+            }
         } catch (error) {
-            console.log(error)
+          setStatusAttendance('noGroup')
+          setInitializeGetStatusAttendance(false)
         }
     }
 

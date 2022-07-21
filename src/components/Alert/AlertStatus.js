@@ -24,6 +24,16 @@ const AlertStatus = ({type, time, attendanceStatus, additionalClass}) => {
             <p className='flex items-center gap-1'>Kamu {<p className='font-bold underline'>BELUM</p>} Clock-In</p>
         </div>
       :
+      (type === 'noGroup') ?
+        <div className='flex px-3 py-3 bg-blue-100 rounded-lg w-full justify-center'>
+            <p className='flex items-center gap-1'>Kamu Belum Memiliki Grup</p>
+        </div>
+      :
+      (type === 'waitingAdmin') ?
+        <div className='flex px-3 py-3 bg-blue-100 rounded-lg w-full justify-center'>
+            <p className='flex items-center gap-1'>Menunggu Persetujuan Admin</p>
+        </div>
+      :
       ""
       }
     </>

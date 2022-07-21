@@ -10,7 +10,7 @@ const DetailProfile = () => {
     <div>
         <TopNavbar navbarColor={'bg-blue-500'} label={'Profil'} labelColor={'text-white'} back={true} navigateTo={-1}/>
         <div className='px-4 py-4'>
-            <ul className='flex flex-col divide-y bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-600 dark:divide-gray-600 rounded-lg'>
+            <ul className='flex flex-col divide-y bg-white dark:bg-slate-800 dark:divide-gray-600 rounded-lg'>
                 <li className='py-3 px-4 flex items-center justify-between'>
                     <div>
                         <p className='text-gray-500 text-sm font-bold dark:text-white'>Nama</p>

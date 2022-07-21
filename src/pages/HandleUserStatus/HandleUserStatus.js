@@ -124,25 +124,26 @@ const HandleUserStatus = () => {
 }
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <div className='min-h-screen bg-gray-100'>
       <TopNavbar navbarColor={`bg-blue-500`} back={true} label={`Ubah Status User`} labelColor={`text-white`} navigateTo={-1}/>
       {state.initializeChangeStatus ? <SpinnerLoading/>
       :
       <div className='px-4 py-4'>
-        <div className='bg-white rounded-lg p-4 border border-gray-200'> 
+        <div className='bg-white rounded-lg p-4'> 
           <div className='flex flex-col gap-2'>
             <div className=''>
-              <p>Nama User</p><p className='font-bold text-lg'>{location.state.displayName}</p>
+              <p className='text-sm'>Nama User</p>
+              <p className='font-bold text-lg'>{location.state.displayName}</p>
             </div>
             <div>
-              <p>Status</p>
+              <p className='text-sm'>Status</p>
               <div className='flex items-center gap-1'>
                 <input type={'checkbox'} value={'03'} onChange={handleRoleUser}/>
-                <span>User</span>
+                <span className='text-lg font-bold'>User</span>
               </div>
               <div className='flex items-center gap-1'>
                 <input type={'checkbox'} value={'02'} onChange={handleRoleUser} disabled={!roleUser.includes('03')}/>
-                <span>Manajer</span>
+                <span className='text-lg font-bold'>Manajer</span>
               </div>
             </div>
             <ButtonFill disabled={!roleUser.includes('03')} additionalClass={!roleUser.includes('03') ?'bg-blue-200 border-blue-200' : 'bg-blue-500 border-blue-500'} label={'Setuju'} handleClick={() => handleChangeStatus(location.state.userId, location.state.displayName, location.state.photoURL, location.state.status, location.state.groupInfoId, 'approve')}/>

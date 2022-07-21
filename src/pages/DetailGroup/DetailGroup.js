@@ -45,6 +45,7 @@ const DetailGroup = () => {
     const [tab, setTab] = useState(1)
     const userContext = useUserContext()
     const [state, dispatch] = useReducer(reducer, initialState)
+
     const handleCopy = () => {
         navigator.clipboard.writeText(groupInfo.id)
         dispatch({type: "HANDLE TOLTIP", payload: !state.showToltip})
@@ -116,6 +117,12 @@ const DetailGroup = () => {
         <div className='flex sticky top-0 flex-col z-50'>
             <TopNavbar navbarColor={'bg-blue-500'} label={'Informasi Grup'} labelColor={'text-white'} back={true} navigateTo={'/'}/>
             {groupInfo.roleUser.includes('02')&&       
+            <ul className="flex bg-blue-500 z-50 drop-shadow-sm">
+                <li className="w-full"><button onClick={()=> setTab(1)} className={tab === 1 ? "p-2 w-full text-white border-b-4 border-white" : "p-2 w-full text-blue-400 rounded-t-lg border-b-2 border-transparent"}>Detail Grup</button></li>
+                <li className="w-full"><button onClick={()=> setTab(2)} className={tab === 2 ? "p-2 w-full text-white border-b-4 border-white" : "p-2 w-full text-blue-400 rounded-t-lg border-b-2 border-transparent"}>Kehadiran Grup</button></li>
+            </ul>
+            }
+            {groupInfo.roleUser.includes('01')&&       
             <ul className="flex bg-blue-500 z-50 drop-shadow-sm">
                 <li className="w-full"><button onClick={()=> setTab(1)} className={tab === 1 ? "p-2 w-full text-white border-b-4 border-white" : "p-2 w-full text-blue-400 rounded-t-lg border-b-2 border-transparent"}>Detail Grup</button></li>
                 <li className="w-full"><button onClick={()=> setTab(2)} className={tab === 2 ? "p-2 w-full text-white border-b-4 border-white" : "p-2 w-full text-blue-400 rounded-t-lg border-b-2 border-transparent"}>Kehadiran Grup</button></li>

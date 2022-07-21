@@ -4,7 +4,7 @@ import LetterAvatar from '../LetterAvatar/LetterAvatar'
 
 const ListGroupAttendanceInformation = ({val}) => {
   return (
-    <div className='flex justify-between bg-white w-full px-4 py-2 rounded-lg dark:bg-slate-800 dark:border-gray-600 '>
+    <div className='flex justify-between bg-white w-full px-4 py-2 rounded-lg dark:bg-slate-800'>
       <div className='flex items-center'>
         <div>
           <LetterAvatar letter={val.photoURL}/>

@@ -10,14 +10,14 @@ const ConfirmationAddGroup = ({ groupName, groupStatus, locations, handleAddGrou
       {error&&<Alert type={'error'} text={errorMessage}/>}
         <div className='flex flex-col'>
             <ul className='flex flex-col gap-2 mb-4 text-center'>
-                <li><p className='font-bold'>Nama Grup</p><p className='text-lg'>{groupName}</p></li>
-                <li><p className='font-bold'>Kapasitas Group</p><p className='text-lg'>50</p></li>
-                <li> <p className='font-bold'>Status Grup</p> 
+                <li><p className='text-sm'>Nama Grup</p><p className='text-lg font-bold'>{groupName}</p></li>
+                <li><p className='text-sm'>Kapasitas Group</p><p className='text-lg font-bold'>50</p></li>
+                <li> <p className='text-sm'>Status Grup</p> 
                   <div className='flex gap-2 flex-wrap justify-center'>
                     {groupStatus.map((item, i) => <div key={i} className='px-2 bg-blue-100 rounded-lg text-blue-500 flex items-center gap-1 text-lg font-bold'>{item}</div>)}
                   </div>
                 </li>
-                <li> <p className='font-bold'>Lokasi WFO</p> 
+                <li> <p className='text-sm'>Lokasi WFO</p> 
                   <div className='flex gap-2 flex-wrap justify-center'>
                     {locations.map((item, i) => <div key={i} className='px-2 bg-blue-100 rounded-lg text-blue-500 flex items-center gap-1 text-lg font-bold'>{item}</div>)}
                   </div>

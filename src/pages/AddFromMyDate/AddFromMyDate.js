@@ -1,7 +1,7 @@
 import { collection, doc, getDoc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
 import moment from 'moment'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
 import Stepper from '../../components/Stepper/Stepper'
 import useUserContext from '../../hooks/UseUserContext/UseUserContext'
@@ -13,12 +13,13 @@ import Result from './Result/Result'
 const AddFromMyDate = () => {
     const userContext = useUserContext()
     const uid = userContext.currentUser.uid
+    const location = useLocation()
     const navigate = useNavigate()
     const [stepAddCalender, setStepAddCalender] = useState(1)
     const [initializeAddCalender, setInitializeAddCalender] = useState(false)
     const [calendar, setCalendar] = useState({
-      startDate: new Date(),
-      endDate: new Date()
+      startDate: location.state.startDate,
+      endDate: location.state.endDate
     })
     
     function handleStepAddCalender(statusAddCalender){

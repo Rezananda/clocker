@@ -234,13 +234,13 @@ const AddGroup = () => {
     <div className='flex flex-col overflow-y-auto'>
         <div className='flex sticky top-0 flex-col z-50'>
           <TopNavbar navbarColor={'bg-blue-500'} label={'Tambah Grup'} labelColor={'text-white'} back={true} navigateTo={'/'}/>
-          <ul className="flex bg-white">
-              <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 1})} className={state.tab === 1 ? "p-4 w-full text-blue-500 border-b-4 border-blue-500" : "p-4 w-full text-gray-400 rounded-t-lg border-b-2 border-transparent"}>Gabung Grup</button></li>
-              <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 2})} className={state.tab === 2 ? "p-4 w-full text-blue-500 border-b-4 border-blue-500" : "p-4 w-full text-gray-400 rounded-t-lg border-b-2 border-transparent"}>Buat Grup</button></li>
+          <ul className="flex bg-blue-500 z-50 drop-shadow-sm">
+              <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 1})} className={state.tab === 1 ? "p-4 w-full text-white border-b-4 border-white" : "p-4 w-full text-blue-300 rounded-t-lg border-b-2 border-transparent"}>Gabung Grup</button></li>
+              <li className="w-full"><button onClick={()=> dispatch({type: "HANDLE TAB", payload: 2})} className={state.tab === 2 ? "p-4 w-full text-white border-b-4 border-white" : "p-4 w-full text-blue-300 rounded-t-lg border-b-2 border-transparent"}>Buat Grup</button></li>
           </ul>
         </div>
         <div className={state.tab === 1 ? "flex flex-col px-4 py-4" : "hidden"}>
-          <div className='bg-white rounded-xl border border-gray-200 p-4'>
+          <div className='bg-white rounded-xl p-4'>
             <Stepper stepAddGroup={state.stepJoinGroup}/>
             {(state.stepJoinGroup === 1) ? 
             <InputGroupCode setGroupCode={(e) => dispatch({type: "HANDLE GROUP CODE", payload: e.target.value})} groupCode={state.groupCode} handleCheckCodeGroup={handleCheckCodeGroup} groupCodeData={state.groupCodeData} initializingGroupCodeData={state.initializingGroupCodeData} /> : (state.stepJoinGroup === 2) ? 
@@ -250,8 +250,8 @@ const AddGroup = () => {
         </div>
 
         <div className={state.tab === 2 ? "flex flex-col px-4 py-4" : "hidden"}>
-          <div className='bg-white rounded-xl border border-gray-200 p-4'>
-            <Stepper stepAddGroup={state.stepAddGroup}/>
+          <Stepper stepAddGroup={state.stepAddGroup}/>
+          <div className='bg-white rounded-xl p-4'>
             {(state.stepAddGroup === 1) ? 
             <InputGroupName handleStepAddGroup={handleStepAddGroup} setGroupName={(e) => dispatch({type: "HANDLE GROUP NAME", payload: e.target.value})} handleGroupStatus={handleGroupStatus} groupName={state.groupName} groupStatus={groupStatus} handleLocation={handleLocation} handleRemoveLocation={handleRemoveLocation} setLocation={(e) => dispatch({type: "HANDLE GROUP LOCATION NAME", payload: e.target.value})} locations={locations} location={state.groupLocationName} /> : (state.stepAddGroup === 2) ? 
             <ConfirmationAddGroup  groupName={state.groupName} groupStatus={groupStatus} locations={locations} handleAddGroup={handleAddGroup} loadingSaveGroup={state.loadingSaveGroup} handleStepAddGroup={handleStepAddGroup} error={state.error} errorMessage={state.errorMessage}/> : (state.stepAddGroup === 3) ? 

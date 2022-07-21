@@ -1,5 +1,5 @@
 import { CONSTANTS } from '@firebase/util'
-import { collection, doc, onSnapshot, query, Timestamp, where } from 'firebase/firestore'
+import { collection, doc, getDoc, onSnapshot, query, Timestamp, where } from 'firebase/firestore'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -21,23 +21,30 @@ const GroupAttendanceInformation = () => {
   const [allAttendance, setAllAttendance] = useState()
   const [filter, setFilter] = useState('all')
   const attendances = []
+  
 
-  console.log(allAttendance)
-  console.log(groupInfo)
-
-  const getAllAttendance = () => {
+  const getAllAttendance = async() => {
     setInitializeGetAllAttendance(true)
-    const docRef = doc(db, 'users', userContext.currentUser.uid)
-    const unsubGetGroup = onSnapshot(docRef, async(docSnap) => {
-      const queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]))
-      const unsubGetAttendance = onSnapshot(queryAttendance, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            attendances.push({id: doc.id, ...doc.data()})
+    try{
+      const docRef = doc(db, 'users', userContext.currentUser.uid)
+      const docSnap = await getDoc(docRef)
+        if(docSnap.data().group[0]){
+          const queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]))
+          const unsubGetAttendance = onSnapshot(queryAttendance, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                attendances.push({id: doc.id, ...doc.data()})
+            })
+            setAllAttendance(attendances)
+            setInitializeGetAllAttendance(false)
         })
-        setAllAttendance(attendances)
-        setInitializeGetAllAttendance(false)
-    })
-    })
+        }else {
+          setAllAttendance('noGroup')
+          setInitializeGetAllAttendance(false)
+        }
+    }catch(error){
+      setAllAttendance('noGroup')
+      setInitializeGetAllAttendance(false)
+    }
   }
 
   useEffect(() => {
@@ -67,27 +74,33 @@ const GroupAttendanceInformation = () => {
     <div className='px-4'>
         {initilaizingGroupInfo || initializeAttendance || initializeGetAllAttendance?
         <>
+          <div className='animate-pulse mb-2'>
+              <div className="flex items-center justify-between">
+                  <div className="h-5 bg-slate-200 w-44 rounded"></div>
+                  <div className="h-5 bg-slate-200 w-20 rounded-full"></div>
+              </div>
+          </div>
           <LoadingChip/>
           <LoadingListAttendance/>
         </>
         :
-        (groupInfo === false && attendanceInfo === "noGroup") ?
+        (groupInfo === false && attendanceInfo === "noGroup" && allAttendance === "noGroup") ?
         <div className='flex flex-col gap-2'>
-          <p className='font-bold'>Kehadiran Hari Ini</p>
+          <p className='font-bold dark:text-white'>Kehadiran Hari Ini</p>
           <p className='text-sm text-gray-500 text-center'>-Belum Ada Grup-</p>
         </div>
         :
         (groupInfo.status === '02' && attendanceInfo === 'noAttendance')?
         <div className='flex flex-col gap-2'>
-          <p className='font-bold'>Kehadiran Hari Ini</p>
+          <p className='font-bold dark:text-white'>Kehadiran Hari Ini</p>
           <p className='text-sm text-gray-500 text-center'>-Menunggu Persetujuan Admin-</p>
         </div>
         :
         (groupInfo.groupStatus.length > 0 &&  groupInfo.status === '01') ?
         <div>
           <div className='flex w-full justify-between items-center'>
-              <p className='font-bold'>Kehadiran Hari Ini</p>
-              <span className='flex items-center bg-blue-500 px-2 py-0.5 text-white font-bold text-xs rounded-full'>{allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).length} / {groupInfo.groupMember.length} Hadir</span>
+              <p className='font-bold dark:text-white'>Kehadiran Hari Ini</p>
+              <span className='flex items-center bg-blue-100 px-2 py-0.5 text-blue-500 font-bold text-xs rounded-full'>{allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).length} / {groupInfo.groupMember.length} Hadir</span>
           </div>
           <style>
             {
@@ -96,7 +109,7 @@ const GroupAttendanceInformation = () => {
             }`
             }
           </style>
-          <div className='flex w-full gap-1 overflow-x-auto scrollable sticky top-0 bg-gray-100 py-2' id='scrollableDiv'>
+          <div className='flex w-full gap-1 overflow-x-auto scrollable sticky top-0 bg-gray-100 py-2 dark:bg-black' id='scrollableDiv'>
             <Chip text="Sudah Isi" enable={filter === 'all'} isCount={true} count={allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).length} handleClick={() => handleFilter('all')} color={'blue'} /> 
               {groupInfo.groupStatus.map((val, index) => 
                 <Chip key={index} text={val} enable={val === filter} isCount={true} count={allAttendance.filter(item => item.addDate === new Date(Date.now()).toLocaleDateString() && item.status === val).length} handleClick={() => handleFilter(val === "WFH"? 'wfh': val === "WFO" ? 'wfo' : val === 'Sakit' ? 'sakit' : val === 'Cuti' ? 'cuti' :'')} color={val === "WFH"? 'green': val === "WFO" ? 'amber' : val === 'Sakit' ? 'red' : val === 'Cuti' ? 'indigo' :''}/>

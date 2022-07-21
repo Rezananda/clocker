@@ -56,12 +56,12 @@ const App = () => {
                 <Route path='/add-group' element={<DashboardSectionWithoutNavbar><AddGroup/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/detail-group' element={<DashboardSectionWithoutNavbar><DetailGroup/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/change-status' element={<DashboardSectionWithoutNavbar><HandleUserStatus/></DashboardSectionWithoutNavbar>}/>
-                <Route path='/my-date' element={<DashboardSectionWithoutNavbar><MyDate/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/add-calendar' element={<DashboardSectionWithoutNavbar><AddFromMyDate/></DashboardSectionWithoutNavbar>}/>
-                <Route path='/my-attendance' element={<DashboardSectionWithoutNavbar><MyAttendance/></DashboardSectionWithoutNavbar>}/>
                 <Route path='/detail-transaction' element={<DashboardSectionWithoutNavbar><DetailTransaction/></DashboardSectionWithoutNavbar>}/>
+                {/* <Route path='/my-date' element={<DashboardSectionWithoutNavbar><MyDate/></DashboardSectionWithoutNavbar>}/> */}
+                {/* <Route path='/my-attendance' element={<DashboardSectionWithoutNavbar><MyAttendance/></DashboardSectionWithoutNavbar>}/> */}
               </Route>
-              <Route path="*" element={<p>Page Not Found</p>}/>
+              <Route path="*" element={<p className='h-screen flex flex-col items-center justify-center'>Halaman Tidak Ditemukan</p>}/>
           </Routes>
         </Router>
       </RouteProvider>

@@ -109,7 +109,7 @@ const Login = () => {
                     <p className='text-2xl font-bold text-white'>CLOCKER</p>
                 </div>
 
-                <div className='flex flex-col gap-4 rounded-xl bg-white border border-gray-200 relative dark:bg-slate-800 dark:border-gray-600'>
+                <div className='flex flex-col gap-4 rounded-xl bg-white relative dark:bg-slate-800'>
                     <div className='border-b border-gray-200 flex items-center px-4 py-2 dark:border-gray-600'>
                         <LargeTypography textValue="Login" additionalClass={'dark:text-white'}/>
                     </div>

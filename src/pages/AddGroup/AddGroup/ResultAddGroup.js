@@ -23,8 +23,8 @@ const ResultAddGroup = ({groupId}) => {
           <p className='text-sm text-center'>Salin atau bagikan Kode Grup agar User dapat masuk ke grupmu. </p>
           <div className='flex items-center justify-between bg-blue-50 w-full px-4 py-2 rounded-lg'>
             <div>
-              <p className='font-bold text-sm'>Kode Grup</p>
-              <p>{groupId}</p>
+              <p className='text-sm'>Kode Grup</p>
+              <p className='text-lg font-bold '>{groupId}</p>
             </div>
             <div className='flex items-center gap-1'>
               <div className='relative flex justify-center'>

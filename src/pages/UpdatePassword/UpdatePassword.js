@@ -82,7 +82,7 @@ const UpdatePassword = () => {
         {initializeOldPassword&&<SpinnerLoading/>}
         <TopNavbar navbarColor={'bg-blue-500'} label={'Ubah Password'} labelColor={'text-white'} back={true} navigateTo={-1}/>
         <div className='px-4 py-4'>
-            <div className='bg-white rounded-lg px-4 py-4 dark:bg-slate-800 border border-gray-200 dark:border-gray-600'>
+            <div className='bg-white rounded-lg px-4 py-4 dark:bg-slate-800'>
                 {stepPassword === 1 ?
                 <InputOldPassowrd alert={alert} setAlert={setAlert} password={password} setPassword={setPassword} handleVerifyPassword={handleVerifyPassword} showPassword={showPassword} setShowPassword={setShowPassword}/>
                 :
