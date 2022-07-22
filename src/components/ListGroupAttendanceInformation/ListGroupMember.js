@@ -47,7 +47,7 @@ const ListGroupMember = ({val, groupInfo, dispatch, state, handleChangeStatus}) 
             {(groupInfo.roleUser.includes('01') && val.status === '01' && val.roleUser.includes('01')) ? 
             null
                 :
-            ((groupInfo.roleUser.includes('01') || groupInfo.roleUser.includes('02')) && val.status === '02') ?
+            ((groupInfo.roleUser.includes('01')) && val.status === '02') ?
             <>                                    
                 <button onClick={() => navigate('/change-status', {state:{userId: val.userId, displayName:val.displayName, photoURL:val.photoURL, status:val.status, roleUser:val.roleUser, groupInfoId: groupInfo.id}})} className='bg-blue-500 rounded-full text-xs text-white font-bold px-2 py-1 flex gap-1 items-center'>Ubah 
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -56,12 +56,12 @@ const ListGroupMember = ({val, groupInfo, dispatch, state, handleChangeStatus}) 
                 </button>
             </>
             :
-            (groupInfo.roleUser.includes('01') && val.status === '01' && val.roleUser.includes('02')) ?
+            (groupInfo.roleUser.includes('01') && val.status === '01') ?
             <div>
-                <ButtonIcon actionFunction={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} icon={<svg className="h-6 w-6 dark:text-white"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="1" />  <circle cx="12" cy="19" r="1" />  <circle cx="12" cy="5" r="1" /></svg>}/>
+                <ButtonIcon actionFunction={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} icon={<svg className="h-6 w-6 text-black dark:text-white"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="1" />  <circle cx="12" cy="19" r="1" />  <circle cx="12" cy="5" r="1" /></svg>}/>
                 {state.dropDown&&<div onClick={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} className='fixed inset-0 z-40'></div>}
                 <div className='flex justify-end'>                            
-                    <ul className={`divide-y text-gray-700 absolute z-40 bg-white rounded px-4 py-2 shadow-md w-fit dark:bg-black text-white ${state.dropDown? 'block' : 'hidden'} `}>
+                    <ul className={`divide-y text-gray-700 absolute z-40 bg-white rounded px-4 py-2 shadow-md w-fit dark:bg-black ${state.dropDown? 'block' : 'hidden'} `}>
                         <li onClick={() => {dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser}); dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})}} className="cursor-pointer">Hapus User</li> 
                     </ul>
                 </div>

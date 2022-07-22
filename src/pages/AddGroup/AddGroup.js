@@ -1,5 +1,4 @@
 import React, { useContext, useReducer, useState } from 'react'
-import ButtonIcon from '../../components/Button/ButtonIcon/ButtonIcon'
 import InputGroupName from './AddGroup/InputGroupName'
 import ConfirmationAddGroup from './AddGroup/ConfirmationAddGroup'
 import { arrayUnion, collection, doc, getDoc, serverTimestamp, Timestamp, writeBatch } from 'firebase/firestore'
@@ -10,7 +9,6 @@ import InputGroupCode from './JoinGroup/InputGroupCode'
 import ConfirmationJoinGroup from './JoinGroup/ConfirmationJoinGroup'
 import ResultJoinGroup from './JoinGroup/ResultJoinGroup'
 import Stepper from '../../components/Stepper/Stepper'
-import { useNavigate } from 'react-router-dom'
 import TopNavbar from '../../components/Navbar/TopNavbar'
 
 const initialState = {
@@ -65,7 +63,6 @@ const reducer = (state, action) => {
 const AddGroup = () => {
 
     const user = useContext(AuthContext)
-    const navigate = useNavigate()
     const [state, dispatch] = useReducer(reducer, initialState)
     const [groupStatus, setGroupStatus] = useState([])
     const [locations, setLocations] = useState([])
