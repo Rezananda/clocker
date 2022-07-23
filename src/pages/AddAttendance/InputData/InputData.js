@@ -87,7 +87,7 @@ const InputData = ({setAttendanceData, attendanceData, initilaizingGroupInfo, gr
             </select>
         </div>
         }
-        <ButtonFill additionalClass={attendanceData.status === "WFH" || attendanceData.wfoLocation || attendanceData.sickReason || attendanceData.startDate || attendanceData.endDate ? `bg-blue-500 border-blue-500` : `bg-blue-100 border-blue-100`} label="Lanjutkan" handleClick={() => handleStepAddAttendance('next')} />
+        <ButtonFill disabled={Object.keys(attendanceData).length === 0 ? true : false} additionalClass={attendanceData.status === "WFH" || attendanceData.wfoLocation || attendanceData.sickReason || attendanceData.startDate || attendanceData.endDate ? `bg-blue-500 border-blue-500` : `bg-blue-100 border-blue-100`} label="Lanjutkan" handleClick={() => handleStepAddAttendance('next')} />
     </div>
     }
     </>

@@ -5,9 +5,7 @@ import LabelTypography from '../../../components/Typography/LabelTypography'
 
 const InputData = ({handleStepAddCalender, calendar,  setCalender}) => {
 
-    const handleDateChangeRaw = (e) => {
-        e.preventDefault();
-    }
+    console.log(calendar)
 
   return (
     <div className='flex flex-col gap-4'>
@@ -16,7 +14,7 @@ const InputData = ({handleStepAddCalender, calendar,  setCalender}) => {
             <div className='flex items-center gap-1'>
                 <div>
                     <ReactDatePicker
-                    className='bg-blue-50 w-full px-4 py-2 rounded-lg text-md text-gray-500'
+                    className='bg-blue-50 w-full px-4 py-2 rounded-lg text-md text-gray-500 text-center'
                     selected={calendar.startDate}
                     onChange={(date) => setCalender((prevState => ({...prevState, startDate: new Date(date)})))}
                     selectsStart
@@ -24,13 +22,12 @@ const InputData = ({handleStepAddCalender, calendar,  setCalender}) => {
                     endDate={calendar.endDate}           
                     minDate={new Date()}
                     placeholderText='Tanggal Awal'
-                    onChangeRaw={handleDateChangeRaw}
                     />
                 </div>
                 <span>-</span>
                 <div>
                     <ReactDatePicker
-                    className='bg-blue-50 w-full px-4 py-2 rounded-lg text-md text-gray-500'
+                    className='bg-blue-50 w-full px-4 py-2 rounded-lg text-md text-gray-500 text-center'
                     selected={calendar.endDate}
                     onChange={(date) => setCalender((prevState => ({...prevState, endDate: new Date(date)})))}
                     selectsEnd
@@ -38,7 +35,6 @@ const InputData = ({handleStepAddCalender, calendar,  setCalender}) => {
                     endDate={calendar.endDate}
                     minDate={calendar.startDate}     
                     placeholderText='Tanggal Akhir'     
-                    onChangeRaw={handleDateChangeRaw}  
                     />
                 </div>
             </div>
@@ -51,7 +47,7 @@ const InputData = ({handleStepAddCalender, calendar,  setCalender}) => {
             </select>  
         </div>
         <div>
-        <ButtonFill additionalClass={`bg-blue-500 border-blue-500`} label="Lanjutkan"  handleClick={() => handleStepAddCalender('next')} />
+        <ButtonFill disabled={Object.keys(calendar).length <= 2? true : false} additionalClass={Object.keys(calendar).length <= 2 ? `bg-blue-100 border-blue-100` : `bg-blue-500 border-blue-500`} label="Lanjutkan"  handleClick={() => handleStepAddCalender('next')} />
         </div>
         
     </div>

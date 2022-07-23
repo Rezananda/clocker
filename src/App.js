@@ -20,6 +20,7 @@ import Login from './pages/Login/Login'
 import MyAttendance from './pages/MyAttendance/MyAttendance'
 import MyCalendar from './pages/MyCalendar/MyCalendar'
 import MyDate from './pages/MyDate/MyDate'
+import NotAttendance from './pages/NotAttendance/NotAttendance'
 import Notifications from './pages/Notifications/Notifications'
 import Registration from './pages/Registration/Registration'
 import Settings from './pages/Settings/Settings'
@@ -45,6 +46,7 @@ const App = () => {
                 <Route path="/" element={<DashboardSectionWithNavbar><Home/></DashboardSectionWithNavbar>} />
                 <Route path="/calendar" element={<DashboardSectionWithNavbar><MyCalendar/></DashboardSectionWithNavbar>}/>
                 <Route path="/transactions" element={<DashboardSectionWithoutNavbar><Transactions/></DashboardSectionWithoutNavbar>}/>
+                <Route path="/not-attendance" element={<DashboardSectionWithoutNavbar><NotAttendance/></DashboardSectionWithoutNavbar>}/>
                 <Route path="/notifications" element={<DashboardSectionWithNavbar> <Notifications/></DashboardSectionWithNavbar>}/>
                 <Route path="/profile" element={<DashboardSectionWithNavbar><Account/></DashboardSectionWithNavbar>} />
                 <Route path="/detail-profile" element={<DashboardSectionWithoutNavbar><DetailProfile/></DashboardSectionWithoutNavbar>} />

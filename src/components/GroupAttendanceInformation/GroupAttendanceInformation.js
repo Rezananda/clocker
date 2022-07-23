@@ -1,8 +1,8 @@
-import { CONSTANTS } from '@firebase/util'
 import { collection, doc, getDoc, onSnapshot, query, Timestamp, where } from 'firebase/firestore'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { useNavigate } from 'react-router-dom'
 import UseCheckAttendance from '../../hooks/UseCheckAttendance/UseCheckAttendance'
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup'
 import useUserContext from '../../hooks/UseUserContext/UseUserContext'
@@ -12,16 +12,27 @@ import ListGroupAttendanceInformation from '../ListGroupAttendanceInformation/Li
 import LoadingChip from '../LoadingPulse/LoadingChip'
 import LoadingListAttendance from '../LoadingPulse/LoadingListAttendance'
 
-
 const GroupAttendanceInformation = () => {
   const userContext = useUserContext()
+  const navigate = useNavigate()
   const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
   const [initializeAttendance, attendanceInfo, attendanceEmpty, scroll, checkAttandance] = UseCheckAttendance()
   const [initializeGetAllAttendance, setInitializeGetAllAttendance] = useState(false)
   const [allAttendance, setAllAttendance] = useState()
   const [filter, setFilter] = useState('all')
   const attendances = []
-  
+
+  const getNotAttendance = () => {
+    try{
+      const attendanceInfos = attendanceInfo.map(a => a.userName)
+      const groupInfos = groupInfo.groupMember.map(a => a.displayName)
+      const unique = groupInfos.filter(obj => attendanceInfos.indexOf(obj) === -1)
+      navigate('/not-attendance', {state: unique})
+    }catch (e){
+      const groupInfos = groupInfo.groupMember.map(a => a.displayName)
+      navigate('/not-attendance', {state: groupInfos})
+    }
+  }
 
   const getAllAttendance = async() => {
     setInitializeGetAllAttendance(true)
@@ -100,7 +111,18 @@ const GroupAttendanceInformation = () => {
         <div>
           <div className='flex w-full justify-between items-center'>
               <p className='font-bold dark:text-white'>Kehadiran Hari Ini</p>
-              <span className='flex items-center bg-blue-100 px-2 py-0.5 text-blue-500 font-bold text-xs rounded-full'>{allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).length} / {groupInfo.groupMember.length} Hadir</span>
+              <button onClick={getNotAttendance} className='flex items-center bg-blue-500 px-2 py-0.5 text-white text-xs rounded-full'>
+                {allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).length}/{groupInfo.groupMember.length} Hadir 
+                {allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).length === groupInfo.groupMember.length ? 
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                :
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                }
+              </button>
           </div>
           <style>
             {
@@ -109,7 +131,7 @@ const GroupAttendanceInformation = () => {
             }`
             }
           </style>
-          <div className='flex w-full gap-1 overflow-x-auto scrollable sticky top-0 bg-gray-100 py-2 dark:bg-black' id='scrollableDiv'>
+          <div className='flex w-full gap-1 overflow-x-auto scrollable sticky top-0 bg-gray-100 py-2 dark:bg-black z-20' id='scrollableDiv'>
             <Chip text="Sudah Isi" enable={filter === 'all'} isCount={true} count={allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).length} handleClick={() => handleFilter('all')} color={'blue'} /> 
               {groupInfo.groupStatus.map((val, index) => 
                 <Chip key={index} text={val} enable={val === filter} isCount={true} count={allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY') && item.status === val).length} handleClick={() => handleFilter(val === "WFH"? 'wfh': val === "WFO" ? 'wfo' : val === 'Sakit' ? 'sakit' : val === 'Cuti' ? 'cuti' :'')} color={val === "WFH"? 'green': val === "WFO" ? 'amber' : val === 'Sakit' ? 'red' : val === 'Cuti' ? 'indigo' :''}/>

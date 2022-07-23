@@ -7,6 +7,7 @@ import AlertStatus from '../Alert/AlertStatus';
 import ButtonFill from '../Button/ButtonFill/ButtonFill';
 import ButtonOutline from '../Button/ButtonOutline/ButtonOutline';
 import LoadingAttendanceInformation from '../LoadingPulse/LoadingAttendanceInformation';
+import SlideIn from '../SlideIn/SlideIn';
 import SpinnerLoading from '../SpinnerLoading/SpinnerLoading';
 import SwipeClockIn from '../SwipeClockIn/SwipeClockIn';
 import LoadingAttendanceInformationClockInStatus from './LoadingAttendanceInformationClockInStatus';
@@ -73,44 +74,43 @@ const AttendanceInformation = () => {
         </div>
 
         {slideIn?
-        <div>
-            <div className='flex fixed z-50'>
-                <div className='flex flex-col fixed bottom-0 left-0 right-0 bg-white rounded-t-xl dark:bg-slate-800'>
-                    {initializeGetStatusAttendance ? 
-                    <SpinnerLoading/>
-                    :
-                    <div className='flex flex-col w-full p-4 gap-4'>
-                        <button className='flex justify-end' onClick={() => setSlideIn(false)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                        <ul className='text-center flex flex-col gap-2 w-full'>
-                            <li>
-                                <p className='text-sm dark:text-white'>Kehadiran</p>
-                                <p className='text-lg font-bold dark:text-white'>{statusAttendance.status}</p>
-                            </li>
-                            <li>
-                                {statusAttendance.wfoLocation&&<li><p className='text-sm dark:text-white'>Lokasi WFO</p> <p className='text-lg font-bold dark:text-white'> {statusAttendance.wfoLocation}</p></li>}
-                                {statusAttendance.startDate&&statusAttendance.endDate&&<li><p className='text-sm dark:text-white'>Lama Cuti</p> <p className='font-bold text-lg dark:text-white'>{moment(moment(statusAttendance.startDate)).format('DD/MM/YYYY')} - {moment(moment(statusAttendance.endDate)).format('DD/MM/YYYY')}</p></li>}
-                                {statusAttendance.sickReason&&<li><p className='text-sm dark:text-white'>Alasan Sakit</p><p className='font-bold text-lg dark:text-white'> {statusAttendance.sickReason}</p></li>}
-                            </li>
-                            <li>
-                                <p className='text-sm dark:text-white'>Tanggal Kehadiran</p>
-                                <p className='text-lg font-bold dark:text-white'>{statusAttendance.addDate}</p>
-                            </li>
-                            <li>
-                                <p className='text-sm dark:text-white'>Waktu Kehadiran</p>
-                                <p className='text-lg font-bold dark:text-white'>{statusAttendance.addTime}</p>
-                            </li>
-                        </ul>
-                        <ButtonOutline label={'Ubah'} handleClick={() => navigate('/update-attendance', {state: statusAttendance.id})}/>
-                    </div>
-                    }
+        <SlideIn>            
+            {initializeGetStatusAttendance ? 
+            <SpinnerLoading/>
+            :
+            <div className='flex flex-col w-full p-4 gap-4'>
+                <div className='flex justify-between w-full items-center border-b border-gray-100 mb-2'>
+                    <p className='font-bold'>Detail Kehadiran</p>
+                    <button className='flex justify-end mb-2' onClick={() => setSlideIn(false)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
+                <ul className='text-center flex flex-col gap-2 w-full'>
+                    <li>
+                        <p className='text-sm dark:text-white'>Kehadiran</p>
+                        <p className='text-lg font-bold dark:text-white'>{statusAttendance.status}</p>
+                    </li>
+                    <li>
+                        {statusAttendance.wfoLocation&&<li><p className='text-sm dark:text-white'>Lokasi WFO</p> <p className='text-lg font-bold dark:text-white'> {statusAttendance.wfoLocation}</p></li>}
+                        {statusAttendance.startDate&&statusAttendance.endDate&&<li><p className='text-sm dark:text-white'>Lama Cuti</p> <p className='font-bold text-lg dark:text-white'>{moment(moment(statusAttendance.startDate)).format('DD/MM/YYYY')} - {moment(moment(statusAttendance.endDate)).format('DD/MM/YYYY')}</p></li>}
+                        {statusAttendance.sickReason&&<li><p className='text-sm dark:text-white'>Alasan Sakit</p><p className='font-bold text-lg dark:text-white'> {statusAttendance.sickReason}</p></li>}
+                    </li>
+                    <li>
+                        <p className='text-sm dark:text-white'>Tanggal Kehadiran</p>
+                        <p className='text-lg font-bold dark:text-white'>{statusAttendance.addDate}</p>
+                    </li>
+                    <li>
+                        <p className='text-sm dark:text-white'>Waktu Kehadiran</p>
+                        <p className='text-lg font-bold dark:text-white'>{statusAttendance.addTime}</p>
+                    </li>
+                </ul>
+                <ButtonOutline label={'Ubah'} handleClick={() => navigate('/update-attendance', {state: statusAttendance.id})}/>
             </div>
-            <div className="opacity-20 fixed inset-0 z-40 bg-black" onClick={()=> setSlideIn(false)}></div>
-        </div>
+            }
+
+        </SlideIn>
         :
         null
         }

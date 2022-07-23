@@ -152,7 +152,7 @@ const MyCalendar = () => {
                         x.status === "WFO"
                     )
                   ) {
-                    return `wfo disabled`;
+                    return `wfo`;
                   } else if (
                     personalAttendance.find(
                       (x) =>
@@ -160,7 +160,7 @@ const MyCalendar = () => {
                         x.status === "WFH"
                     )
                   ) {
-                    return "wfh disabled";
+                    return "wfh";
                   } else if (
                     personalAttendance.find(
                       (x) =>
@@ -168,7 +168,7 @@ const MyCalendar = () => {
                         x.status === "Cuti"
                     )
                   ) {
-                    return "cuti disabled";
+                    return "cuti";
                   } else if (
                     personalAttendance.find(
                       (x) =>
@@ -176,7 +176,7 @@ const MyCalendar = () => {
                         x.status === "Sakit"
                     )
                   ) {
-                    return "sakit disabled";
+                    return "sakit";
                   }
                 } catch (e) {
                   return "";
@@ -185,9 +185,9 @@ const MyCalendar = () => {
               tileDisabled={({ date }) =>
               {
                 try{
-                  personalAttendance.find(
-                    (x) => x.addDate === moment(date).format("DD/MM/YYYY")
-                  )
+                  if(personalAttendance.some((x) => x.addDate === moment(date).format("DD/MM/YYYY"))){
+                    return 'disabled'
+                  }
                 }catch (e) {
                   return ""
                 }
@@ -196,6 +196,8 @@ const MyCalendar = () => {
               minDate={new Date()}
             />
           </div>
+          
+          <p className="px-4 font-bold mt-2">Kehadiran Saya</p>
           <div className="flex w-full px-4 py-2 justify-between sticky top-0 bg-gray-100 z-50 dark:bg-black">
             <Chip
               text={"Semua"}

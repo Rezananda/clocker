@@ -4,6 +4,7 @@ import ButtonOutline from '../../../components/Button/ButtonOutline/ButtonOutlin
 
 const Result = ({initilaizingGroupInfo, groupInfo, attendanceData}) => {
     const navigate = useNavigate()
+
   return (
     <>
     <div className='flex flex-col gap-4'>
@@ -36,6 +37,7 @@ const Result = ({initilaizingGroupInfo, groupInfo, attendanceData}) => {
             <p className='text-lg font-bold'>: {attendanceData.sickReason}</p>
           </li>}
         </ul>
+        <ButtonOutline handleClick={() => navigate('/')} label={`Simpan Sebagai Favorit`}/>
         <ButtonOutline handleClick={() => navigate('/')} label="Kembali ke Beranda"/>
     </div>
     </>

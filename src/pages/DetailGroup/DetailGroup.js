@@ -111,7 +111,7 @@ const DetailGroup = () => {
       }
 
   return (
-    <div className='flex flex-col h-screen overflow-y-auto' id="scrollableDiv">
+    <div className='flex flex-col h-screen overflow-y-auto'>
     {initilaizingGroupInfo? <LoadingDetailGroup/> : 
     <>
         <div className='flex sticky top-0 flex-col z-50'>
