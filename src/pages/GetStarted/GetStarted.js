@@ -23,7 +23,7 @@ const GetStarted = () => {
                         <p className='font-bold text-lg text-blue-500'>CLOCKER</p>
                     </div>
                   </div>
-                    <button className='flex items-center justify-end px-4 py-2 bg-blue-500 text-white font-bold rounded-full shadow-lg' onClick={() => navigate('/login')}>MASUK</button>
+                    <button className='flex items-center justify-end px-4 py-2 bg-blue-500 text-white font-bold rounded-full shadow-lg' onClick={() => navigate('/login')}>LOGIN</button>
               </div>
           </nav>
 
@@ -35,10 +35,10 @@ const GetStarted = () => {
                         </div>
                         <div className='md:w-1/2 text-center md:text-right md:relative md:flex md:items-center md:justify-end'>
                             <div className='backdrop-blur-xs bg-white/30 rounded-lg flex flex-col gap-1'>
-                                <p className='text-2xl font-bold drop-shadow-xl italic'>Kemudahan Mengatur <br/> Kehadiranmu Dengan </p>
-                                <p className='text-4xl font-bold text-blue-500 drop-shadow-xl'>CLOCKER</p>
-                                <div className='flex justify-center md:justify-end gap-2'>
-                                    <button className='flex items-center justify-end px-4 py-2 bg-blue-500 border border-blue-500 text-white font-bold rounded-full drop-shadow-lg' onClick={() => navigate('/login')}>MASUK</button>
+                                <p className='text-xl font-bold drop-shadow-xl italic'>Atur kehadiran <br/> Tim mu dengan </p>
+                                <p className='text-3xl font-bold text-blue-500 drop-shadow-xl'>CLOCKER</p>
+                                <div className='flex justify-center md:justify-end gap-2 md:mt-4 mt-2'>
+                                    <button className='flex items-center justify-end px-4 py-2 bg-blue-500 border border-blue-500 text-white font-bold rounded-full drop-shadow-lg' onClick={() => navigate('/login')}>LOGIN</button>
                                     <button className='flex items-center justify-end px-4 py-2 bg-white border border-blue-500 text-blue-500 font-bold rounded-full drop-shadow-lg' onClick={() => myRef.current.scrollIntoView()}>PELAJARI</button>
                                 </div>
                             </div>

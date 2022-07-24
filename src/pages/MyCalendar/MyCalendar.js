@@ -104,7 +104,7 @@ const MyCalendar = () => {
           </p>
         ) : groupInfo.groupStatus.length > 0 && groupInfo.status === "01" ? (
           <div>
-            <div className="flex w-full justify-center">
+            <div className="flex w-full justify-center px-4">
               <style>
                 {`
               .react-calendar {

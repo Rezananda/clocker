@@ -134,7 +134,7 @@ const UpdateAttendance = () => {
       </div>    
       <div className='px-4 py-4 flex overflow-y-auto flex-col'>
         <Stepper stepAddGroup={stepUpdateAttendance}/>
-        <div className='bg-white rounded-lg p-4 flex flex-col border border-gray-200 dark:bg-slate-800 dark:border-gray-600'>
+        <div className='bg-white rounded-lg p-4 flex flex-col dark:bg-slate-800'>
           {stepUpdateAttendance === 1? 
           <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} handleStepUpdateAttendance={handleStepUpdateAttendance} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo}/> : 
           stepUpdateAttendance === 2 ? 

@@ -37,7 +37,6 @@ const Result = ({initilaizingGroupInfo, groupInfo, attendanceData}) => {
             <p className='text-lg font-bold'>: {attendanceData.sickReason}</p>
           </li>}
         </ul>
-        <ButtonOutline handleClick={() => navigate('/')} label={`Simpan Sebagai Favorit`}/>
         <ButtonOutline handleClick={() => navigate('/')} label="Kembali ke Beranda"/>
     </div>
     </>
