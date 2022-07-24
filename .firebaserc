@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "clocker-84a50"
-  }
+    "default": "clocker-84a50",
+    "prod": "clocker-fbbd6",
+    "env": "clocker-84a50",
+    "dev": "clocker-84a50"
+  },
+  "targets": {}
 }

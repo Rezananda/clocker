@@ -9,12 +9,13 @@ import { getMessaging } from "firebase/messaging/sw";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCmv5BCzbs962Q_v3l6J4ZNXQXPabqBzWA",
-  authDomain: "clocker-84a50.firebaseapp.com",
-  projectId: "clocker-84a50",
-  storageBucket: "clocker-84a50.appspot.com",
-  messagingSenderId: "795363865532",
-  appId: "1:795363865532:web:0c799f22c91eabcafa31b9"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
 // Initialize Firebase

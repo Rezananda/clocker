@@ -37,7 +37,7 @@ const App = () => {
         <Router>
           <Routes>
               <Route element={<PublicRoute/>}>
-                {/* <Route path="/get-started" element={<GetStarted/>}/> */}
+                <Route path="/get-started" element={<GetStarted/>}/>
                 <Route path="/login" element={<Login/>} />
                 <Route path="/registration" element={<Registration/>} />
                 <Route path="/forget-password" element={<ForgetPassword/>} />

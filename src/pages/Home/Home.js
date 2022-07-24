@@ -15,7 +15,7 @@ const Home = () => {
         }`
         }
       </style>
-      <div className='h-screen overflow-y-auto scrollable'>
+      <div className='h-screen overflow-y-auto scrollable md:shadow-lg'>
         <AccountInformation/>
         <AttendanceInformation/>
         <GroupAttendanceInformation/>

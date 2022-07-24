@@ -5,7 +5,7 @@ import useUserContext from '../../../hooks/UseUserContext/UseUserContext'
 const PrivateRoute = () => {
     const userContext = useUserContext()
     if(!userContext.currentUser){
-        return <Navigate to={'/login'} />
+        return <Navigate to={'/get-started'} />
     }
     return <Outlet/>
     

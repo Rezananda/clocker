@@ -56,40 +56,40 @@ const ListGroupMember = ({val, groupInfo, dispatch, state, handleChangeStatus}) 
                 </button>
             </>
             :
-            (groupInfo.roleUser.includes('01') && val.status === '01') ?
-            <div>
-                <ButtonIcon actionFunction={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} icon={<svg className="h-6 w-6 text-black dark:text-white"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="1" />  <circle cx="12" cy="19" r="1" />  <circle cx="12" cy="5" r="1" /></svg>}/>
-                {state.dropDown&&<div onClick={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} className='fixed inset-0 z-40'></div>}
-                <div className='flex justify-end'>                            
-                    <ul className={`divide-y text-gray-700 absolute z-40 bg-white rounded px-4 py-2 shadow-md w-fit dark:bg-black ${state.dropDown? 'block' : 'hidden'} `}>
-                        <li onClick={() => {dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser}); dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})}} className="cursor-pointer">Hapus User</li> 
-                    </ul>
-                </div>
+            // (groupInfo.roleUser.includes('01') && val.status === '01') ?
+            // <div>
+            //     <ButtonIcon actionFunction={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} icon={<svg className="h-6 w-6 text-black dark:text-white"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="1" />  <circle cx="12" cy="19" r="1" />  <circle cx="12" cy="5" r="1" /></svg>}/>
+            //     {state.dropDown&&<div onClick={() => dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})} className='fixed inset-0 z-40'></div>}
+            //     <div className='flex justify-end'>                            
+            //         <ul className={`divide-y text-gray-700 absolute z-40 bg-white rounded px-4 py-2 shadow-md w-fit dark:bg-black ${state.dropDown? 'block' : 'hidden'} `}>
+            //             <li onClick={() => {dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser}); dispatch({type: "HANDLE DROPDOWN", payload: !state.dropDown})}} className="cursor-pointer">Hapus User</li> 
+            //         </ul>
+            //     </div>
 
-                {state.showModalDeleteUser&&                
-                    <>
-                        <div className="flex justify-center items-center fixed inset-0 z-50 px-4">
-                            <div className="rounded-lg shadow-lg relative flex flex-col w-full bg-white p-3 gap-3">
-                                <button className="flex justify-end" onClick={() => dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser})}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-gray-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                    </svg>
-                                </button>
-                                <p className='text-center flex'>Apakah kamu yakin menghapus User ini?</p>
-                                <ul className='flex flex-col divide-y p-2 bg-blue-50 rounded-lg'>
-                                    <li className='flex flex-col'><p className='text-sm'>Nama</p><p className='font-bold'>{val.displayName}</p></li>
-                                </ul>
+            //     {state.showModalDeleteUser&&                
+            //         <>
+            //             <div className="flex justify-center items-center fixed inset-0 z-50 px-4">
+            //                 <div className="rounded-lg shadow-lg relative flex flex-col w-full bg-white p-3 gap-3">
+            //                     <button className="flex justify-end" onClick={() => dispatch({type: "HANDLE SHOW MODAL DELETE USER", payload: !state.showModalDeleteUser})}>
+            //                         <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-gray-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
+            //                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            //                         </svg>
+            //                     </button>
+            //                     <p className='text-center flex'>Apakah kamu yakin menghapus User ini?</p>
+            //                     <ul className='flex flex-col divide-y p-2 bg-blue-50 rounded-lg'>
+            //                         <li className='flex flex-col'><p className='text-sm'>Nama</p><p className='font-bold'>{val.displayName}</p></li>
+            //                     </ul>
                                 
-                                <ButtonFill additionalClass={`bg-blue-500 border-blue-500`} label="Hapus" handleClick={() => handleChangeStatus(val.userId, val.displayName, val.photoURL, val.status, groupInfo.id, val.roleUser)}/>
-                            </div>
-                        </div>
-                        <div className="opacity-20 fixed inset-0 z-40 bg-black"></div>
-                    </>
-                }
+            //                     <ButtonFill additionalClass={`bg-blue-500 border-blue-500`} label="Hapus" handleClick={() => handleChangeStatus(val.userId, val.displayName, val.photoURL, val.status, groupInfo.id, val.roleUser)}/>
+            //                 </div>
+            //             </div>
+            //             <div className="opacity-20 fixed inset-0 z-40 bg-black"></div>
+            //         </>
+            //     }
 
 
-            </div> 
-            :
+            // </div> 
+            // :
             null
             }
         </div>
