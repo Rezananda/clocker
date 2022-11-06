@@ -7,7 +7,7 @@ import LoadingAddAttendance from '../../../components/LoadingPulse/LoadingAddAtt
 import moment from 'moment'
 import { Timestamp } from 'firebase/firestore'
 
-const InputData = ({setAttendanceData, attendanceData, initilaizingGroupInfo, groupInfo, handleStepAddAttendance}) => {
+const InputData = ({setAttendanceData, attendanceData, initilaizingGroupInfo, groupInfo, handleStepAddAttendance, wfoAttendance}) => {
 
     return (
     <>
@@ -24,12 +24,16 @@ const InputData = ({setAttendanceData, attendanceData, initilaizingGroupInfo, gr
             <label className="flex p-4 items-center bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white dark:bg-black dark:text-white dark:border-gray-600" htmlFor="wfh">WFH</label>
             </div>
             <div className='mb-2'>
-            <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="WFO" name="statusAttendance" id="wfo"/>
+            <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value, wfoLocation: wfoAttendance.map(val => val.wfoLocation).toString()}))}}  className="sr-only peer" type="radio" value="WFO" name="statusAttendance" id="wfo"/>
             <label className="flex items-center p-4 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white dark:bg-black dark:text-white dark:border-gray-600" htmlFor="wfo">WFO</label>
             </div>
             <div className='mb-2'>
             <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="Cuti" name="statusAttendance" id="cuti"/>
             <label className="flex items-center p-4 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white dark:bg-black dark:text-white dark:border-gray-600" htmlFor="cuti">Cuti</label>
+            </div>
+            <div className='mb-2'>
+            <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="Training" name="statusAttendance" id="training"/>
+            <label className="flex items-center p-4 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white dark:bg-black dark:text-white dark:border-gray-600" htmlFor="training">Training</label>
             </div>
             <div>
             <input onChange={(e) => {setAttendanceData({}); setAttendanceData((prevState) => ({...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="Sakit" name="statusAttendance" id="sakit"/>
@@ -79,7 +83,7 @@ const InputData = ({setAttendanceData, attendanceData, initilaizingGroupInfo, gr
         {attendanceData.status === 'WFO' && 
         <div>
             <LabelTypography textValue="Lokasi WFO" additionalClass={'dark:text-white'}/>
-            <select onChange={(e) => setAttendanceData((prevState) => ({...prevState, wfoLocation: e.target.value}))} defaultValue={'DEFAULT'} className="bg-blue-50 text-gray-900 text-sm rounded-lg block w-full px-4 h-12 focus:outline-none focus:ring-blue-500 focus:ring-2 dark:bg-black dark:text-white">
+            <select value={attendanceData.wfoLocation} onChange={(e) => setAttendanceData((prevState) => ({...prevState, wfoLocation: e.target.value}))} defaultValue={'DEFAULT'} className="bg-blue-50 text-gray-900 text-sm rounded-lg block w-full px-4 h-12 focus:outline-none focus:ring-blue-500 focus:ring-2 dark:bg-black dark:text-white">
                 <option value={'DEFAULT'} disabled>Pilih...</option>
                 {groupInfo.groupLocation.map((val, index) => (
                     <option key={index} value={val}>{val}</option>
@@ -87,7 +91,7 @@ const InputData = ({setAttendanceData, attendanceData, initilaizingGroupInfo, gr
             </select>
         </div>
         }
-        <ButtonFill disabled={Object.keys(attendanceData).length === 0 ? true : false} additionalClass={attendanceData.status === "WFH" || attendanceData.wfoLocation || attendanceData.sickReason || attendanceData.startDate || attendanceData.endDate ? `bg-blue-500 border-blue-500` : `bg-blue-100 border-blue-100`} label="Lanjutkan" handleClick={() => handleStepAddAttendance('next')} />
+        <ButtonFill disabled={Object.keys(attendanceData).length === 0 ? true : false} additionalClass={attendanceData.status === "WFH" || attendanceData.status === "Training" || attendanceData.wfoLocation || attendanceData.sickReason || attendanceData.startDate || attendanceData.endDate ? `bg-blue-500 border-blue-500` : `bg-blue-100 border-blue-100`} label="Lanjutkan" handleClick={() => handleStepAddAttendance('next')} />
     </div>
     }
     </>

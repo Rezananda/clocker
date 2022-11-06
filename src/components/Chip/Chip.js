@@ -6,7 +6,7 @@ const Chip = ({text, enable, count, isCount, handleClick, color}) => {
       <div className='flex gap-1 items-center text-sm font-bold'>
         <p className='flex truncate'>{text}</p> 
         {isCount? 
-        <span className={`flex items-center justify-center rounded-full w-5 h-5 text-xs ${enable ? `text-white bg-${color}-500` : 'text-gray-500 bg-gray-200'}`}>{count}</span>
+        <span className={`${enable ? `bg-${color}-500 text-white` : 'text-gray-500 bg-gray-200'} flex items-center justify-center rounded-full w-5 h-5 text-xs`}>{count}</span>
         :
         null
         }

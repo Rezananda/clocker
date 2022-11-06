@@ -9,6 +9,7 @@ import moment from 'moment'
 
 const InputData = ({setAttendanceData, attendanceData, handleStepUpdateAttendance, initilaizingGroupInfo, groupInfo}) => {
 
+    console.log(attendanceData.status)
     return (
     <>
     <div className='flex flex-col gap-4'>
@@ -25,6 +26,10 @@ const InputData = ({setAttendanceData, attendanceData, handleStepUpdateAttendanc
             <div className='mb-2'>
             <input onChange={(e) => {setAttendanceData(prevState => ({ ...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="Cuti" name="statusAttendance" id="cuti" checked={attendanceData.status === 'Cuti'}/>
             <label className="flex items-center p-4 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-blue-100 peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white dark:bg-black dark:text-white dark:border-gray-600" htmlFor="cuti">Cuti</label>
+            </div>
+            <div className='mb-2'>
+            <input onChange={(e) => {setAttendanceData(prevState => ({ ...prevState, status: e.target.value}))}} className="sr-only peer" type="radio" value="Training" name="statusAttendance" id="training" checked={attendanceData.status === 'Training'}/>
+            <label className="flex p-4 items-center bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-blue-100 peer-checked:ring-blue-500 peer-checked:ring-2 peer-checked:border-transparent peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white dark:bg-black dark:text-white dark:border-gray-600" htmlFor="training">Training</label>
             </div>
             <div>
             <input onChange={(e) => {setAttendanceData(prevState => ({ ...prevState, status: e.target.value}))}}  className="sr-only peer" type="radio" value="Sakit" name="statusAttendance" id="sakit" checked={attendanceData.status === 'Sakit'}/>
@@ -83,7 +88,7 @@ const InputData = ({setAttendanceData, attendanceData, handleStepUpdateAttendanc
             }
         </div>
         }
-        <ButtonFill additionalClass={attendanceData.status === "WFH" || attendanceData.wfoLocation || attendanceData.sickReason || attendanceData.startDate || attendanceData.endDate ? `bg-blue-500 border-blue-500` : `bg-blue-100 border-blue-100`} label="Lanjutkan" handleClick={() => handleStepUpdateAttendance('next')} />
+        <ButtonFill additionalClass={attendanceData.status === "WFH" || attendanceData.status === "Training" || attendanceData.wfoLocation || attendanceData.sickReason || attendanceData.startDate || attendanceData.endDate ? `bg-blue-500 border-blue-500` : `bg-blue-100 border-blue-100`} label="Lanjutkan" handleClick={() => handleStepUpdateAttendance('next')} />
     </div>
     </>
   )

@@ -7,21 +7,12 @@ import useDarkMode from '../../hooks/UseDarkMode/useDarkMode'
 const Home = () => {
   useDarkMode()
   return (
-    <>
-      <style>
-        {
-          `.scrollable::-webkit-scrollbar {
-            display: none;
-        }`
-        }
-      </style>
-      <div className='h-screen overflow-y-auto scrollable md:shadow-lg'>
-        <AccountInformation/>
-        <AttendanceInformation/>
-        <GroupAttendanceInformation/>
-        <div className='h-96 w-full'></div>
-      </div>
-    </>
+    <div className='bg-gray-100 dark:bg-black md:shadow-lg'>
+      <AccountInformation/>
+      <AttendanceInformation/>
+      <GroupAttendanceInformation/>
+      <div className='h-32 w-full'></div>
+    </div>
   )
 }
 

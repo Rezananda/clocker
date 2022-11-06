@@ -30,6 +30,8 @@ const UseCheckPersonalAttendance = () => {
                     queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Cuti'), orderBy('timestamp', 'desc'), limit(10))
                 }else if(type === 'sakit'){
                     queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Sakit'), orderBy('timestamp', 'desc'), limit(10))
+                }else if(type === 'training'){
+                    queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Training'), orderBy('timestamp', 'desc'), limit(10))
                 }
                 const unsubGetAttendance = onSnapshot(queryAttendance, (attendance)=> {
                     attendance.forEach((doc) => {
@@ -93,6 +95,8 @@ const UseCheckPersonalAttendance = () => {
                 queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Cuti'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(10))
             }else if(type === 'sakit'){
                 queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Sakit'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(10))
+            }else if(type === 'training'){
+                queryAttendance = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('userId', '==', docSnap.id), where('status', '==', 'Training'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(10))
             }
             const unsubGetAttendance = onSnapshot(queryAttendance, (attendance)=> {
                 updateData(attendance)

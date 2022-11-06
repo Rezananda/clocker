@@ -20,7 +20,7 @@ const UpdateAttendance = () => {
     const [initializeGetAttendance, setInitializeGetAttendance] = useState(false)
     const [initilaizingGroupInfo, groupInfo] = useCheckGroup(user.currentUser.uid)
     const [stepUpdateAttendance, setStepUpdateAttendance] = useState(1)
-    
+
     const getAttendance = async() => {
         setInitializeGetAttendance(true)
         const docRefAttendance = doc(db, "attendanceInformation", location.state)
@@ -72,6 +72,10 @@ const UpdateAttendance = () => {
         }else if(attendanceData.status === 'WFO'){
           attendances.status = "WFO"
           attendances.wfoLocation = attendanceData.wfoLocation
+          const attendanceRef = doc(db, "attendanceInformation", location.state)
+          batch.set(attendanceRef, attendances);
+        }else if(attendanceData.status === 'Training'){
+          attendances.status = 'Training'
           const attendanceRef = doc(db, "attendanceInformation", location.state)
           batch.set(attendanceRef, attendances);
         }else if(attendanceData.status === "Sakit"){

@@ -80,7 +80,7 @@ const AttendanceInformation = () => {
             :
             <div className='flex flex-col w-full p-4 gap-4'>
                 <div className='flex justify-between w-full items-center border-b border-gray-100 mb-2'>
-                    <p className='font-bold'>Detail Kehadiran</p>
+                    <p className='font-bold dark:text-white'>Detail Kehadiran</p>
                     <button className='flex justify-end mb-2' onClick={() => setSlideIn(false)}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

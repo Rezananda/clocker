@@ -48,6 +48,9 @@ const MyCalendar = () => {
     } else if (type === "cuti") {
       setFilter("Cuti");
       checkPersonalAttendance("cuti");
+    } else if (type === "training") {
+      setFilter("Training");
+      checkPersonalAttendance("training");
     }
   };
   return (
@@ -126,8 +129,11 @@ const MyCalendar = () => {
                 background-color: #ef4444;
                 color: white;
               }
+              .training:disabled {
+                background-color: #ec4899;
+                color: white;                
+              }
               
-
               .wfo {
                 background-color: #f59e0b;
                 color: white;
@@ -143,6 +149,10 @@ const MyCalendar = () => {
               .sakit {
                 background-color: #ef4444;
                 color: white;
+              }
+              .training {
+                background-color: #ec4899;
+                color: white;                
               }
               `}
               </style>
@@ -185,6 +195,14 @@ const MyCalendar = () => {
                       )
                     ) {
                       return "sakit";
+                    } else if (
+                      personalAttendance.find(
+                        (x) =>
+                          x.addDate === moment(date).format("DD/MM/YYYY") &&
+                          x.status === "Training"
+                      )
+                    ) {
+                      return "training";
                     }
                   } catch (e) {
                     return "";
@@ -229,6 +247,8 @@ const MyCalendar = () => {
                         ? "sakit"
                         : val === "Cuti"
                         ? "cuti"
+                        : val === "Training"
+                        ? "training"
                         : ""
                     )
                   }
@@ -241,6 +261,8 @@ const MyCalendar = () => {
                       ? "red"
                       : val === "Cuti"
                       ? "indigo"
+                      : val === "Training"
+                      ? "pink"
                       : ""
                   }
                 />
@@ -270,6 +292,8 @@ const MyCalendar = () => {
                           ? "wfh"
                           : filter === "Cuti"
                           ? "cuti"
+                          : filter === "Training"
+                          ? "training"
                           : ""
                       )
                     }
@@ -300,7 +324,7 @@ const MyCalendar = () => {
                       personalAttendance.map((val, index) => (
                         <li
                           key={index}
-                          className="bg-white px-4 py-2 flex justify-between rounded-lg dark:bg-slate-800 dark:border-gray-600 dark:text-white"
+                          className="bg-white px-4 py-2 flex justify-between rounded-lg dark:bg-slate-800 dark:text-white"
                         >
                           <div className="flex items-center">
                             <div className="flex flex-col">
@@ -314,7 +338,9 @@ const MyCalendar = () => {
                                     ? "bg-indigo-200 border-indigo-500 text-indigo-500"
                                     : val.status === "Sakit"
                                     ? "bg-red-200 border-red-500 text-red-500"
-                                    : ""
+                                    : val.status === "Training"
+                                    ? "bg-pink-200 border-pink-500 text-pink-500"
+                                    :""
                                 } flex justify-center items-center px-3 py-2 font-bold text-sm rounded border-l-4`}
                               >
                                 {val.status}

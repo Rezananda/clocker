@@ -17,9 +17,9 @@ const Result = ({attendanceData}) => {
       </div>
         <ul className='flex flex-col gap-2 text-center bg-blue-50 rounded-xl py-2'>
           <li><p className='font-bold'>Kehadiran</p> <p className='text-lg'>{attendanceData.status}</p></li>
-          {attendanceData.wfoLocation&&<li><p className='font-bold'>Lokasi WFO</p> <p className='text-lg'>{attendanceData.wfoLocation}</p></li>}
-          {attendanceData.startDate&&attendanceData.endDate&&<li><p className='font-bold'>Lama Cuti</p> <p className='text-lg'>{new Date(attendanceData.startDate).toLocaleDateString()} - {new Date(attendanceData.endDate).toLocaleDateString()}</p></li>}
-          {attendanceData.sickReason&&<li><p className='font-bold'>Alasan Sakit</p> <p className='text-lg'>: {attendanceData.sickReason}</p></li>}
+          {attendanceData.wfoLocation&&attendanceData.status === 'WFO'&&<li><p className='font-bold'>Lokasi WFO</p> <p className='text-lg'>{attendanceData.wfoLocation}</p></li>}
+          {attendanceData.startDate&&attendanceData.endDate&&attendanceData.status === 'Cuti'&&<li><p className='font-bold'>Lama Cuti</p> <p className='text-lg'>{new Date(attendanceData.startDate).toLocaleDateString()} - {new Date(attendanceData.endDate).toLocaleDateString()}</p></li>}
+          {attendanceData.sickReason&&attendanceData.status === 'Sakit'&&<li><p className='font-bold'>Alasan Sakit</p> <p className='text-lg'>{attendanceData.sickReason}</p></li>}
         </ul>
         <ButtonOutline handleClick={() => navigate('/')} label="Kembali ke Beranda"/>
     </div>

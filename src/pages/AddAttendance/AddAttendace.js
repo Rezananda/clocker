@@ -10,6 +10,8 @@ import { collection, doc, getDoc, serverTimestamp, Timestamp, writeBatch } from 
 import { db } from '../../utils/Firebase/Firebase'
 import TopNavbar from '../../components/Navbar/TopNavbar';
 import moment from 'moment';
+import useGetWFOAttendance from '../../hooks/UseGetWFOAttendance/useGetWFOAttendance';
+import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 
 const AddAttendace = () => {
   const user = useContext(AuthContext)
@@ -17,6 +19,7 @@ const AddAttendace = () => {
   const [attendanceData, setAttendanceData] = useState({})
   const [initializeAddAttendance, setInitializeAddAttendance] = useState(false)
   const [stepAddAttendance, setStepAddAttendance] = useState(1)
+  const [initializeGetWFOAttendance, wfoAttendance] = useGetWFOAttendance()
 
   function handleStepAddAttendance(statusStepAddGroup){
     if(statusStepAddGroup === "prev"){
@@ -53,6 +56,10 @@ const AddAttendace = () => {
       }else if(attendanceData.status === 'WFO'){
         attendances.status = "WFO"
         attendances.wfoLocation = attendanceData.wfoLocation
+        const attendanceRef = doc(collection(db, "attendanceInformation"))
+        batch.set(attendanceRef, attendances);
+      }else if(attendanceData.status === "Training"){
+        attendances.status = 'Training'
         const attendanceRef = doc(collection(db, "attendanceInformation"))
         batch.set(attendanceRef, attendances);
       }else if(attendanceData.status === "Sakit"){
@@ -114,11 +121,14 @@ const AddAttendace = () => {
       <div className='flex sticky top-0 flex-col z-50'>
         <TopNavbar navbarColor={'bg-blue-500'} label={'Tambah Kehadiran'} labelColor={'text-white'} back={true} navigateTo={-1}/>
       </div>
+      {initializeGetWFOAttendance ? 
+      <SpinnerLoading/>
+      :
       <div className='px-4 py-4 flex flex-col'>
         <Stepper stepAddGroup={stepAddAttendance}/>
         <div className='bg-white rounded-lg p-4 h-full overflow-y-auto dark:bg-slate-800 dark:border-gray-600'>
           {stepAddAttendance === 1? 
-          <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} handleStepAddAttendance={handleStepAddAttendance}/> : 
+          <InputData setAttendanceData={setAttendanceData} attendanceData={attendanceData} initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} handleStepAddAttendance={handleStepAddAttendance} wfoAttendance={wfoAttendance}/> : 
           stepAddAttendance === 2 ? 
           <Confirmation initilaizingGroupInfo={initilaizingGroupInfo} groupInfo={groupInfo} attendanceData={attendanceData} handleStepAddAttendance={handleStepAddAttendance} handleAddAttendance={handleAddAttendance} initializeAddAttendance={initializeAddAttendance}/> : 
           stepAddAttendance === 3? 
@@ -126,6 +136,7 @@ const AddAttendace = () => {
         </div>
         <div className='h-20'></div>
       </div>
+      }
     </div>
   )
 }

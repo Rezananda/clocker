@@ -1,15 +1,65 @@
-import React from 'react'
+import React, { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { useNavigate } from 'react-router-dom'
+import ButtonIcon from '../../../components/Button/ButtonIcon/ButtonIcon'
+import Chip from '../../../components/Chip/Chip'
 import ListGroupAttendanceInformation from '../../../components/ListGroupAttendanceInformation/ListGroupAttendanceInformation'
 import SpinnerLoading from '../../../components/SpinnerLoading/SpinnerLoading'
+import useSearch from '../../../hooks/UseSearch/useSearch'
 
-const GroupAttendance = ({initializeGetAllAttendance, allAttendance, attendanceEmpty, scroll, filter}) => {
+const GroupAttendance = ({initializeGetAllAttendance, allAttendance, attendanceEmpty, scroll, filter, groupInfo, initilaizingGroupInfo}) => {
+  const [searchValue, setSearchValue] = useState("")
+  const [search, initializeSearch, getSearchValue] = useSearch(searchValue)
+  const navigate = useNavigate()
+
+  const handleClose = () => {
+    setSearchValue("")
+    getSearchValue()
+  }
+
   return (
     <div className='py-4 px-4' >
-        {initializeGetAllAttendance? 
+        {initializeGetAllAttendance || initilaizingGroupInfo? 
         <SpinnerLoading/>
         :
         <div className='flex flex-col gap-1'>
+          {/* <div className='flex gap-2 mb-2'>
+            <div className='relative w-full'>
+              <input type={'text'} className='p-2 rounded-lg w-full' placeholder='Cari Nama Member' onChange={(e) => setSearchValue(e.target.value)}/>
+              {search.length > 0 &&              
+              <div className='absolute inset-y-0 right-0 pr-3 flex items-center'>
+                <ButtonIcon icon={
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                }
+                actionFunction={handleClose}
+                />
+              </div>
+              }
+            </div>
+            <button className='bg-blue-500 p-2 text-white rounded-lg flex items-center' onClick={getSearchValue}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+              </svg>
+              Cari
+              </button>
+          </div> */}
+          <div className='flex'>
+          <div className='flex w-full gap-1 overflow-x-auto scrollable sticky top-0 bg-gray-100 py-2 dark:bg-black z-20'>
+            <Chip text="Sudah Isi" enable={filter === 'all'} color={'blue'} /> 
+              {groupInfo.groupStatus.map((val, index) => 
+                <Chip key={index} text={val} enable={val === filter}/>
+              )}
+          </div>
+          <ButtonIcon icon={
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          }
+          actionFunction={() => navigate('/search')}
+          />
+          </div>
           {allAttendance !== 'noAttendance' && <InfiniteScroll
               className='flex flex-col gap-1'
               dataLength={allAttendance.length}
@@ -25,11 +75,23 @@ const GroupAttendance = ({initializeGetAllAttendance, allAttendance, attendanceE
               }
               scrollableTarget={'scrollableDiv'}
             >
-            {allAttendance.map((val, index) => 
-                <ListGroupAttendanceInformation val={val} key={index}/>
+            {search.length===0&&allAttendance.map((val, index) => 
+                <ListGroupAttendanceInformation val={val} key={index} date={true}/>
             )}
           </InfiniteScroll>
           }
+
+          {initializeSearch ? 
+          
+          <SpinnerLoading/> 
+          :
+          <div className='flex flex-col gap-1'>
+            {search.length>0&&search.map((val, index) => 
+              <ListGroupAttendanceInformation val={val} key={index} date={true}/>
+            )}
+          </div>            
+          }
+
         </div>
         }
     </div>

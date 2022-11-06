@@ -15,7 +15,7 @@ const NotAttendance = () => {
             :
             <ul className='flex flex-col gap-1'>
                 {location.state.map((val, index) => (
-                    <li key={index} className='flex w-full items-center px-2 py-4 bg-white rounded-md'>
+                    <li key={index} className='flex w-full items-center px-2 py-4 bg-white rounded-md dark:bg-slate-800 dark:text-white'>
                         <p className='w-9/12 truncate'>{val}</p>
                         <a className='w-3/12 text-right text-sm text-blue-500 underline' href={`whatsapp://send?text=Hi ${val}, jangan lupa isi kehadiran di Clocker ya. Terima Kasih`} data-action="share/whatsapp/share">
                             Ingatkan 

@@ -5,6 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router-dom'
 import UseCheckAttendance from '../../hooks/UseCheckAttendance/UseCheckAttendance'
 import useCheckGroup from '../../hooks/UseCheckGroup/useCheckGroup'
+import useGetCurrentAttendance from '../../hooks/UseGetCurrentAttendance/useGetCurrentAttendance'
 import useUserContext from '../../hooks/UseUserContext/UseUserContext'
 import { db } from '../../utils/Firebase/Firebase'
 import Chip from '../Chip/Chip'
@@ -17,6 +18,7 @@ const GroupAttendanceInformation = () => {
   const navigate = useNavigate()
   const [initilaizingGroupInfo, groupInfo] = useCheckGroup()
   const [initializeAttendance, attendanceInfo, attendanceEmpty, scroll, checkAttandance] = UseCheckAttendance()
+  const [initializeCurrentAttendance, currentAttendance] = useGetCurrentAttendance()
   const [initializeGetAllAttendance, setInitializeGetAllAttendance] = useState(false)
   const [allAttendance, setAllAttendance] = useState()
   const [filter, setFilter] = useState('all')
@@ -24,9 +26,9 @@ const GroupAttendanceInformation = () => {
 
   const getNotAttendance = () => {
     try{
-      const attendanceInfos = attendanceInfo.map(a => a.userName)
+      const currentAttendances = currentAttendance.map(a => a.userName)
       const groupInfos = groupInfo.groupMember.map(a => a.displayName)
-      const unique = groupInfos.filter(obj => attendanceInfos.indexOf(obj) === -1)
+      const unique = groupInfos.filter(obj => currentAttendances.indexOf(obj) === -1)
       navigate('/not-attendance', {state: unique})
     }catch (e){
       const groupInfos = groupInfo.groupMember.map(a => a.displayName)
@@ -78,12 +80,15 @@ const GroupAttendanceInformation = () => {
     }else if(type === 'cuti'){
       setFilter('Cuti')
       checkAttandance('cuti')
+    }else if(type === 'training'){
+      setFilter('Training')
+      checkAttandance('training')
     }
   }
 
   return (
     <div className='px-4'>
-        {initilaizingGroupInfo || initializeAttendance || initializeGetAllAttendance?
+        {initilaizingGroupInfo || initializeAttendance || initializeGetAllAttendance || initializeCurrentAttendance ?
         <>
           <div className='animate-pulse mb-2'>
               <div className="flex items-center justify-between">
@@ -131,16 +136,16 @@ const GroupAttendanceInformation = () => {
             }`
             }
           </style>
-          <div className='flex w-full gap-1 overflow-x-auto scrollable sticky top-0 bg-gray-100 py-2 dark:bg-black z-20' id='scrollableDiv'>
+          <div className='flex w-full gap-1 overflow-x-auto scrollable sticky top-0 bg-gray-100 py-2 dark:bg-black z-20'>
             <Chip text="Sudah Isi" enable={filter === 'all'} isCount={true} count={allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).length} handleClick={() => handleFilter('all')} color={'blue'} /> 
               {groupInfo.groupStatus.map((val, index) => 
-                <Chip key={index} text={val} enable={val === filter} isCount={true} count={allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY') && item.status === val).length} handleClick={() => handleFilter(val === "WFH"? 'wfh': val === "WFO" ? 'wfo' : val === 'Sakit' ? 'sakit' : val === 'Cuti' ? 'cuti' :'')} color={val === "WFH"? 'green': val === "WFO" ? 'amber' : val === 'Sakit' ? 'red' : val === 'Cuti' ? 'indigo' :''}/>
+                <Chip key={index} text={val} enable={val === filter} isCount={true} count={allAttendance.filter(item => item.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY') && item.status === val).length} handleClick={() => handleFilter(val === "WFH"? 'wfh': val === "WFO" ? 'wfo' : val === 'Sakit' ? 'sakit' : val === 'Cuti' ? 'cuti' : val === 'Training' ? 'training' : '')} color={val === "WFH"? 'green': val === "WFO" ? 'amber' : val === 'Sakit' ? 'red' : val === 'Cuti' ? 'indigo' : val === 'Training' ? 'pink' : ''}/>
               )}        
           </div>
 
           {attendanceInfo === 'noAttendance' &&<p className='text-sm text-gray-500 text-center'>-Belum Ada Kehadiran-</p>}
 
-          <div className='flex flex-col gap-1'>
+          <div className='flex flex-col gap-1' id='scrollableDiv'>
           {attendanceInfo !== "noGroup" && attendanceInfo !== "noAttendance"&&            
             <InfiniteScroll
               className='flex flex-col gap-1'
@@ -155,7 +160,7 @@ const GroupAttendanceInformation = () => {
                   </svg>
               </div>
               }
-              scrollableTarget={'scrollableDiv'}
+              // scrollableTarget={'scrollableDiv'}
             >
               {attendanceInfo !== "noGroup" && attendanceInfo !== "noAttendance"&& attendanceInfo.filter(val => val.addDate === moment(Timestamp.now().toDate()).format('DD/MM/YYYY')).map((val, index) => (
                 <ListGroupAttendanceInformation key={index} val={val}/>

@@ -30,6 +30,8 @@ const UseCheckAttendance = () => {
                         attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', moment(Timestamp.now().toDate()).format('DD/MM/YYYY')), where('status', '==', 'Cuti'), orderBy('timestamp', 'desc'), limit(15))
                     }else if(type === 'sakit'){
                         attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', moment(Timestamp.now().toDate()).format('DD/MM/YYYY')), where('status', '==', 'Sakit'), orderBy('timestamp', 'desc'), limit(15))
+                    }else if(type === 'training'){
+                        attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', moment(Timestamp.now().toDate()).format('DD/MM/YYYY')), where('status', '==', 'Training'), orderBy('timestamp', 'desc'), limit(15))
                     }
                     const unsubGetAttendance = onSnapshot(attendanceNowQuery, async(attendance)=> {
                         attendance.forEach((doc) => {
@@ -95,6 +97,8 @@ const scroll = async(type) => {
             attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', moment(Timestamp.now().toDate()).format('DD/MM/YYYY')), where('status', '==', 'Cuti'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(15))
         }else if(type === 'sakit'){
             attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', moment(Timestamp.now().toDate()).format('DD/MM/YYYY')), where('status', '==', 'Sakit'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(15))           
+        }else if(type === 'training'){
+            attendanceNowQuery = query(collection(db, 'attendanceInformation'), where('groupId', '==', docSnap.data().group[0]), where('addDate', '==', moment(Timestamp.now().toDate()).format('DD/MM/YYYY')), where('status', '==', 'Training'), orderBy('timestamp', 'desc'), startAfter(lastvisibility), limit(15))           
         }
         const unsubGetAttendance = onSnapshot(attendanceNowQuery, (attendance)=> {
             updateData(attendance)

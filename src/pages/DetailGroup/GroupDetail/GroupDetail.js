@@ -4,7 +4,7 @@ import ListGroupMember from '../../../components/ListGroupAttendanceInformation/
 
 const GroupDetail = ({groupInfo, dispatch, state, handleChangeStatus}) => {
   return (
-    <div className='py-4 px-4 flex flex-col gap-3 h-screen'>
+    <div className='py-4 px-4 flex flex-col gap-3'>
         <div className='flex flex-col gap-1 items-center'>
             <LetterAvatar letter={groupInfo.groupName.split(" ").length > 1? groupInfo.groupName.split(" ").shift().charAt(0) + groupInfo.groupName.split(" ").pop().charAt(0) : groupInfo.groupName.split(" ").shift().charAt(0)}/>
             <p className='text-xl font-bold dark:text-white'>{groupInfo.groupName}</p>
